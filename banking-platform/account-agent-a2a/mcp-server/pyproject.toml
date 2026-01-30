@@ -1,0 +1,23 @@
+[project]
+name = "account-mcp-server"
+version = "1.0.0"
+description = "Unified Account MCP Server providing account and limits tools"
+requires-python = ">=3.11"
+dependencies = [
+    # FastAPI and Uvicorn for HTTP server
+    "fastapi>=0.109.0",
+    "uvicorn[standard]>=0.27.0",
+    
+    # Data models
+    "pydantic>=2,<3",
+    
+    # Environment variables
+    "python-dotenv>=1.0.0",
+    
+    # Utilities
+    "typing-extensions",
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"

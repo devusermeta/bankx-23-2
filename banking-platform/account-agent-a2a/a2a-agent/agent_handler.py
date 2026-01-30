@@ -82,10 +82,41 @@ class AccountAgentHandler:
             logger.info(f"✅ AzureAIClient created - referencing agent {settings.account_agent_name}:{settings.account_agent_version}")
             
             # Create ChatAgent with MCP tools added dynamically
+            # Add strict instructions to FORCE tool usage (anti-hallucination)
             print("🔧 Building ChatAgent with MCP tools...")
+            
+            agent_instructions = """You are an Account Agent for a banking system. You have access to real-time banking data through MCP tools.
+
+CRITICAL RULES - MANDATORY TOOL USAGE:
+1. You MUST ALWAYS use the available MCP tools to retrieve account information
+2. NEVER provide account details, balances, limits, or transaction information from memory or general knowledge
+3. NEVER make up or guess account numbers, balances, or limits
+4. For EVERY query about accounts, balances, limits, or transactions:
+   - ALWAYS call the appropriate tool FIRST
+   - ONLY respond based on the tool's actual results
+   - If a tool returns no data, say "I could not find that information"
+
+Available Tools and When to Use Them:
+- getAccountsByUserName: When user provides email address to find their accounts
+- getAccountDetails: When you need account balance and details for a specific account ID
+- getPaymentMethodDetails: When you need payment method information for an account
+- checkLimits: When you need to verify if a transaction amount is allowed
+- getAccountLimits: When you need to show transaction limits for an account
+
+Example Workflows:
+- "What accounts does user@example.com have?" → MUST call getAccountsByUserName
+- "What is the balance of CHK-001?" → MUST call getAccountDetails
+- "Can I transfer 5000 from CHK-001?" → MUST call checkLimits
+- "What are my limits?" → MUST call getAccountLimits
+
+If you cannot determine which tool to call or need clarification from the user, ask for the specific information needed (email, account ID, amount, etc.).
+
+NEVER respond with generic banking information. ALWAYS use the tools to get real data."""
+
             self.agent = azure_client.create_agent(
                 name=settings.account_agent_name,
                 tools=[self.mcp_tool],
+                instructions=agent_instructions,
             )
             print("✅ ChatAgent created")
             print(f"   Agent Name: {self.agent.name}")
@@ -149,23 +180,34 @@ class AccountAgentHandler:
         logger.info(f"User message: {user_message}")
         
         try:
-            # Process with agent
-            print("\n🤖 Calling Account Agent...")
-            result = await self.agent.ask(user_message, thread_id=thread_id)
+            # Run the agent with the user message
+            print("\n🤖 Calling agent.run()...")
+            print("   (This should call the MCP tools for account/limits data)")
+            logger.info("🤖 Invoking agent.run()")
             
-            # Extract response
-            response_text = result.response.content if result.response else ""
+            response = await self.agent.run(user_message)
             
-            print("\n✅ Agent Response Received")
-            print(f"📄 Response Length: {len(response_text)} characters")
+            print("✅ Agent execution completed")
+            print(f"📊 Response Type: {type(response).__name__}")
+            logger.info(f"✅ Agent execution completed")
+            logger.info(f"📊 Response Type: {type(response).__name__}")
+            
+            # Extract text from AgentRunResponse object
+            response_text = response.text if hasattr(response, 'text') else str(response)
+            
+            print(f"💡 Response Length: {len(response_text)} characters")
+            print(f"📤 Response Preview: {response_text[:200]}..." if len(response_text) > 200 else f"📤 Response: {response_text}")
             print("=" * 80 + "\n")
             
-            logger.info(f"✅ Agent response received: {len(response_text)} characters")
+            logger.info(f"💡 Response length: {len(response_text)} characters")
+            logger.info(f"📤 Response: {response_text[:500]}..." if len(response_text) > 500 else f"📤 Response: {response_text}")
+            logger.info("=" * 80)
             
             return {
                 "role": "assistant",
                 "content": response_text,
                 "agent_name": settings.account_agent_name,
+                "agent_version": settings.account_agent_version,
                 "thread_id": thread_id
             }
             

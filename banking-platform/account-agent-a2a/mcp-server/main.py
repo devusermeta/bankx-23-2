@@ -283,13 +283,13 @@ async def mcp_endpoint(request: Request):
                     "tools": [
                         {
                             "name": "getAccountsByUserName",
-                            "description": "Get all accounts for a user by their email address",
+                            "description": "REQUIRED TOOL: Retrieve all real bank accounts for a user from the database. MUST be called when user asks about 'my accounts', 'what accounts do I have', or provides their email. Never make up account information - always call this tool to get actual data.",
                             "inputSchema": {
                                 "type": "object",
                                 "properties": {
                                     "email": {
                                         "type": "string",
-                                        "description": "User's email address"
+                                        "description": "User's email address (e.g., user@example.com)"
                                     }
                                 },
                                 "required": ["email"]
@@ -297,13 +297,13 @@ async def mcp_endpoint(request: Request):
                         },
                         {
                             "name": "getAccountDetails",
-                            "description": "Get detailed information about a specific account including balance, type, and payment methods",
+                            "description": "REQUIRED TOOL: Get real-time account balance and details from database. MUST be called when user asks about balance, account info, or specific account details. Returns actual balance, account holder name, account type, and payment methods. Never estimate or fabricate account information.",
                             "inputSchema": {
                                 "type": "object",
                                 "properties": {
                                     "account_id": {
                                         "type": "string",
-                                        "description": "Account identifier (e.g., CHK-001, SAV-001)"
+                                        "description": "Exact account identifier from database (e.g., CHK-001, SAV-001, SAV-002)"
                                     }
                                 },
                                 "required": ["account_id"]
@@ -311,13 +311,13 @@ async def mcp_endpoint(request: Request):
                         },
                         {
                             "name": "getPaymentMethodDetails",
-                            "description": "Get details about a specific payment method",
+                            "description": "REQUIRED TOOL: Retrieve real payment method details and available balance from database. MUST be called when checking payment method availability or balance. Returns actual payment method balance and status.",
                             "inputSchema": {
                                 "type": "object",
                                 "properties": {
                                     "payment_method_id": {
                                         "type": "string",
-                                        "description": "Payment method identifier (e.g., PM-CHK-001)"
+                                        "description": "Exact payment method identifier from database (e.g., PM-CHK-001)"
                                     }
                                 },
                                 "required": ["payment_method_id"]
@@ -325,17 +325,17 @@ async def mcp_endpoint(request: Request):
                         },
                         {
                             "name": "checkLimits",
-                            "description": "Check if a transaction is within account limits. Returns whether the transaction is allowed and provides detailed limit information.",
+                            "description": "REQUIRED TOOL: Validate if transaction is allowed based on actual account limits and balance. MUST be called when user asks 'can I transfer X amount', 'is X within limits', or before any transaction. Returns whether transaction is allowed with detailed validation (balance check, per-transaction limit, daily limit). Never guess if transaction is allowed.",
                             "inputSchema": {
                                 "type": "object",
                                 "properties": {
                                     "account_id": {
                                         "type": "string",
-                                        "description": "Account identifier"
+                                        "description": "Account identifier to check limits for"
                                     },
                                     "transaction_amount": {
                                         "type": "number",
-                                        "description": "Amount to check in THB"
+                                        "description": "Exact amount to validate in THB (e.g., 30000 for 30,000 THB)"
                                     },
                                     "transaction_type": {
                                         "type": "string",
@@ -349,13 +349,13 @@ async def mcp_endpoint(request: Request):
                         },
                         {
                             "name": "getAccountLimits",
-                            "description": "Get all limit information for an account including daily and per-transaction limits",
+                            "description": "REQUIRED TOOL: Get real transaction limits for account from database. MUST be called when user asks about 'what are my limits', 'how much can I transfer', 'daily limit', or 'transaction limit'. Returns actual per-transaction limit, daily limit, remaining daily limit, and utilization. Never make up limit amounts.",
                             "inputSchema": {
                                 "type": "object",
                                 "properties": {
                                     "account_id": {
                                         "type": "string",
-                                        "description": "Account identifier"
+                                        "description": "Account identifier to get limits for"
                                     }
                                 },
                                 "required": ["account_id"]

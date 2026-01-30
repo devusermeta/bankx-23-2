@@ -27,8 +27,13 @@ class DataLoaderService:
     def __init__(self, data_dir: Optional[Path] = None):
         """Initialize data loader with path to dynamic_data folder"""
         if data_dir is None:
-            # Default: banking-platform/dynamic_data
-            self.data_dir = Path(__file__).parent.parent.parent / "dynamic_data"
+            # Check if running in Docker (data will be in /app/dynamic_data)
+            docker_data_dir = Path("/app/dynamic_data")
+            if docker_data_dir.exists():
+                self.data_dir = docker_data_dir
+            else:
+                # Local development: banking-platform/dynamic_data
+                self.data_dir = Path(__file__).parent.parent.parent / "dynamic_data"
         else:
             self.data_dir = Path(data_dir)
         

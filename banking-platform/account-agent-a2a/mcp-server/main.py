@@ -237,6 +237,35 @@ def get_account_limits(account_id: str) -> Dict[str, Any]:
         }
 
 
+def update_limits_after_transaction(account_id: str, amount: float) -> Dict[str, Any]:
+    """
+    Update daily limits after a successful transaction.
+    
+    Args:
+        account_id: Account identifier
+        amount: Transaction amount to deduct from daily limit
+    
+    Returns:
+        Dictionary with success status and message
+    """
+    logger.info(f"[MCP] update_limits_after_transaction called: account_id={account_id}, amount={amount}")
+    
+    try:
+        result = limits_service.update_limits_after_transaction(account_id, amount)
+        logger.info(f"[MCP] Limits updated for {account_id}")
+        return {
+            "success": True,
+            **result
+        }
+    
+    except Exception as e:
+        logger.error(f"[MCP] Error in update_limits_after_transaction: {e}", exc_info=True)
+        return {
+            "success": False,
+            "error": str(e)
+        }
+
+
 # =============================================================================
 # MCP JSON-RPC ENDPOINTS (Azure AI Foundry Compatible)
 # =============================================================================
@@ -360,6 +389,24 @@ async def mcp_endpoint(request: Request):
                                 },
                                 "required": ["account_id"]
                             }
+                        },
+                        {
+                            "name": "updateLimitsAfterTransaction",
+                            "description": "Update daily limits after a successful transaction. Called internally by Payment Service after payment execution. Deducts transaction amount from remaining daily limit.",
+                            "inputSchema": {
+                                "type": "object",
+                                "properties": {
+                                    "account_id": {
+                                        "type": "string",
+                                        "description": "Account identifier to update limits for"
+                                    },
+                                    "amount": {
+                                        "type": "number",
+                                        "description": "Transaction amount (positive value) to deduct from daily limit"
+                                    }
+                                },
+                                "required": ["account_id", "amount"]
+                            }
                         }
                     ]
                 },
@@ -384,6 +431,8 @@ async def mcp_endpoint(request: Request):
                 result = check_limits(**arguments)
             elif tool_name == "getAccountLimits":
                 result = get_account_limits(**arguments)
+            elif tool_name == "updateLimitsAfterTransaction":
+                result = update_limits_after_transaction(**arguments)
             else:
                 return {
                     "jsonrpc": "2.0",
@@ -451,6 +500,7 @@ if __name__ == "__main__":
     logger.info("  3. getPaymentMethodDetails - Get payment method details")
     logger.info("  4. checkLimits - Check if transaction is within limits")
     logger.info("  5. getAccountLimits - Get all account limits")
+    logger.info("  6. updateLimitsAfterTransaction - Update limits after successful payment")
     logger.info("=" * 80)
     logger.info("Protocol: MCP JSON-RPC over HTTP (Azure AI Foundry compatible)")
     logger.info("=" * 80)

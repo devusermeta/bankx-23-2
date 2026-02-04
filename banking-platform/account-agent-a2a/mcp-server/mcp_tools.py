@@ -129,3 +129,26 @@ def get_account_limits(
     """
     logger.info(f"getAccountLimits called: accountId={accountId}")
     return limits_service.get_limits_info(accountId)
+
+
+@mcp.tool(
+    name="updateLimitsAfterTransaction",
+    description="Update daily limits after a successful transaction. Called by Payment Service internally after payment execution."
+)
+def update_limits_after_transaction(
+    accountId: Annotated[str, "Account ID to update limits for"],
+    amount: Annotated[float, "Transaction amount (positive value) to deduct from daily limit"]
+):
+    """
+    Update remaining daily limit after transaction.
+    
+    This is called by Payment Service after successful payment execution.
+    Deducts the amount from remaining_today limit.
+    
+    NOTE: This should only be called by Payment Service, not by agents directly.
+    
+    Example: updateLimitsAfterTransaction("CHK-001", 30000.0)
+    """
+    logger.info(f"updateLimitsAfterTransaction called: accountId={accountId}, amount={amount}")
+    result = limits_service.update_limits_after_transaction(accountId, amount)
+    return result

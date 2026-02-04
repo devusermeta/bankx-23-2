@@ -16,9 +16,9 @@ AZURE_AI_PROJECT_ENDPOINT = os.getenv("AZURE_AI_PROJECT_ENDPOINT")
 # =============================================================================
 # AGENT CONFIGURATION
 # =============================================================================
-AI_MONEY_COACH_AGENT_NAME = os.getenv("AI_MONEY_COACH_AGENT_NAME", "AIMoneyCoachAgent")
+AI_MONEY_COACH_AGENT_NAME = os.getenv("AI_MONEY_COACH_AGENT_NAME", "ai-money-coach-a2a")
 AI_MONEY_COACH_AGENT_VERSION = os.getenv("AI_MONEY_COACH_AGENT_VERSION", "1")
-AI_MONEY_COACH_AGENT_MODEL_DEPLOYMENT = os.getenv("AI_MONEY_COACH_AGENT_MODEL_DEPLOYMENT", "gpt-4.1-mini")
+AI_MONEY_COACH_AGENT_MODEL_DEPLOYMENT = os.getenv("AI_MONEY_COACH_AGENT_MODEL_DEPLOYMENT", "gpt-5-mini")
 
 # =============================================================================
 # MCP SERVER CONFIGURATION (Escalation Comms for ticket creation)

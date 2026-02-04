@@ -11,8 +11,9 @@ import logging
 from typing import AsyncGenerator
 
 from agent_framework import ChatAgent
-from agent_framework.azure import AzureAIAgentClient  # Use AzureAIAgentClient for Foundry agents
+from agent_framework.azure import AzureAIClient  # Use AzureAIClient to reference existing Foundry agent
 from azure.identity.aio import AzureCliCredential
+from azure.ai.projects.aio import AIProjectClient
 
 from audited_mcp_tool import AuditedMCPTool  # Audit wrapper for compliance
 from config import (
@@ -44,6 +45,7 @@ class AccountAgentHandler:
     def __init__(self):
         self.credential = None
         self.instructions: str = ""
+        self.project_client = None
         
         # Agent caching (per thread)
         self._cached_agents: dict[str, ChatAgent] = {}
@@ -55,14 +57,20 @@ class AccountAgentHandler:
 
     async def initialize(self):
         """Initialize Azure AI resources"""
-        # Create Azure CLI credential (same as create_foundry_agent_with_a2a.py)
+        # Create Azure CLI credential
         self.credential = AzureCliCredential()
+
+        # Create AIProjectClient to reference existing Foundry agents
+        self.project_client = AIProjectClient(
+            endpoint=AZURE_AI_PROJECT_ENDPOINT,
+            credential=self.credential
+        )
 
         # Load agent instructions from markdown file
         with open("prompts/account_agent.md", "r", encoding="utf-8") as f:
             self.instructions = f.read()
         
-        logger.info("✅ Handler initialized (Azure credential + instructions loaded)")
+        logger.info("✅ Handler initialized (Azure credential + AIProjectClient + instructions loaded)")
 
     async def _create_mcp_tools(self, customer_id: str | None = None, thread_id: str | None = None) -> list:
         """Create fresh MCP tool instances for each request with audit logging"""
@@ -162,24 +170,21 @@ class AccountAgentHandler:
         user_email = await self._get_user_email(customer_id)
         full_instructions = self.instructions.replace("{user_mail}", user_email)
 
-        # Create AzureAIAgentClient (no thread_id - let Azure create it)
-        # Note: Don't pass thread_id here - Azure will create thread on first message
-        # Use agent_name + agent_version - client handles versioning internally
-        azure_client = AzureAIAgentClient(
-            project_endpoint=AZURE_AI_PROJECT_ENDPOINT,
-            credential=self.credential,
+        # Create AzureAIClient that references the EXISTING Foundry agent
+        # This does NOT create a new agent - it references the agent created by create_agent_in_foundry.py
+        azure_client = AzureAIClient(
+            project_client=self.project_client,
             agent_name=ACCOUNT_AGENT_NAME,
             agent_version=ACCOUNT_AGENT_VERSION,
-            model_deployment_name=ACCOUNT_AGENT_MODEL_DEPLOYMENT,
         )
-        logger.info(f"✅ AzureAIAgentClient created - Agent: {ACCOUNT_AGENT_NAME} v{ACCOUNT_AGENT_VERSION}")
+        logger.info(f"✅ AzureAIClient created - Referencing existing agent: {ACCOUNT_AGENT_NAME}:{ACCOUNT_AGENT_VERSION}")
 
-        # Create ChatAgent with MCP tools (same pattern as old working code)
-        chat_agent = ChatAgent(
-            name="AccountAgent",
-            chat_client=azure_client,
-            instructions=full_instructions,
+        # Create ChatAgent with MCP tools added dynamically
+        # The Foundry agent has NO tools - we add them here to avoid duplication
+        chat_agent = azure_client.create_agent(
+            name=ACCOUNT_AGENT_NAME,
             tools=mcp_tools,
+            instructions=full_instructions,
         )
         
         # Note: Azure creates thread on first message - thread ID available after first run
@@ -288,6 +293,11 @@ class AccountAgentHandler:
         
         # Clear cached agents
         self._cached_agents.clear()
+        
+        # Close project client
+        if self.project_client:
+            await self.project_client.close()
+            logger.info("✅ AIProjectClient closed")
         
         # Close credential
         if self.credential:

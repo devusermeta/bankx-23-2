@@ -23,9 +23,9 @@ AZURE_OPENAI_MINI_DEPLOYMENT_NAME = os.getenv("AZURE_OPENAI_MINI_DEPLOYMENT_NAME
 # =============================================================================
 # AGENT CONFIGURATION
 # =============================================================================
-SUPERVISOR_AGENT_NAME = os.getenv("SUPERVISOR_AGENT_NAME", "SupervisorAgent")
+SUPERVISOR_AGENT_NAME = os.getenv("SUPERVISOR_AGENT_NAME", "supervisor-a2a")
 SUPERVISOR_AGENT_VERSION = os.getenv("SUPERVISOR_AGENT_VERSION", "1")
-SUPERVISOR_AGENT_MODEL_DEPLOYMENT = os.getenv("SUPERVISOR_AGENT_MODEL_DEPLOYMENT", "gpt-4.1-mini")
+SUPERVISOR_AGENT_MODEL_DEPLOYMENT = os.getenv("SUPERVISOR_AGENT_MODEL_DEPLOYMENT", "gpt-5-mini")
 
 # =============================================================================
 # SPECIALIST AGENT A2A URLS

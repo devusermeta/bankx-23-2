@@ -8,8 +8,8 @@ WORKDIR /app
 RUN pip install --no-cache-dir pipx \
 	&& pipx ensurepath \
 	&& pipx install uv
-ENV PATH="/root/.local/bin:$PATH"
-ENV PYTHONPATH="/app/common:$PYTHONPATH"
+ENV PATH="/root/.local/bin:${PATH}"
+ENV PYTHONPATH="/app/common:${PYTHONPATH}"
 
 # Copy service files from build context root
 COPY app/business-api/python/account/ .

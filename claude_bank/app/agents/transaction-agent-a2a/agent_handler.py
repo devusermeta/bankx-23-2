@@ -8,8 +8,9 @@ from pathlib import Path
 from typing import AsyncIterator
 
 from agent_framework import ChatAgent
-from agent_framework.azure import AzureAIAgentClient
+from agent_framework.azure import AzureAIClient
 from azure.identity.aio import AzureCliCredential
+from azure.ai.projects.aio import AIProjectClient
 
 from audited_mcp_tool import AuditedMCPTool
 from config import (
@@ -29,8 +30,17 @@ class TransactionAgentHandler:
     
     def __init__(self):
         self.credential = AzureCliCredential()
+        self.project_client = None
         self._cached_agents = {}  # Cache agents per thread_id
         self._mcp_tools_cache: list | None = None  # Cache MCP tools for performance
+    
+    async def initialize(self):
+        """Initialize Azure AI resources"""
+        self.project_client = AIProjectClient(
+            endpoint=AZURE_AI_PROJECT_ENDPOINT,
+            credential=self.credential
+        )
+        logger.info("✅ TransactionAgentHandler initialized (AIProjectClient created)")
     
     async def _create_mcp_tools(self, customer_id: str, thread_id: str):
         """Create MCP tool connections with audit logging"""
@@ -94,21 +104,18 @@ class TransactionAgentHandler:
         
         mcp_tools = self._mcp_tools_cache
         
-        # Create Azure AI client
-        azure_client = AzureAIAgentClient(
-            project_endpoint=AZURE_AI_PROJECT_ENDPOINT,
-            credential=self.credential,
+        # Create AzureAIClient that references the EXISTING Foundry agent
+        azure_client = AzureAIClient(
+            project_client=self.project_client,
             agent_name=TRANSACTION_AGENT_NAME,
             agent_version=TRANSACTION_AGENT_VERSION,
-            model_deployment_name=TRANSACTION_AGENT_MODEL_DEPLOYMENT,
         )
         
-        # Create ChatAgent
-        chat_agent = ChatAgent(
-            name="TransactionAgent",
-            chat_client=azure_client,
-            instructions=full_instructions,
+        # Create ChatAgent with MCP tools added dynamically
+        chat_agent = azure_client.create_agent(
+            name=TRANSACTION_AGENT_NAME,
             tools=mcp_tools,
+            instructions=full_instructions,
         )
         
         # Cache for future use

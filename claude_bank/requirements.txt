@@ -36,8 +36,15 @@ azure-communication-email==1.0.0
 # Dependency Injection
 dependency-injector==4.48.1
 
-# Agent Framework (Microsoft Custom Package)
-agent-framework-azure-ai
+# Agent Framework (Microsoft Custom Package - NEW Azure AI Foundry SDK)
+# Using latest packages for Azure AI Foundry support with name:version agent format
+agent-framework-core==1.0.0b251223
+agent-framework-azure-ai==1.0.0b251223
+agent-framework-a2a==1.0.0b251223
+
+# Azure AI Foundry SDK (for AIProjectClient)
+azure-ai-projects>=2.0.0b2
+azure-ai-agents==1.2.0b5
 
 # ==============================================================================
 # MCP SERVICES - Model Context Protocol Microservices

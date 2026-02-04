@@ -11,8 +11,9 @@ import logging
 from typing import AsyncGenerator, Any
 
 from agent_framework import ChatAgent
-from agent_framework.azure import AzureAIAgentClient  # Use AzureAIAgentClient for Foundry agents
+from agent_framework.azure import AzureAIClient  # Use AzureAIClient to reference existing Foundry agent
 from azure.identity.aio import AzureCliCredential
+from azure.ai.projects.aio import AIProjectClient
 
 from audited_mcp_tool import AuditedMCPTool  # Audit wrapper for compliance
 from config import (
@@ -49,6 +50,7 @@ class PaymentAgentHandler:
     def __init__(self):
         self.credential = None
         self.instructions: str = ""
+        self.project_client = None
         
         # Agent caching (per thread)
         self._cached_agents: dict[str, ChatAgent] = {}
@@ -64,11 +66,17 @@ class PaymentAgentHandler:
         # Create Azure CLI credential
         self.credential = AzureCliCredential()
 
+        # Create AIProjectClient to reference existing Foundry agents
+        self.project_client = AIProjectClient(
+            endpoint=AZURE_AI_PROJECT_ENDPOINT,
+            credential=self.credential
+        )
+
         # Load agent instructions from markdown file
         with open("prompts/payment_agent.md", "r", encoding="utf-8") as f:
             self.instructions = f.read()
         
-        logger.info("✅ Handler initialized (Azure credential + instructions loaded)")
+        logger.info("✅ Handler initialized (Azure credential + AIProjectClient + instructions loaded)")
 
     async def _create_mcp_tools(self, customer_id: str | None = None, thread_id: str | None = None) -> list:
         """Create fresh MCP tool instances for each request with audit logging"""
@@ -192,22 +200,19 @@ class PaymentAgentHandler:
         user_email = await self._get_user_email(customer_id)
         full_instructions = self.instructions.replace("{user_mail}", user_email)
 
-        # Create AzureAIAgentClient
-        azure_client = AzureAIAgentClient(
-            project_endpoint=AZURE_AI_PROJECT_ENDPOINT,
-            credential=self.credential,
+        # Create AzureAIClient that references the EXISTING Foundry agent
+        azure_client = AzureAIClient(
+            project_client=self.project_client,
             agent_name=PAYMENT_AGENT_NAME,
             agent_version=PAYMENT_AGENT_VERSION,
-            model_deployment_name=PAYMENT_AGENT_MODEL_DEPLOYMENT,
         )
-        logger.info(f"✅ AzureAIAgentClient created - Agent: {PAYMENT_AGENT_NAME} v{PAYMENT_AGENT_VERSION}")
+        logger.info(f"✅ AzureAIClient created - Referencing existing agent: {PAYMENT_AGENT_NAME}:{PAYMENT_AGENT_VERSION}")
 
-        # Create ChatAgent with MCP tools
-        chat_agent = ChatAgent(
-            name="PaymentAgent",
-            chat_client=azure_client,
-            instructions=full_instructions,
+        # Create ChatAgent with MCP tools added dynamically
+        chat_agent = azure_client.create_agent(
+            name=PAYMENT_AGENT_NAME,
             tools=mcp_tools,
+            instructions=full_instructions,
         )
 
         # Cache the agent
@@ -334,6 +339,11 @@ class PaymentAgentHandler:
         
         # Clear cached agents
         self._cached_agents.clear()
+        
+        # Close project client
+        if self.project_client:
+            await self.project_client.close()
+            logger.info("✅ AIProjectClient closed")
         
         # Close credential
         if self.credential:

@@ -16,9 +16,9 @@ AZURE_AI_PROJECT_ENDPOINT = os.getenv("AZURE_AI_PROJECT_ENDPOINT")
 # =============================================================================
 # AGENT CONFIGURATION
 # =============================================================================
-PRODINFO_FAQ_AGENT_NAME = os.getenv("PRODINFO_FAQ_AGENT_NAME", "ProdInfoFAQAgent")
+PRODINFO_FAQ_AGENT_NAME = os.getenv("PRODINFO_FAQ_AGENT_NAME", "prodinfo-faq-a2a")
 PRODINFO_FAQ_AGENT_VERSION = os.getenv("PRODINFO_FAQ_AGENT_VERSION", "1")
-PRODINFO_FAQ_AGENT_MODEL_DEPLOYMENT = os.getenv("PRODINFO_FAQ_AGENT_MODEL_DEPLOYMENT", "gpt-4.1-mini")
+PRODINFO_FAQ_AGENT_MODEL_DEPLOYMENT = os.getenv("PRODINFO_FAQ_AGENT_MODEL_DEPLOYMENT", "gpt-5-mini")
 
 # =============================================================================
 # ESCALATION AGENT A2A CONFIGURATION (for ticket creation)

@@ -11,10 +11,10 @@ load_dotenv(override=True)
 # Azure AI Foundry V2 Configuration
 AZURE_AI_PROJECT_ENDPOINT = os.getenv("AZURE_AI_PROJECT_ENDPOINT")
 AZURE_AI_PROJECT_API_KEY = os.getenv("AZURE_AI_PROJECT_API_KEY")
-ACCOUNT_AGENT_MODEL_DEPLOYMENT = os.getenv("ACCOUNT_AGENT_MODEL_DEPLOYMENT", "gpt-4o")
+ACCOUNT_AGENT_MODEL_DEPLOYMENT = os.getenv("ACCOUNT_AGENT_MODEL_DEPLOYMENT", "gpt-5-mini")
 
 # Agent Name and Version (NEW Foundry V2 format: name:version)
-ACCOUNT_AGENT_NAME = os.getenv("ACCOUNT_AGENT_NAME", "AccountAgent")
+ACCOUNT_AGENT_NAME = os.getenv("ACCOUNT_AGENT_NAME", "account-a2a")
 ACCOUNT_AGENT_VERSION = os.getenv("ACCOUNT_AGENT_VERSION", "1")
 
 # MCP Server URLs

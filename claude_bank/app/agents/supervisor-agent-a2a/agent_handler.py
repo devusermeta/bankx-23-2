@@ -22,7 +22,9 @@ from azure.identity import AzureCliCredential
 from openai import AsyncAzureOpenAI
 
 from agent_framework import ChatAgent
-from agent_framework.azure import AzureAIAgentClient
+from agent_framework.azure import AzureAIClient
+from azure.identity.aio import AzureCliCredential
+from azure.ai.projects.aio import AIProjectClient
 
 from config import (
     AZURE_AI_PROJECT_ENDPOINT,
@@ -75,6 +77,7 @@ class SupervisorAgentHandler:
     def __init__(self):
         """Initialize handler with cache-first strategy"""
         self.credential = AzureCliCredential()
+        self.project_client = None
         self.instructions = self._load_instructions()
         self._cached_agents: dict[str, ChatAgent] = {}
         self._mini_client: AsyncAzureOpenAI | None = None
@@ -204,13 +207,18 @@ class SupervisorAgentHandler:
                 agent = self._cached_agents[thread_id]
                 logger.debug(f"Using cached Supervisor Agent for thread {thread_id}")
             else:
-                # Create Azure AI Agent Client with persistent agent
-                azure_client = AzureAIAgentClient(
-                    project_endpoint=AZURE_AI_PROJECT_ENDPOINT,
-                    credential=self.credential,
+                # Initialize project client if not already done
+                if not self.project_client:
+                    self.project_client = AIProjectClient(
+                        endpoint=AZURE_AI_PROJECT_ENDPOINT,
+                        credential=self.credential
+                    )
+                
+                # Create Azure AI Client that references the EXISTING Foundry agent
+                azure_client = AzureAIClient(
+                    project_client=self.project_client,
                     agent_name=SUPERVISOR_AGENT_NAME,
                     agent_version=SUPERVISOR_AGENT_VERSION,
-                    model_deployment_name=SUPERVISOR_AGENT_MODEL_DEPLOYMENT,
                 )
                 
                 # Create routing instructions
@@ -228,12 +236,11 @@ Query: "{{user_message}}"
 Respond with ONE WORD ONLY - the agent name (lowercase).
 """
                 
-                # Create persistent ChatAgent in Azure AI Foundry
-                agent = ChatAgent(
-                    name="SupervisorAgent",
-                    chat_client=azure_client,
-                    instructions=routing_instructions,
+                # Create persistent ChatAgent with MCP tools added dynamically
+                agent = azure_client.create_agent(
+                    name=SUPERVISOR_AGENT_NAME,
                     tools=[],  # No tools needed for routing
+                    instructions=routing_instructions,
                 )
                 
                 # Cache agent per thread for thread tracking in Azure

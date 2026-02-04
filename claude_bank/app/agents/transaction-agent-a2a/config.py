@@ -17,9 +17,9 @@ if not AZURE_AI_PROJECT_ENDPOINT:
 # =============================================================================
 # AGENT SETTINGS (TransactionAgent in Azure AI Foundry)
 # =============================================================================
-TRANSACTION_AGENT_NAME = os.getenv("TRANSACTION_AGENT_NAME", "TransactionAgent")
+TRANSACTION_AGENT_NAME = os.getenv("TRANSACTION_AGENT_NAME", "transaction-a2a")
 TRANSACTION_AGENT_VERSION = os.getenv("TRANSACTION_AGENT_VERSION", "1")
-TRANSACTION_AGENT_MODEL_DEPLOYMENT = os.getenv("TRANSACTION_AGENT_MODEL_DEPLOYMENT", "gpt-4.1-mini")
+TRANSACTION_AGENT_MODEL_DEPLOYMENT = os.getenv("TRANSACTION_AGENT_MODEL_DEPLOYMENT", "gpt-5-mini")
 
 # Azure AI Model Deployment (fallback)
 AZURE_AI_MODEL_DEPLOYMENT_NAME = os.getenv("AZURE_AI_MODEL_DEPLOYMENT_NAME", "gpt-4.1-mini")

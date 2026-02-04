@@ -11,10 +11,10 @@ load_dotenv(override=True)
 # Azure AI Foundry V2 Configuration
 AZURE_AI_PROJECT_ENDPOINT = os.getenv("AZURE_AI_PROJECT_ENDPOINT")
 AZURE_AI_PROJECT_API_KEY = os.getenv("AZURE_AI_PROJECT_API_KEY")
-PAYMENT_AGENT_MODEL_DEPLOYMENT = os.getenv("PAYMENT_AGENT_MODEL_DEPLOYMENT", "gpt-4o")
+PAYMENT_AGENT_MODEL_DEPLOYMENT = os.getenv("PAYMENT_AGENT_MODEL_DEPLOYMENT", "gpt-5-mini")
 
 # Agent Name and Version (NEW Foundry V2 format: name:version)
-PAYMENT_AGENT_NAME = os.getenv("PAYMENT_AGENT_NAME", "PaymentAgent")
+PAYMENT_AGENT_NAME = os.getenv("PAYMENT_AGENT_NAME", "payment-a2a")
 PAYMENT_AGENT_VERSION = os.getenv("PAYMENT_AGENT_VERSION", "1")
 
 # MCP Server URLs

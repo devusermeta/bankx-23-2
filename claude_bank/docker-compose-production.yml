@@ -1,0 +1,428 @@
+version: '3.8'
+
+# BankX Multi-Agent Banking System - Complete Deployment
+# This docker-compose orchestrates all services for production deployment
+
+networks:
+  bankx-network:
+    driver: bridge
+
+volumes:
+  # Shared volume for user cache and session data
+  bankx-memory:
+    driver: local
+  # Shared volume for conversation history
+  bankx-conversations:
+    driver: local
+  # Shared volume for product data documents
+  bankx-data:
+    driver: local
+
+services:
+  # ============================================================================
+  # MCP SERVICES (Business API Layer) - Ports 8070-8078
+  # ============================================================================
+
+  account-mcp:
+    build:
+      context: ./app/business-api/python/account
+      dockerfile: Dockerfile
+    container_name: bankx-account-mcp
+    ports:
+      - "8070:8070"
+    environment:
+      - PROFILE=dev
+      - PORT=8070
+      - HOST=0.0.0.0
+    networks:
+      - bankx-network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8070/health', timeout=5.0)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+
+  transaction-mcp:
+    build:
+      context: ./app/business-api/python/transaction
+      dockerfile: Dockerfile
+    container_name: bankx-transaction-mcp
+    ports:
+      - "8071:8071"
+    environment:
+      - PROFILE=dev
+      - PORT=8071
+      - HOST=0.0.0.0
+    networks:
+      - bankx-network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8071/health', timeout=5.0)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+
+  payment-mcp:
+    build:
+      context: ./app/business-api/python/payment
+      dockerfile: Dockerfile
+    container_name: bankx-payment-mcp
+    ports:
+      - "8072:8072"
+    environment:
+      - PROFILE=dev
+      - PORT=8072
+      - HOST=0.0.0.0
+      - TRANSACTIONS_API_URL=http://transaction-mcp:8071
+    networks:
+      - bankx-network
+    depends_on:
+      - transaction-mcp
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8072/health', timeout=5.0)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+
+  limits-mcp:
+    build:
+      context: ./app/business-api/python/limits
+      dockerfile: Dockerfile
+    container_name: bankx-limits-mcp
+    ports:
+      - "8073:8073"
+    environment:
+      - PROFILE=dev
+      - PORT=8073
+      - HOST=0.0.0.0
+    networks:
+      - bankx-network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8073/health', timeout=5.0)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+
+  contacts-mcp:
+    build:
+      context: ./app/business-api/python/contacts
+      dockerfile: Dockerfile
+    container_name: bankx-contacts-mcp
+    ports:
+      - "8074:8074"
+    environment:
+      - PROFILE=dev
+      - PORT=8074
+      - HOST=0.0.0.0
+    networks:
+      - bankx-network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8074/health', timeout=5.0)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+
+  audit-mcp:
+    build:
+      context: ./app/business-api/python/audit
+      dockerfile: Dockerfile
+    container_name: bankx-audit-mcp
+    ports:
+      - "8075:8075"
+    environment:
+      - PROFILE=dev
+      - PORT=8075
+      - HOST=0.0.0.0
+    networks:
+      - bankx-network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8075/health', timeout=5.0)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+
+  prodinfo-faq-mcp:
+    build:
+      context: ./app/business-api/python/prodinfo_faq
+      dockerfile: Dockerfile
+    container_name: bankx-prodinfo-faq-mcp
+    ports:
+      - "8076:8076"
+    environment:
+      - PROFILE=dev
+      - PORT=8076
+      - HOST=0.0.0.0
+      # Azure AI Search (UC2)
+      - AZURE_AI_SEARCH_ENDPOINT=${AZURE_AI_SEARCH_ENDPOINT}
+      - AZURE_AI_SEARCH_KEY=${AZURE_AI_SEARCH_KEY}
+      - AZURE_AI_SEARCH_INDEX_UC2=${AZURE_AI_SEARCH_INDEX_UC2:-bankx-products-faq}
+      # Azure AI Foundry (for evaluation)
+      - AZURE_CONTENT_UNDERSTANDING_ENDPOINT=${AZURE_CONTENT_UNDERSTANDING_ENDPOINT}
+      # Azure Cosmos DB (for tickets)
+      - AZURE_COSMOSDB_ENDPOINT=${AZURE_COSMOSDB_ENDPOINT}
+      - AZURE_COSMOSDB_DATABASE=${AZURE_COSMOSDB_DATABASE:-bankx}
+      - AZURE_COSMOSDB_CONTAINER_TICKETS=${AZURE_COSMOSDB_CONTAINER_TICKETS:-support_tickets}
+    volumes:
+      - bankx-data:/app/data:ro
+    networks:
+      - bankx-network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8076/health', timeout=5.0)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+
+  ai-money-coach-mcp:
+    build:
+      context: ./app/business-api/python/ai_money_coach
+      dockerfile: Dockerfile
+    container_name: bankx-ai-money-coach-mcp
+    ports:
+      - "8077:8077"
+    environment:
+      - PROFILE=dev
+      - PORT=8077
+      - HOST=0.0.0.0
+      # Azure AI Search (UC3)
+      - AZURE_AI_SEARCH_ENDPOINT=${AZURE_AI_SEARCH_ENDPOINT}
+      - AZURE_AI_SEARCH_KEY=${AZURE_AI_SEARCH_KEY}
+      - AZURE_AI_SEARCH_INDEX_UC3=${AZURE_AI_SEARCH_INDEX_UC3:-bankx-money-coach}
+      # Azure AI Foundry (for evaluation)
+      - AZURE_CONTENT_UNDERSTANDING_ENDPOINT=${AZURE_CONTENT_UNDERSTANDING_ENDPOINT}
+      # Azure OpenAI (for evaluation)
+      - AZURE_OPENAI_ENDPOINT=${AZURE_OPENAI_ENDPOINT}
+      - AZURE_OPENAI_DEPLOYMENT_NAME=${AZURE_OPENAI_DEPLOYMENT_NAME:-gpt-4o}
+    volumes:
+      - bankx-data:/app/data:ro
+    networks:
+      - bankx-network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8077/health', timeout=5.0)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+
+  escalation-comms-mcp:
+    build:
+      context: ./app/business-api/python/escalation_comms
+      dockerfile: Dockerfile
+    container_name: bankx-escalation-comms-mcp
+    ports:
+      - "8078:8078"
+    environment:
+      - PROFILE=dev
+      - PORT=8078
+      - HOST=0.0.0.0
+      # Azure Cosmos DB (for tickets)
+      - AZURE_COSMOSDB_ENDPOINT=${AZURE_COSMOSDB_ENDPOINT}
+      - AZURE_COSMOSDB_DATABASE=${AZURE_COSMOSDB_DATABASE:-bankx}
+      - AZURE_COSMOSDB_CONTAINER_TICKETS=${AZURE_COSMOSDB_CONTAINER_TICKETS:-support_tickets}
+      # Azure Communication Services (for email)
+      - AZURE_COMMUNICATION_SERVICES_ENDPOINT=${AZURE_COMMUNICATION_SERVICES_ENDPOINT}
+      - AZURE_COMMUNICATION_SERVICES_EMAIL_FROM=${AZURE_COMMUNICATION_SERVICES_EMAIL_FROM:-support@bankx.com}
+    networks:
+      - bankx-network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8078/health', timeout=5.0)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+
+  # ============================================================================
+  # COPILOT BACKEND (Main Orchestrator) - Port 8080
+  # ============================================================================
+
+  copilot-backend:
+    build:
+      context: ./app/copilot
+      dockerfile: Dockerfile
+    container_name: bankx-copilot-backend
+    ports:
+      - "8080:8080"
+    environment:
+      # Application Settings
+      - APP_NAME=BankX Banking Assistant
+      - PROFILE=dev
+      - ENABLE_OTEL=${ENABLE_OTEL:-true}
+      
+      # Azure AI Foundry (Required)
+      - FOUNDRY_PROJECT_ENDPOINT=${FOUNDRY_PROJECT_ENDPOINT}
+      - FOUNDRY_MODEL_DEPLOYMENT_NAME=${FOUNDRY_MODEL_DEPLOYMENT_NAME:-gpt-4o}
+      - AZURE_OPENAI_ENDPOINT=${AZURE_OPENAI_ENDPOINT}
+      - AZURE_OPENAI_CHAT_DEPLOYMENT_NAME=${AZURE_OPENAI_CHAT_DEPLOYMENT_NAME:-gpt-4o}
+      - AZURE_OPENAI_MINI_DEPLOYMENT_NAME=${AZURE_OPENAI_MINI_DEPLOYMENT_NAME:-gpt-4.1-mini}
+      
+      # Azure Storage (for invoice scanning)
+      - AZURE_STORAGE_ACCOUNT=${AZURE_STORAGE_ACCOUNT}
+      - AZURE_STORAGE_CONTAINER=${AZURE_STORAGE_CONTAINER:-content}
+      
+      # Azure Document Intelligence
+      - AZURE_DOCUMENT_INTELLIGENCE_SERVICE=${AZURE_DOCUMENT_INTELLIGENCE_SERVICE}
+      
+      # MCP Service URLs (UC1 - Financial Operations)
+      - ACCOUNT_MCP_URL=http://account-mcp:8070
+      - TRANSACTION_MCP_URL=http://transaction-mcp:8071
+      - PAYMENT_MCP_URL=http://payment-mcp:8072
+      - LIMITS_MCP_URL=http://limits-mcp:8073
+      - CONTACTS_MCP_URL=http://contacts-mcp:8074
+      - AUDIT_MCP_URL=http://audit-mcp:8075
+      
+      # MCP Service URLs (UC2/UC3 - Product FAQ & Money Coach)
+      - PRODINFO_FAQ_MCP_URL=http://prodinfo-faq-mcp:8076
+      - AI_MONEY_COACH_MCP_URL=http://ai-money-coach-mcp:8077
+      - ESCALATION_COMMS_MCP_URL=http://escalation-comms-mcp:8078
+      
+      # Azure AI Agent IDs (optional - reuse existing agents)
+      - SUPERVISOR_AGENT_ID=${SUPERVISOR_AGENT_ID}
+      - PAYMENT_AGENT_ID=${PAYMENT_AGENT_ID}
+      - TRANSACTION_AGENT_ID=${TRANSACTION_AGENT_ID}
+      - ACCOUNT_AGENT_ID=${ACCOUNT_AGENT_ID}
+      - PRODINFO_FAQ_AGENT_ID=${PRODINFO_FAQ_AGENT_ID}
+      - AI_MONEY_COACH_AGENT_ID=${AI_MONEY_COACH_AGENT_ID}
+      - ESCALATION_COMMS_AGENT_ID=${ESCALATION_COMMS_AGENT_ID}
+      
+      # Vector Store IDs (UC2/UC3 knowledge bases)
+      - PRODINFO_FAQ_VECTOR_STORE_IDS=${PRODINFO_FAQ_VECTOR_STORE_IDS}
+      - AI_MONEY_COACH_VECTOR_STORE_IDS=${AI_MONEY_COACH_VECTOR_STORE_IDS}
+      
+      # Azure AI Search (UC2/UC3 RAG)
+      - AZURE_AI_SEARCH_ENDPOINT=${AZURE_AI_SEARCH_ENDPOINT}
+      - AZURE_AI_SEARCH_KEY=${AZURE_AI_SEARCH_KEY}
+      - AZURE_AI_SEARCH_INDEX_UC2=${AZURE_AI_SEARCH_INDEX_UC2:-bankx-products-faq}
+      - AZURE_AI_SEARCH_INDEX_UC3=${AZURE_AI_SEARCH_INDEX_UC3:-bankx-money-coach}
+      
+      # Azure Content Understanding (UC3 grounding validation)
+      - AZURE_CONTENT_UNDERSTANDING_ENDPOINT=${AZURE_CONTENT_UNDERSTANDING_ENDPOINT}
+      
+      # Azure Cosmos DB (for conversations and tickets)
+      - AZURE_COSMOSDB_ENDPOINT=${AZURE_COSMOSDB_ENDPOINT}
+      - AZURE_COSMOSDB_DATABASE=${AZURE_COSMOSDB_DATABASE:-bankx}
+      - AZURE_COSMOSDB_CONTAINER_TICKETS=${AZURE_COSMOSDB_CONTAINER_TICKETS:-support_tickets}
+      
+      # Azure Communication Services (for email notifications)
+      - AZURE_COMMUNICATION_SERVICES_ENDPOINT=${AZURE_COMMUNICATION_SERVICES_ENDPOINT}
+      - AZURE_COMMUNICATION_SERVICES_EMAIL_FROM=${AZURE_COMMUNICATION_SERVICES_EMAIL_FROM:-support@bankx.com}
+      
+      # Azure Managed Identity
+      - AZURE_CLIENT_ID=${AZURE_CLIENT_ID}
+      
+      # Azure Authentication (Microsoft Entra ID)
+      - AZURE_AUTH_TENANT_ID=${AZURE_AUTH_TENANT_ID}
+      - AZURE_APP_CLIENT_ID=${AZURE_APP_CLIENT_ID}
+      
+      # Application Insights (Observability)
+      - APPLICATIONINSIGHTS_CONNECTION_STRING=${APPLICATIONINSIGHTS_CONNECTION_STRING}
+      - OTEL_RESOURCE_ATTRIBUTES=service.name=Copilot Multi Agent Chat API,service.version=1.0.0
+    
+    volumes:
+      - bankx-memory:/app/memory
+      - bankx-conversations:/app/conversations
+      - bankx-data:/app/data:ro
+    
+    networks:
+      - bankx-network
+    
+    depends_on:
+      - account-mcp
+      - transaction-mcp
+      - payment-mcp
+      - limits-mcp
+      - contacts-mcp
+      - audit-mcp
+      - prodinfo-faq-mcp
+      - ai-money-coach-mcp
+      - escalation-comms-mcp
+    
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8080/health', timeout=5.0)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    
+    restart: unless-stopped
+
+  # ============================================================================
+  # FRONTEND (React + Nginx) - Port 8081 (or 80 for production)
+  # ============================================================================
+
+  frontend:
+    build:
+      context: ./app/frontend
+      dockerfile: Dockerfile
+    container_name: bankx-frontend
+    ports:
+      - "8081:80"
+    environment:
+      - REACT_APP_API_BASE_URL=http://copilot-backend:8080
+      - VITE_BACKEND_URI=http://localhost:8080/api
+      - VITE_AZURE_CLIENT_ID=${VITE_AZURE_CLIENT_ID}
+      - VITE_AZURE_TENANT_ID=${VITE_AZURE_TENANT_ID}
+    networks:
+      - bankx-network
+    depends_on:
+      - copilot-backend
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+
+# ============================================================================
+# USAGE INSTRUCTIONS
+# ============================================================================
+#
+# 1. SETUP ENVIRONMENT:
+#    Create a .env file in the project root with all required variables.
+#    See .env.example for template.
+#
+# 2. BUILD ALL SERVICES:
+#    docker-compose build
+#
+# 3. START ALL SERVICES:
+#    docker-compose up -d
+#
+# 4. VIEW LOGS:
+#    docker-compose logs -f [service-name]
+#    Example: docker-compose logs -f copilot-backend
+#
+# 5. STOP ALL SERVICES:
+#    docker-compose down
+#
+# 6. REBUILD AND RESTART:
+#    docker-compose up -d --build
+#
+# 7. CHECK SERVICE HEALTH:
+#    docker-compose ps
+#
+# 8. ACCESS SERVICES:
+#    Frontend:              http://localhost:8081
+#    Copilot Backend:       http://localhost:8080
+#    MCP Services:          http://localhost:8070-8078
+#
+# 9. SCALE A SERVICE (if needed):
+#    docker-compose up -d --scale copilot-backend=2
+#
+# 10. CLEANUP (remove volumes):
+#     docker-compose down -v
+#
+# ============================================================================

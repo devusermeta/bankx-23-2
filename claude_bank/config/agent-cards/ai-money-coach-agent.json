@@ -1,0 +1,110 @@
+{
+  "agent_id": "ai-money-coach-agent-001",
+  "agent_name": "AIMoneyCoachAgent",
+  "agent_type": "knowledge",
+  "version": "1.0.0",
+  "description": "Provides AI-powered personal finance coaching and debt management guidance grounded in financial literacy content",
+  "capabilities": [
+    {
+      "name": "coaching.debt_management",
+      "description": "Provide debt management coaching from 'Debt-Free to Financial Freedom' guide",
+      "input_schema": {
+        "customer_id": "string",
+        "query": "string",
+        "financial_context": "object (optional)"
+      },
+      "output_schema": "COACHING_CARD"
+    },
+    {
+      "name": "coaching.financial_health",
+      "description": "Assess financial health level (Ordinary vs Critical Patient)",
+      "input_schema": {
+        "customer_id": "string",
+        "debt_to_income_ratio": "number (optional)",
+        "situation_description": "string"
+      },
+      "output_schema": "HEALTH_ASSESSMENT_CARD"
+    },
+    {
+      "name": "coaching.clarification",
+      "description": "Clarification-first approach for personalized financial advice",
+      "input_schema": {
+        "customer_id": "string",
+        "initial_query": "string"
+      },
+      "output_schema": "CLARIFICATION_CARD"
+    },
+    {
+      "name": "coaching.emergency_plan",
+      "description": "Provide Strong Medicine Plan for critical financial situations",
+      "input_schema": {
+        "customer_id": "string",
+        "debt_details": "array",
+        "income_expense_data": "object"
+      },
+      "output_schema": "EMERGENCY_PLAN_CARD"
+    },
+    {
+      "name": "ticket.create_escalation",
+      "description": "Create escalation ticket for complex cases requiring human intervention",
+      "input_schema": {
+        "customer_id": "string",
+        "case_summary": "string",
+        "urgency_level": "string"
+      },
+      "output_schema": "TICKET_CARD"
+    }
+  ],
+  "mcp_tools": [
+    {
+      "tool_name": "AIMoneyCoach.ai_search_rag_results",
+      "description": "Search 'Debt-Free to Financial Freedom' using Azure AI Search",
+      "endpoint": "http://localhost:8075"
+    },
+    {
+      "tool_name": "AIMoneyCoach.ai_foundry_content_understanding",
+      "description": "Validate and ground responses using AI Foundry",
+      "endpoint": "http://localhost:8075"
+    },
+    {
+      "tool_name": "AIMoneyCoach.createTicket",
+      "description": "Create support ticket for escalation",
+      "endpoint": "http://localhost:8075"
+    }
+  ],
+  "endpoints": {
+    "http": "http://localhost:8106",
+    "health": "http://localhost:8106/health",
+    "metrics": "http://localhost:8106/metrics",
+    "a2a": "http://localhost:8106/a2a/invoke"
+  },
+  "health_check_url": "http://localhost:8106/health",
+  "performance": {
+    "average_latency_ms": 800,
+    "p95_latency_ms": 2000,
+    "p99_latency_ms": 4000,
+    "max_concurrent_requests": 30
+  },
+  "dependencies": {
+    "mcp_services": ["AIMoneyCoach MCP Server"],
+    "other_agents": ["EscalationCommsAgent"],
+    "external_services": ["Azure AI Search", "Azure AI Foundry", "APIM Gateway"]
+  },
+  "output_formats": [
+    "COACHING_CARD",
+    "HEALTH_ASSESSMENT_CARD",
+    "CLARIFICATION_CARD",
+    "EMERGENCY_PLAN_CARD",
+    "TICKET_CARD"
+  ],
+  "metadata": {
+    "owner_team": "UC3 Team",
+    "support_contact": "uc3-support@bankx.com",
+    "documentation_url": "https://docs.bankx.com/agents/ai-money-coach",
+    "knowledge_base": "Debt-Free to Financial Freedom (12 chapters)",
+    "max_concurrent_requests": 30,
+    "average_response_time_ms": 800
+  },
+  "status": "active",
+  "tags": ["uc3", "knowledge", "financial-coaching", "debt-management", "ai-powered"]
+}

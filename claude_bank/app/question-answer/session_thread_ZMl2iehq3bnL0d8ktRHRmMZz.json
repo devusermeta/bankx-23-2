@@ -1,0 +1,23 @@
+{
+  "session_id": "thread_ZMl2iehq3bnL0d8ktRHRmMZz",
+  "customer_id": "CUST-002",
+  "user_email": "nattaporn@bankxthb.onmicrosoft.com",
+  "started_at": "2025-12-31T21:23:15.420831",
+  "last_updated": "2025-12-31T21:24:01.830975",
+  "conversation": [
+    {
+      "question": "transfer 25THB to Somchai",
+      "answer": "I found **Somchai Rattanakorn** in your beneficiaries list with account number **123-456-001**.\n\n### ⚠️ PAYMENT CONFIRMATION REQUIRED ⚠️\nPlease confirm to proceed with this payment:\n- **Amount**: 25 THB\n- **Recipient**: Somchai Rattanakorn\n- **Account**: 123-456-001\n\nReply 'Yes' or 'Confirm' to proceed with the payment.",
+      "timestamp": "2025-12-31T21:23:15.420831",
+      "agent_used": "PaymentAgent",
+      "duration_seconds": 33.01685094833374
+    },
+    {
+      "question": "Yes, confirm the payment",
+      "answer": "Your payment of **25 THB** to **Somchai Rattanakorn** has been successfully completed!\n\n### Payment Details:\n- **Amount**: 25 THB\n- **Recipient**: Somchai Rattanakorn\n- **Account**: 123-456-001\n\nYour remaining balance is **78,815.00 THB**.",
+      "timestamp": "2025-12-31T21:24:01.830975",
+      "agent_used": "PaymentAgent",
+      "duration_seconds": 44.45756196975708
+    }
+  ]
+}

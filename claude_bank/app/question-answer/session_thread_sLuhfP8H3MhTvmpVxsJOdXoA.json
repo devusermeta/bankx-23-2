@@ -1,0 +1,23 @@
+{
+  "session_id": "thread_sLuhfP8H3MhTvmpVxsJOdXoA",
+  "customer_id": "CUST-002",
+  "user_email": "nattaporn@bankxthb.onmicrosoft.com",
+  "started_at": "2025-12-31T23:28:49.289923",
+  "last_updated": "2026-01-01T00:01:09.191446",
+  "conversation": [
+    {
+      "question": "transfer 100 THB to Somchai",
+      "answer": "⚠️ **PAYMENT CONFIRMATION REQUIRED** ⚠️  \nPlease confirm to proceed with this payment:  \n- **Amount**: 100 THB  \n- **Recipient**: Somchai Rattanakorn  \n- **Account Number**: 123-456-001  \n\nReply **'Yes'** or **'Confirm'** to proceed with the payment.",
+      "timestamp": "2025-12-31T23:28:49.289923",
+      "agent_used": "PaymentAgent",
+      "duration_seconds": 39.50321960449219
+    },
+    {
+      "question": "what is avalanche method?",
+      "answer": "The avalanche method involves paying off debts in order of their interest rates, starting with the highest. Make minimum payments on all debts, and direct extra funds toward the debt with the highest interest rate. This method reduces overall interest paid over time. (Source: Chapter 4)",
+      "timestamp": "2026-01-01T00:01:09.191446",
+      "agent_used": "AIMoneyCoachAgent",
+      "duration_seconds": 53.35352897644043
+    }
+  ]
+}

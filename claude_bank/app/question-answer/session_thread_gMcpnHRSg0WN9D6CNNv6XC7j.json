@@ -1,0 +1,23 @@
+{
+  "session_id": "thread_gMcpnHRSg0WN9D6CNNv6XC7j",
+  "customer_id": "CUST-002",
+  "user_email": "nattaporn@bankxthb.onmicrosoft.com",
+  "started_at": "2025-12-31T18:32:32.400670",
+  "last_updated": "2025-12-31T18:33:26.060180",
+  "conversation": [
+    {
+      "question": "transfer 1000 THB to Apichat",
+      "answer": "I found \"Apichat\" in your registered beneficiaries with the account number **123-456-010**.\n\n### ⚠️ PAYMENT CONFIRMATION REQUIRED ⚠️\nPlease confirm to proceed with this payment:\n- **Amount**: 1,000 THB\n- **Recipient**: Apichat Wattanakul\n- **Account**: 123-456-010\n\nReply 'Yes' or 'Confirm' to proceed with the payment.",
+      "timestamp": "2025-12-31T18:32:32.400670",
+      "agent_used": "PaymentAgent",
+      "duration_seconds": 36.192168951034546
+    },
+    {
+      "question": "Yes, confirm the payment",
+      "answer": "The payment of 1,000 THB to Apichat Wattanakul (Account: 123-456-010) has been successfully completed. Your new balance is 78,850 THB.",
+      "timestamp": "2025-12-31T18:33:26.060180",
+      "agent_used": "PaymentAgent",
+      "duration_seconds": 44.90457463264465
+    }
+  ]
+}

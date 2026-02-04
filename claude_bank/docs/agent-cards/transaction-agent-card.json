@@ -1,0 +1,185 @@
+{
+  "agent_id": "GENERATED_ON_STARTUP",
+  "agent_name": "TransactionHistoryAgent",
+  "agent_type": "domain",
+  "version": "1.0.0",
+  "description": "Domain agent responsible for transaction history queries, aggregations, and transaction details. Handles natural language date parsing and normalization to Asia/Bangkok timezone. Part of UC1 (Financial Operations).",
+
+  "capabilities": [
+    {
+      "name": "transaction.history",
+      "description": "Retrieve transaction history with date range filtering and natural language date support",
+      "input_schema": {
+        "customer_id": "string (required)",
+        "account_id": "string (optional)",
+        "from_date": "string (ISO date or natural language)",
+        "to_date": "string (ISO date or natural language)",
+        "category": "string (optional)",
+        "direction": "string (IN|OUT|ALL, optional)"
+      },
+      "output_schema": "TXN_TABLE",
+      "natural_language_examples": [
+        "last Friday",
+        "this week",
+        "October 24",
+        "yesterday",
+        "last 7 days"
+      ],
+      "example_request": {
+        "customer_id": "CUST-001",
+        "from_date": "last Friday",
+        "to_date": "last Friday"
+      },
+      "example_response": {
+        "type": "TXN_TABLE",
+        "account_id": "CHK-001",
+        "rows": [
+          {
+            "txn_id": "T000044",
+            "date": "2025-10-24",
+            "amount": 2000.00,
+            "direction": "IN",
+            "description": "Transfer from Krit"
+          }
+        ],
+        "total_count": 1,
+        "summary": {
+          "total_in": 2000.00,
+          "total_out": 0.00,
+          "net": 2000.00
+        }
+      }
+    },
+    {
+      "name": "transaction.aggregation",
+      "description": "Perform aggregations on transactions (COUNT, SUM_IN, SUM_OUT, NET, CATEGORY_BREAKDOWN)",
+      "input_schema": {
+        "customer_id": "string (required)",
+        "account_id": "string (optional)",
+        "from_date": "string",
+        "to_date": "string",
+        "aggregation_type": "string (COUNT|SUM|CATEGORY|NET)"
+      },
+      "output_schema": "INSIGHTS_CARD",
+      "example_request": {
+        "customer_id": "CUST-001",
+        "from_date": "2025-10-01",
+        "to_date": "2025-10-31",
+        "aggregation_type": "CATEGORY"
+      },
+      "example_response": {
+        "type": "INSIGHTS_CARD",
+        "period": "October 2025",
+        "total_transactions": 15,
+        "category_breakdown": [
+          {"category": "Transfer", "count": 10, "total": 15000.00},
+          {"category": "Shopping", "count": 5, "total": 3000.00}
+        ]
+      }
+    },
+    {
+      "name": "transaction.details",
+      "description": "Get detailed information for a single transaction",
+      "input_schema": {
+        "customer_id": "string (required)",
+        "txn_id": "string (required)"
+      },
+      "output_schema": "TXN_DETAIL",
+      "example_response": {
+        "type": "TXN_DETAIL",
+        "txn_id": "T000044",
+        "timestamp": "2025-10-24T10:00:00+07:00",
+        "amount": 2000.00,
+        "direction": "IN",
+        "description": "Transfer from Krit Boonyarat",
+        "category": "Transfer",
+        "status": "POSTED",
+        "counterparty": {
+          "name": "Krit Boonyarat",
+          "account_no": "123-456-006"
+        }
+      }
+    }
+  ],
+
+  "date_normalization": {
+    "timezone": "Asia/Bangkok (+07:00)",
+    "supported_formats": [
+      "ISO 8601 (2025-10-24)",
+      "Natural language (last Friday, yesterday, this week)",
+      "Relative dates (last 7 days, past month)"
+    ],
+    "examples": {
+      "last Friday": "Most recent Friday before today",
+      "this week": "Monday to Sunday of current week",
+      "October 24": "2025-10-24 (current year assumed)",
+      "yesterday": "Previous day from current date"
+    }
+  },
+
+  "mcp_tools": [
+    {
+      "tool_name": "Reporting.searchTransactions",
+      "description": "Query transactions by account, date range, and filters",
+      "endpoint": "http://localhost:8071",
+      "apim_route": "/reporting/searchTransactions"
+    },
+    {
+      "tool_name": "Reporting.aggregateTransactions",
+      "description": "Perform aggregations on transaction data",
+      "endpoint": "http://localhost:8071",
+      "apim_route": "/reporting/aggregateTransactions"
+    },
+    {
+      "tool_name": "Reporting.getTransactionDetails",
+      "description": "Fetch details for a specific transaction",
+      "endpoint": "http://localhost:8071",
+      "apim_route": "/reporting/getTransactionDetails"
+    }
+  ],
+
+  "endpoints": {
+    "http": "http://localhost:8101",
+    "health": "http://localhost:8101/health",
+    "metrics": "http://localhost:8101/metrics",
+    "a2a": "http://localhost:8101/a2a/invoke"
+  },
+
+  "performance": {
+    "average_latency_ms": 350,
+    "p95_latency_ms": 700,
+    "p99_latency_ms": 1200,
+    "max_concurrent_requests": 150,
+    "typical_mcp_calls_per_request": 2
+  },
+
+  "dependencies": {
+    "mcp_services": ["Reporting MCP Server (port 8071)"],
+    "other_agents": ["AccountAgent (for account resolution)"],
+    "external_services": ["APIM Gateway", "Agent Registry"]
+  },
+
+  "output_formats": [
+    "TXN_TABLE",
+    "INSIGHTS_CARD",
+    "AGGREGATION_RESULT",
+    "TXN_DETAIL"
+  ],
+
+  "metadata": {
+    "owner_team": "UC1 Team",
+    "support_contact": "uc1-team@bankx.com",
+    "documentation_url": "https://docs.bankx.com/agents/transaction",
+    "use_cases": ["UC1"],
+    "user_stories": [
+      "US 1.1 - View Transactions",
+      "US 1.2 - Transaction Aggregations",
+      "US 1.5 - View Single Transaction Details"
+    ],
+    "deployment_mode": "replicated",
+    "min_replicas": 3,
+    "max_replicas": 15
+  },
+
+  "tags": ["uc1", "financial-operations", "transaction-history", "domain-agent", "reporting"]
+}

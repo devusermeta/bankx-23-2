@@ -1,0 +1,60 @@
+[project]
+name = "ai-money-coach-agent-a2a"
+version = "1.0.0"
+description = "AIMoneyCoachAgent A2A Microservice - Personal Finance Advisory Service"
+requires-python = ">=3.11"
+
+dependencies = [
+    # Agent Framework (PyPI packages - same versions as agent-framework-1 uses)
+    "agent-framework-core==1.0.0b251223",
+    "agent-framework-azure-ai==1.0.0b251223",
+    "agent-framework-a2a==1.0.0b251223",
+    
+    # Azure AI Foundry V2 SDK (same as agent-framework-azure-ai uses)
+    "azure-ai-projects>=2.0.0b2",
+    "azure-ai-agents==1.2.0b5",
+    
+    # A2A SDK (same as agent-framework-a2a uses)
+    "a2a-sdk>=0.3.5",
+    
+    # Azure Identity (same as agent-framework-core uses)
+    "azure-identity>=1,<2",
+    
+    # Pydantic (same as agent-framework-core uses)
+    "pydantic>=2,<3",
+    "pydantic-settings>=2,<3",
+    
+    # OpenAI SDK (same as agent-framework-core uses)
+    "openai>=1.99.0",
+    
+    # MCP support (same as agent-framework-core uses)
+    "mcp[ws]>=1.23",
+    
+    # FastAPI for A2A HTTP server
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.30.0",
+    
+    # HTTP client (same as agent-framework-azure-ai uses)
+    "aiohttp",
+    "httpx>=0.27.0",
+    
+    # Environment variables
+    "python-dotenv>=1.0.0",
+    
+    # Utilities
+    "typing-extensions",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["."]
+
+[tool.uv]
+dev-dependencies = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "httpx>=0.27.0",
+]

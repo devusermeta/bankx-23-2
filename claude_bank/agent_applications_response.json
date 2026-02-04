@@ -1,0 +1,375 @@
+{
+  "value": [
+    {
+      "id": "/subscriptions/e0783b50-4ca5-4059-83c1-524f39faa624/resourceGroups/rg-banking-new/providers/Microsoft.CognitiveServices/accounts/banking-new-resource/projects/banking-new/applications/TransactionAgent",
+      "name": "TransactionAgent",
+      "type": "Microsoft.CognitiveServices/accounts/projects/applications",
+      "properties": {
+        "description": null,
+        "tags": null,
+        "properties": null,
+        "applicationId": "ab4ff6b6-de7d-486d-83c2-99f0edcf1d36",
+        "displayName": "TransactionAgent",
+        "baseUrl": "https://banking-new-resource.services.ai.azure.com/api/projects/banking-new/applications/TransactionAgent",
+        "agents": [
+          {
+            "agentId": "azureml://subscriptions/e0783b50-4ca5-4059-83c1-524f39faa624/resourceGroups/rg-banking-new/workspaces/banking-new-resource@banking-new@AML/applications/TransactionAgent/agents/TransactionAgent",
+            "agentName": "TransactionAgent"
+          }
+        ],
+        "agentIdentityBlueprint": {
+          "kind": "AgentBlueprint",
+          "type": "System",
+          "clientId": "b3af5bae-903f-4188-a326-2de4dcc117a3",
+          "principalId": "b3af5bae-903f-4188-a326-2de4dcc117a3",
+          "tenantId": "c1e8c736-fd22-4d7b-a7a2-12c6f36ac388",
+          "subject": null,
+          "provisioningState": "Creating"
+        },
+        "defaultInstanceIdentity": {
+          "kind": "AgentInstance",
+          "type": "System",
+          "clientId": "ae540a6c-4dec-4070-a000-cbf1760eb083",
+          "principalId": "b3af5bae-903f-4188-a326-2de4dcc117a3",
+          "tenantId": "c1e8c736-fd22-4d7b-a7a2-12c6f36ac388",
+          "subject": null,
+          "provisioningState": "Creating"
+        },
+        "authorizationPolicy": {
+          "authorizationScheme": "Default"
+        },
+        "trafficRoutingPolicy": {
+          "protocol": "FixedRatio",
+          "rules": [
+            {
+              "ruleId": "default",
+              "description": "Default rule routing all traffic to the first deployment",
+              "deploymentId": "",
+              "trafficPercentage": 100
+            }
+          ]
+        },
+        "provisioningState": "Succeeded",
+        "isEnabled": true
+      }
+    },
+    {
+      "id": "/subscriptions/e0783b50-4ca5-4059-83c1-524f39faa624/resourceGroups/rg-banking-new/providers/Microsoft.CognitiveServices/accounts/banking-new-resource/projects/banking-new/applications/ProdInfoFAQAgent",
+      "name": "ProdInfoFAQAgent",
+      "type": "Microsoft.CognitiveServices/accounts/projects/applications",
+      "properties": {
+        "description": null,
+        "tags": null,
+        "properties": null,
+        "applicationId": "f6f1d5a8-a4e9-4ecf-aecc-f718b457f644",
+        "displayName": "ProdInfoFAQAgent",
+        "baseUrl": "https://banking-new-resource.services.ai.azure.com/api/projects/banking-new/applications/ProdInfoFAQAgent",
+        "agents": [
+          {
+            "agentId": "azureml://subscriptions/e0783b50-4ca5-4059-83c1-524f39faa624/resourceGroups/rg-banking-new/workspaces/banking-new-resource@banking-new@AML/applications/ProdInfoFAQAgent/agents/ProdInfoFAQAgent",
+            "agentName": "ProdInfoFAQAgent"
+          }
+        ],
+        "agentIdentityBlueprint": {
+          "kind": "AgentBlueprint",
+          "type": "System",
+          "clientId": "ff4a77c3-53e9-484b-b17a-7c9c7500156b",
+          "principalId": "ff4a77c3-53e9-484b-b17a-7c9c7500156b",
+          "tenantId": "c1e8c736-fd22-4d7b-a7a2-12c6f36ac388",
+          "subject": null,
+          "provisioningState": "Creating"
+        },
+        "defaultInstanceIdentity": {
+          "kind": "AgentInstance",
+          "type": "System",
+          "clientId": "33c71cdc-e99d-49e4-85c1-865920a9bfe1",
+          "principalId": "ff4a77c3-53e9-484b-b17a-7c9c7500156b",
+          "tenantId": "c1e8c736-fd22-4d7b-a7a2-12c6f36ac388",
+          "subject": null,
+          "provisioningState": "Creating"
+        },
+        "authorizationPolicy": {
+          "authorizationScheme": "Default"
+        },
+        "trafficRoutingPolicy": {
+          "protocol": "FixedRatio",
+          "rules": [
+            {
+              "ruleId": "default",
+              "description": "Default rule routing all traffic to the first deployment",
+              "deploymentId": "",
+              "trafficPercentage": 100
+            }
+          ]
+        },
+        "provisioningState": "Succeeded",
+        "isEnabled": true
+      }
+    },
+    {
+      "id": "/subscriptions/e0783b50-4ca5-4059-83c1-524f39faa624/resourceGroups/rg-banking-new/providers/Microsoft.CognitiveServices/accounts/banking-new-resource/projects/banking-new/applications/AIMoneyCoachAgent",
+      "name": "AIMoneyCoachAgent",
+      "type": "Microsoft.CognitiveServices/accounts/projects/applications",
+      "properties": {
+        "description": null,
+        "tags": null,
+        "properties": null,
+        "applicationId": "d2ed4156-a8a6-4c23-95b3-e8d37951a761",
+        "displayName": "AIMoneyCoachAgent",
+        "baseUrl": "https://banking-new-resource.services.ai.azure.com/api/projects/banking-new/applications/AIMoneyCoachAgent",
+        "agents": [
+          {
+            "agentId": "azureml://subscriptions/e0783b50-4ca5-4059-83c1-524f39faa624/resourceGroups/rg-banking-new/workspaces/banking-new-resource@banking-new@AML/applications/AIMoneyCoachAgent/agents/AIMoneyCoachAgent",
+            "agentName": "AIMoneyCoachAgent"
+          }
+        ],
+        "agentIdentityBlueprint": {
+          "kind": "AgentBlueprint",
+          "type": "System",
+          "clientId": "60834169-4356-4daf-bfcf-99fd25d3f418",
+          "principalId": "60834169-4356-4daf-bfcf-99fd25d3f418",
+          "tenantId": "c1e8c736-fd22-4d7b-a7a2-12c6f36ac388",
+          "subject": null,
+          "provisioningState": "Creating"
+        },
+        "defaultInstanceIdentity": {
+          "kind": "AgentInstance",
+          "type": "System",
+          "clientId": "ca899aab-44ad-47ed-98bc-343dd0b39f3a",
+          "principalId": "60834169-4356-4daf-bfcf-99fd25d3f418",
+          "tenantId": "c1e8c736-fd22-4d7b-a7a2-12c6f36ac388",
+          "subject": null,
+          "provisioningState": "Creating"
+        },
+        "authorizationPolicy": {
+          "authorizationScheme": "Default"
+        },
+        "trafficRoutingPolicy": {
+          "protocol": "FixedRatio",
+          "rules": [
+            {
+              "ruleId": "default",
+              "description": "Default rule routing all traffic to the first deployment",
+              "deploymentId": "",
+              "trafficPercentage": 100
+            }
+          ]
+        },
+        "provisioningState": "Succeeded",
+        "isEnabled": true
+      }
+    },
+    {
+      "id": "/subscriptions/e0783b50-4ca5-4059-83c1-524f39faa624/resourceGroups/rg-banking-new/providers/Microsoft.CognitiveServices/accounts/banking-new-resource/projects/banking-new/applications/EscalationAgent",
+      "name": "EscalationAgent",
+      "type": "Microsoft.CognitiveServices/accounts/projects/applications",
+      "properties": {
+        "description": null,
+        "tags": null,
+        "properties": null,
+        "applicationId": "c1da5211-ccd5-426e-8f1d-1f23f1c72ecf",
+        "displayName": "EscalationAgent",
+        "baseUrl": "https://banking-new-resource.services.ai.azure.com/api/projects/banking-new/applications/EscalationAgent",
+        "agents": [
+          {
+            "agentId": "azureml://subscriptions/e0783b50-4ca5-4059-83c1-524f39faa624/resourceGroups/rg-banking-new/workspaces/banking-new-resource@banking-new@AML/applications/EscalationAgent/agents/EscalationAgent",
+            "agentName": "EscalationAgent"
+          }
+        ],
+        "agentIdentityBlueprint": {
+          "kind": "AgentBlueprint",
+          "type": "System",
+          "clientId": "4c4777f3-0f28-4b0f-ad48-038f09150aa0",
+          "principalId": "4c4777f3-0f28-4b0f-ad48-038f09150aa0",
+          "tenantId": "c1e8c736-fd22-4d7b-a7a2-12c6f36ac388",
+          "subject": null,
+          "provisioningState": "Creating"
+        },
+        "defaultInstanceIdentity": {
+          "kind": "AgentInstance",
+          "type": "System",
+          "clientId": "31856c8d-1b84-4912-b1f1-5bfdd9daa0f1",
+          "principalId": "4c4777f3-0f28-4b0f-ad48-038f09150aa0",
+          "tenantId": "c1e8c736-fd22-4d7b-a7a2-12c6f36ac388",
+          "subject": null,
+          "provisioningState": "Creating"
+        },
+        "authorizationPolicy": {
+          "authorizationScheme": "Default"
+        },
+        "trafficRoutingPolicy": {
+          "protocol": "FixedRatio",
+          "rules": [
+            {
+              "ruleId": "default",
+              "description": "Default rule routing all traffic to the first deployment",
+              "deploymentId": "",
+              "trafficPercentage": 100
+            }
+          ]
+        },
+        "provisioningState": "Succeeded",
+        "isEnabled": true
+      }
+    },
+    {
+      "id": "/subscriptions/e0783b50-4ca5-4059-83c1-524f39faa624/resourceGroups/rg-banking-new/providers/Microsoft.CognitiveServices/accounts/banking-new-resource/projects/banking-new/applications/SupervisorAgent",
+      "name": "SupervisorAgent",
+      "type": "Microsoft.CognitiveServices/accounts/projects/applications",
+      "properties": {
+        "description": null,
+        "tags": null,
+        "properties": null,
+        "applicationId": "d2e28ac3-51a3-43d7-8731-a0b09bac69e9",
+        "displayName": "SupervisorAgent",
+        "baseUrl": "https://banking-new-resource.services.ai.azure.com/api/projects/banking-new/applications/SupervisorAgent",
+        "agents": [
+          {
+            "agentId": "azureml://subscriptions/e0783b50-4ca5-4059-83c1-524f39faa624/resourceGroups/rg-banking-new/workspaces/banking-new-resource@banking-new@AML/applications/SupervisorAgent/agents/SupervisorAgent",
+            "agentName": "SupervisorAgent"
+          }
+        ],
+        "agentIdentityBlueprint": {
+          "kind": "AgentBlueprint",
+          "type": "System",
+          "clientId": "ba24f8b3-f9ae-4221-b712-d773992309ec",
+          "principalId": "ba24f8b3-f9ae-4221-b712-d773992309ec",
+          "tenantId": "c1e8c736-fd22-4d7b-a7a2-12c6f36ac388",
+          "subject": null,
+          "provisioningState": "Creating"
+        },
+        "defaultInstanceIdentity": {
+          "kind": "AgentInstance",
+          "type": "System",
+          "clientId": "3ce3bc67-dcde-4a31-a592-e7628d52e302",
+          "principalId": "ba24f8b3-f9ae-4221-b712-d773992309ec",
+          "tenantId": "c1e8c736-fd22-4d7b-a7a2-12c6f36ac388",
+          "subject": null,
+          "provisioningState": "Creating"
+        },
+        "authorizationPolicy": {
+          "authorizationScheme": "Default"
+        },
+        "trafficRoutingPolicy": {
+          "protocol": "FixedRatio",
+          "rules": [
+            {
+              "ruleId": "default",
+              "description": "Default rule routing all traffic to the first deployment",
+              "deploymentId": "",
+              "trafficPercentage": 100
+            }
+          ]
+        },
+        "provisioningState": "Succeeded",
+        "isEnabled": true
+      }
+    },
+    {
+      "id": "/subscriptions/e0783b50-4ca5-4059-83c1-524f39faa624/resourceGroups/rg-banking-new/providers/Microsoft.CognitiveServices/accounts/banking-new-resource/projects/banking-new/applications/PaymentAgent",
+      "name": "PaymentAgent",
+      "type": "Microsoft.CognitiveServices/accounts/projects/applications",
+      "properties": {
+        "description": null,
+        "tags": null,
+        "properties": null,
+        "applicationId": "89e7e38c-b561-4133-9898-660a558bfc73",
+        "displayName": "PaymentAgent",
+        "baseUrl": "https://banking-new-resource.services.ai.azure.com/api/projects/banking-new/applications/PaymentAgent",
+        "agents": [
+          {
+            "agentId": "azureml://subscriptions/e0783b50-4ca5-4059-83c1-524f39faa624/resourceGroups/rg-banking-new/workspaces/banking-new-resource@banking-new@AML/applications/PaymentAgent/agents/PaymentAgent",
+            "agentName": "PaymentAgent"
+          }
+        ],
+        "agentIdentityBlueprint": {
+          "kind": "AgentBlueprint",
+          "type": "System",
+          "clientId": "b494f2e3-7b8a-4039-83c9-34bb4548f09b",
+          "principalId": "b494f2e3-7b8a-4039-83c9-34bb4548f09b",
+          "tenantId": "c1e8c736-fd22-4d7b-a7a2-12c6f36ac388",
+          "subject": null,
+          "provisioningState": "Creating"
+        },
+        "defaultInstanceIdentity": {
+          "kind": "AgentInstance",
+          "type": "System",
+          "clientId": "790c605f-b84d-46d4-819b-478b161f30aa",
+          "principalId": "b494f2e3-7b8a-4039-83c9-34bb4548f09b",
+          "tenantId": "c1e8c736-fd22-4d7b-a7a2-12c6f36ac388",
+          "subject": null,
+          "provisioningState": "Creating"
+        },
+        "authorizationPolicy": {
+          "authorizationScheme": "Default"
+        },
+        "trafficRoutingPolicy": {
+          "protocol": "FixedRatio",
+          "rules": [
+            {
+              "ruleId": "default",
+              "description": "Default rule routing all traffic to the first deployment",
+              "deploymentId": "",
+              "trafficPercentage": 100
+            }
+          ]
+        },
+        "provisioningState": "Succeeded",
+        "isEnabled": true
+      }
+    },
+    {
+      "id": "/subscriptions/e0783b50-4ca5-4059-83c1-524f39faa624/resourceGroups/rg-banking-new/providers/Microsoft.CognitiveServices/accounts/banking-new-resource/projects/banking-new/applications/AccountAgent",
+      "name": "AccountAgent",
+      "type": "Microsoft.CognitiveServices/accounts/projects/applications",
+      "properties": {
+        "description": null,
+        "tags": null,
+        "properties": null,
+        "applicationId": "bdfdf3df-4703-4ca8-94c6-6ddd16af7e1e",
+        "displayName": "AccountAgent",
+        "baseUrl": "https://banking-new-resource.services.ai.azure.com/api/projects/banking-new/applications/AccountAgent",
+        "agents": [
+          {
+            "agentId": "azureml://subscriptions/e0783b50-4ca5-4059-83c1-524f39faa624/resourceGroups/rg-banking-new/workspaces/banking-new-resource@banking-new@AML/applications/AccountAgent/agents/AccountAgent",
+            "agentName": "AccountAgent"
+          }
+        ],
+        "agentIdentityBlueprint": {
+          "kind": "AgentBlueprint",
+          "type": "System",
+          "clientId": "9ab1ed52-ac7c-4642-b439-51a0d2b32e9b",
+          "principalId": "9ab1ed52-ac7c-4642-b439-51a0d2b32e9b",
+          "tenantId": "c1e8c736-fd22-4d7b-a7a2-12c6f36ac388",
+          "subject": null,
+          "provisioningState": "Creating"
+        },
+        "defaultInstanceIdentity": {
+          "kind": "AgentInstance",
+          "type": "System",
+          "clientId": "cd49c905-46c1-4361-ba85-7269948c1d73",
+          "principalId": "9ab1ed52-ac7c-4642-b439-51a0d2b32e9b",
+          "tenantId": "c1e8c736-fd22-4d7b-a7a2-12c6f36ac388",
+          "subject": null,
+          "provisioningState": "Creating"
+        },
+        "authorizationPolicy": {
+          "authorizationScheme": "Default"
+        },
+        "trafficRoutingPolicy": {
+          "protocol": "FixedRatio",
+          "rules": [
+            {
+              "ruleId": "default",
+              "description": "Default rule routing all traffic to the first deployment",
+              "deploymentId": "",
+              "trafficPercentage": 100
+            }
+          ]
+        },
+        "provisioningState": "Succeeded",
+        "isEnabled": true
+      }
+    }
+  ]
+}

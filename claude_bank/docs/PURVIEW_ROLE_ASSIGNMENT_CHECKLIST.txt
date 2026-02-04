@@ -1,0 +1,36 @@
+# Service Principals for Purview Role Assignment
+
+Copy-paste these App IDs into Purview Portal when assigning "Data curator" role:
+
+1. BankX-AccountAgent-SP
+   App ID: f7219061-e3db-4dfb-a8de-2b5fa4b98ccf
+
+2. BankX-TransactionAgent-SP
+   App ID: abdde3bd-954f-4626-be85-c995faeec314
+
+3. BankX-PaymentAgent-SP
+   App ID: 19c0d01f-228b-45e0-b337-291679acb75c
+
+4. BankX-ProdInfoAgent-SP
+   App ID: cd8e9191-1d08-4bd2-9dbe-e23139dcbd90
+
+5. BankX-MoneyCoachAgent-SP
+   App ID: b81a5e18-1760-4836-8a5e-e4ef2e8f1113
+
+6. BankX-EscalationAgent-SP
+   App ID: 019b1746-a104-437a-b1ff-a911ba8c356c
+
+7. BankX-SupervisorAgent-SP
+   App ID: cbb7c307-5c43-4999-ada4-63a934853ec5
+
+---
+
+Steps in Purview Portal:
+1. Go to Data Map → Collections → Root collection
+2. Click "Role assignments" tab
+3. Click "Add" button
+4. Select "Data curator" role
+5. Paste App ID in search box
+6. Select the service principal
+7. Click OK
+8. Repeat for all 7 service principals

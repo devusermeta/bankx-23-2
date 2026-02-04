@@ -1,0 +1,90 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+ENV/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Documentation
+*.md
+docs/
+understandingUseCases/
+
+# Test files
+test_*.py
+*_test.py
+tests/
+pytest.ini
+.pytest_cache/
+
+# Environment files
+# NOTE: Docker Compose reads .env from HOST (not from image)
+# Exclude all .env files from being copied into images
+.env
+.env.*
+.env.dev
+.env.production
+.env.local
+.env.docker
+envsample.env
+
+# Node modules (frontend)
+node_modules/
+app/frontend/node_modules/
+app/frontend/build/
+app/frontend/dist/
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+tmp/
+
+# Docker
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# Infrastructure
+infrastructure/
+manifests/
+
+# Scripts
+scripts/
+deploy.sh
+deploy.ps1
+
+# Conversation data - NOW INCLUDED IN IMAGE (not just mounted)
+# conversations/*.json
+# memory/*.json
+# observability/*.json
+
+# Dynamic data - NOW INCLUDED IN IMAGE (not just mounted)
+# dynamic_data/*.json

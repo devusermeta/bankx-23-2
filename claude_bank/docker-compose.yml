@@ -1,0 +1,173 @@
+version: '3.8'
+
+# BankX Multi-Agent System - Local Development Setup
+# This docker-compose file runs all A2A-enabled agents locally for testing
+
+services:
+  # Agent Registry Service
+  agent-registry:
+    build: ./app/agent-registry
+    container_name: bankx-agent-registry
+    ports:
+      - "9000:9000"
+    environment:
+      - AUTH_ENABLED=false
+      - LOG_LEVEL=INFO
+      - ENVIRONMENT=development
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:9000/health').raise_for_status()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - bankx-network
+
+  # Account Agent Service
+  account-agent:
+    build: ./app/agents/account-agent
+    container_name: bankx-account-agent
+    ports:
+      - "8100:8100"
+    environment:
+      - AGENT_REGISTRY_URL=http://agent-registry:9000
+      - MCP_ACCOUNT_URL=http://host.docker.internal:8070
+      - MCP_LIMITS_URL=http://host.docker.internal:8073
+      - LOG_LEVEL=INFO
+      - ENVIRONMENT=development
+    depends_on:
+      - agent-registry
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8100/health').raise_for_status()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - bankx-network
+
+  # Transaction Agent Service
+  transaction-agent:
+    build: ./app/agents/transaction-agent
+    container_name: bankx-transaction-agent
+    ports:
+      - "8101:8101"
+    environment:
+      - AGENT_REGISTRY_URL=http://agent-registry:9000
+      - MCP_TRANSACTION_URL=http://host.docker.internal:8071
+      - LOG_LEVEL=INFO
+      - ENVIRONMENT=development
+    depends_on:
+      - agent-registry
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8101/health').raise_for_status()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - bankx-network
+
+  # Payment Agent Service
+  payment-agent:
+    build: ./app/agents/payment-agent
+    container_name: bankx-payment-agent
+    ports:
+      - "8102:8102"
+    environment:
+      - AGENT_REGISTRY_URL=http://agent-registry:9000
+      - MCP_PAYMENT_URL=http://host.docker.internal:8072
+      - MCP_LIMITS_URL=http://host.docker.internal:8073
+      - LOG_LEVEL=INFO
+      - ENVIRONMENT=development
+    depends_on:
+      - agent-registry
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8102/health').raise_for_status()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - bankx-network
+
+  # ProdInfoFAQ Agent Service
+  prodinfo-faq-agent:
+    build: ./app/agents/prodinfo-faq-agent
+    container_name: bankx-prodinfo-faq-agent
+    ports:
+      - "8103:8103"
+    environment:
+      - AGENT_REGISTRY_URL=http://agent-registry:9000
+      - MCP_PRODINFO_URL=http://host.docker.internal:8074
+      - LOG_LEVEL=INFO
+      - ENVIRONMENT=development
+    depends_on:
+      - agent-registry
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8103/health').raise_for_status()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - bankx-network
+
+  # AIMoneyCoach Agent Service
+  ai-money-coach-agent:
+    build: ./app/agents/ai-money-coach-agent
+    container_name: bankx-ai-money-coach-agent
+    ports:
+      - "8104:8104"
+    environment:
+      - AGENT_REGISTRY_URL=http://agent-registry:9000
+      - MCP_MONEYCOACH_URL=http://host.docker.internal:8075
+      - LOG_LEVEL=INFO
+      - ENVIRONMENT=development
+    depends_on:
+      - agent-registry
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8104/health').raise_for_status()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - bankx-network
+
+  # EscalationComms Agent Service (MANDATORY - Required for UC2 and UC3)
+  # Handles ticket creation and email notifications for both ProdInfoFAQ and AIMoneyCoach agents
+  escalation-comms-agent:
+    build: ./app/agents/escalation-comms-agent
+    container_name: bankx-escalation-comms-agent
+    ports:
+      - "8105:8105"
+    environment:
+      - AGENT_REGISTRY_URL=http://agent-registry:9000
+      - MCP_ESCALATION_URL=http://host.docker.internal:8076
+      - LOG_LEVEL=INFO
+      - ENVIRONMENT=development
+    depends_on:
+      - agent-registry
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8105/health').raise_for_status()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - bankx-network
+
+networks:
+  bankx-network:
+    driver: bridge
+
+# Usage:
+# ------
+# Start all services:
+#   docker-compose up -d
+#
+# View logs:
+#   docker-compose logs -f
+#
+# Stop all services:
+#   docker-compose down
+#
+# Rebuild and start:
+#   docker-compose up --build -d
+#
+# Check status:
+#   docker-compose ps

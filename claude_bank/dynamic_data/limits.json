@@ -1,0 +1,79 @@
+{
+  "_metadata": {
+    "last_updated": "2026-02-04T15:25:06+07:00",
+    "source": "uc1_synthetic_data/limits.csv",
+    "description": "Runtime transfer limits - remaining_today updated on each transfer"
+  },
+  "limits": [
+    {
+      "account_id": "CHK-001",
+      "per_txn_limit": 50000.0,
+      "daily_limit": 200000.0,
+      "remaining_today": 200000.0,
+      "currency": "THB"
+    },
+    {
+      "account_id": "CHK-002",
+      "per_txn_limit": 50000.0,
+      "daily_limit": 200000.0,
+      "remaining_today": 199000.0,
+      "currency": "THB"
+    },
+    {
+      "account_id": "CHK-003",
+      "per_txn_limit": 50000.0,
+      "daily_limit": 200000.0,
+      "remaining_today": 200000.0,
+      "currency": "THB"
+    },
+    {
+      "account_id": "CHK-004",
+      "per_txn_limit": 50000.0,
+      "daily_limit": 200000.0,
+      "remaining_today": 200000.0,
+      "currency": "THB"
+    },
+    {
+      "account_id": "CHK-005",
+      "per_txn_limit": 50000.0,
+      "daily_limit": 200000.0,
+      "remaining_today": 200000.0,
+      "currency": "THB"
+    },
+    {
+      "account_id": "CHK-006",
+      "per_txn_limit": 50000.0,
+      "daily_limit": 200000.0,
+      "remaining_today": 200000.0,
+      "currency": "THB"
+    },
+    {
+      "account_id": "CHK-007",
+      "per_txn_limit": 50000.0,
+      "daily_limit": 200000.0,
+      "remaining_today": 200000.0,
+      "currency": "THB"
+    },
+    {
+      "account_id": "CHK-008",
+      "per_txn_limit": 50000.0,
+      "daily_limit": 200000.0,
+      "remaining_today": 200000.0,
+      "currency": "THB"
+    },
+    {
+      "account_id": "CHK-009",
+      "per_txn_limit": 50000.0,
+      "daily_limit": 200000.0,
+      "remaining_today": 200000.0,
+      "currency": "THB"
+    },
+    {
+      "account_id": "CHK-010",
+      "per_txn_limit": 50000.0,
+      "daily_limit": 200000.0,
+      "remaining_today": 200000.0,
+      "currency": "THB"
+    }
+  ]
+}

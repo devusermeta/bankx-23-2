@@ -1,0 +1,23 @@
+{
+  "session_id": "thread_gIBHTNxWvegwGej5yFMdvKch",
+  "customer_id": "CUST-002",
+  "user_email": "nattaporn@bankxthb.onmicrosoft.com",
+  "started_at": "2025-12-31T18:02:26.403005",
+  "last_updated": "2025-12-31T18:03:25.375876",
+  "conversation": [
+    {
+      "question": "transfer 1000 THB to Apichat",
+      "answer": "⚠️ **PAYMENT CONFIRMATION REQUIRED** ⚠️  \nPlease confirm to proceed with this payment:\n\n- **Amount:** 1,000 THB  \n- **Recipient:** Apichat Wattanakul  \n- **Account:** 123-456-010  \n\nReply **'Yes'** or **'Confirm'** to proceed with the payment.",
+      "timestamp": "2025-12-31T18:02:26.403005",
+      "agent_used": "PaymentAgent",
+      "duration_seconds": 39.62726712226868
+    },
+    {
+      "question": "No, cancel the payment",
+      "answer": "The payment has been canceled as per your request.",
+      "timestamp": "2025-12-31T18:03:25.375876",
+      "agent_used": null,
+      "duration_seconds": 12.242089986801147
+    }
+  ]
+}

@@ -1,0 +1,138 @@
+# BankX Multi-Agent Banking System - Python Dependencies
+# Generated: 2025-11-06
+# Python Version: >=3.11
+
+# ==============================================================================
+# CORE FRAMEWORK - Copilot Backend (FastAPI Multi-Agent Orchestration)
+# ==============================================================================
+
+# Web Framework & Server
+fastapi[all]==0.116.1
+uvicorn==0.35.0
+httpx==0.28.1
+
+# Azure Services
+azure-identity==1.24.0
+azure-storage-blob==12.26.0
+azure-ai-documentintelligence==1.0.1
+
+# Azure AI Search (for UC2, UC3 RAG)
+azure-search-documents==11.5.0
+
+# Document Processing (for multimodal RAG)
+python-docx==1.1.2
+Pillow==11.0.0
+aiohttp==3.11.10
+
+# Azure Cosmos DB (for Decision Ledger, Agent Registry)
+azure-cosmos==4.5.1
+
+# Azure Data Governance (optional - commented out, only beta available)
+# azure-purview-account==1.0.0b1
+
+# Azure Communication Services (for email notifications)
+azure-communication-email==1.0.0
+
+# Dependency Injection
+dependency-injector==4.48.1
+
+# Agent Framework (Microsoft Custom Package)
+agent-framework-azure-ai
+
+# ==============================================================================
+# MCP SERVICES - Model Context Protocol Microservices
+# ==============================================================================
+
+# MCP Framework
+fastmcp>=2.0.0
+
+# Data Validation & Serialization
+pydantic>=2.0
+
+# Authentication & JWT Validation
+PyJWT[crypto]==2.8.0
+
+# HTTP Requests (for Payment service)
+requests
+
+# File locking for thread-safe JSON state management
+filelock
+
+# ==============================================================================
+# OBSERVABILITY & MONITORING (MANDATORY)
+# ==============================================================================
+
+# OpenTelemetry Core - Updated for agent-framework-azure-ai compatibility
+opentelemetry-api>=1.36.0
+opentelemetry-sdk>=1.36.0
+
+# Azure Monitor & Application Insights (MANDATORY)
+azure-monitor-opentelemetry==1.2.0
+azure-monitor-opentelemetry-exporter>=1.0.0b21
+
+# OpenTelemetry Auto-Instrumentation
+opentelemetry-instrumentation-fastapi>=0.45b0
+opentelemetry-instrumentation-httpx>=0.45b0
+opentelemetry-instrumentation-redis>=0.45b0
+
+# ==============================================================================
+# DEVELOPMENT & TESTING (Optional)
+# ==============================================================================
+
+# Testing Framework
+pytest==8.4.1
+pytest-asyncio==1.1.0
+
+# Code Quality
+black
+flake8
+mypy
+
+# ==============================================================================
+# ADDITIONAL UTILITIES
+# ==============================================================================
+
+# YAML Configuration
+pyyaml
+
+# ==============================================================================
+# NOTES
+# ==============================================================================
+#
+# This requirements.txt consolidates dependencies from all services:
+#
+# 1. Copilot Backend (Port 8080)
+#    - FastAPI orchestration with 7 agents
+#    - Azure AI Foundry integration
+#    - Document Intelligence & Blob Storage
+#
+# 2. MCP Microservices (Ports 8070-8075)
+#    - Account Service (8070)
+#    - Transaction Service (8071)
+#    - Payment Service (8072)
+#    - Limits Service (8073)
+#    - Contacts Service (8074)
+#    - Audit Service (8075)
+#
+# Installation:
+# -------------
+# For full system setup, each service has its own pyproject.toml.
+# Use this requirements.txt for a unified virtual environment.
+#
+# Using pip:
+#   pip install -r requirements.txt
+#
+# Using uv (recommended):
+#   uv pip install -r requirements.txt
+#
+# For individual services:
+#   cd app/copilot && uv sync --prerelease=allow
+#   cd app/business-api/python/account && uv sync
+#   cd app/business-api/python/transaction && uv sync
+#   ... (repeat for other services)
+#
+# Azure AI Foundry:
+# -----------------
+# The agent-framework-azure-ai package requires access to Microsoft's
+# private package registry. Follow Azure AI Foundry documentation for setup.
+#

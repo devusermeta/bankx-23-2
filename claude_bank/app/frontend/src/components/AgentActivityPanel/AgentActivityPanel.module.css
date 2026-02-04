@@ -1,0 +1,305 @@
+.container {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.2s ease;
+}
+
+.container:hover {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.header:hover {
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+}
+
+.headerLeft {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.headerIcon {
+    color: #3b82f6;
+}
+
+.title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.loadingSpinner {
+    animation: spin 1s linear infinite;
+    color: #3b82f6;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.headerRight {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.badge {
+    background: #3b82f6;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.chevron {
+    color: #6b7280;
+    transition: transform 0.3s ease;
+}
+
+.content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.contentExpanded {
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+/* Scrollbar styling */
+.contentExpanded {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+}
+
+.contentExpanded::-webkit-scrollbar {
+    width: 6px;
+}
+
+.contentExpanded::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.contentExpanded::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+
+.contentExpanded::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+.emptyState {
+    padding: 48px 20px;
+    text-align: center;
+    color: #6b7280;
+}
+
+.emptyIcon {
+    margin: 0 auto 12px;
+    opacity: 0.5;
+}
+
+.emptySubtext {
+    display: block;
+    font-size: 13px;
+    color: #9ca3af;
+    margin-top: 8px;
+}
+
+.activityList {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.activityItem {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 12px;
+    animation: slideInFade 0.3s ease-out;
+}
+
+@keyframes slideInFade {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.activityHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.activityAgent {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.agentDot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.agentName {
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.activityTime {
+    font-size: 12px;
+    color: #9ca3af;
+    font-family: 'Courier New', monospace;
+}
+
+.activityBody {
+    display: flex;
+    gap: 12px;
+}
+
+.activityIcon {
+    flex-shrink: 0;
+    padding-top: 2px;
+}
+
+.iconSuccess {
+    color: #10b981;
+}
+
+.iconError {
+    color: #ef4444;
+}
+
+.iconActivity {
+    color: #3b82f6;
+}
+
+.iconDefault {
+    color: #6b7280;
+}
+
+.activityContent {
+    flex: 1;
+    min-width: 0;
+}
+
+.activityMessage {
+    margin: 0;
+    font-size: 14px;
+    color: #1f2937;
+    line-height: 1.5;
+}
+
+.activityDetails {
+    margin-top: 8px;
+    padding: 8px;
+    background: white;
+    border-radius: 6px;
+    font-size: 12px;
+}
+
+.detailItem {
+    display: flex;
+    gap: 8px;
+    padding: 4px 0;
+}
+
+.detailKey {
+    font-weight: 600;
+    color: #6b7280;
+}
+
+.detailValue {
+    color: #374151;
+    word-break: break-word;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .container {
+        background: #1f2937;
+        border-color: #374151;
+    }
+
+    .header {
+        background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+    }
+
+    .header:hover {
+        background: linear-gradient(135deg, #111827 0%, #0f172a 100%);
+    }
+
+    .title {
+        color: #f9fafb;
+    }
+
+    .activityItem {
+        background: #111827;
+        border-color: #374151;
+    }
+
+    .agentName {
+        color: #d1d5db;
+    }
+
+    .activityMessage {
+        color: #e5e7eb;
+    }
+
+    .activityDetails {
+        background: #1f2937;
+    }
+
+    .detailKey {
+        color: #9ca3af;
+    }
+
+    .detailValue {
+        color: #d1d5db;
+    }
+}

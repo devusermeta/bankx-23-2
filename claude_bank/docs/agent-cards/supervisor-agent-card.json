@@ -1,0 +1,93 @@
+{
+  "agent_id": "GENERATED_ON_STARTUP",
+  "agent_name": "SupervisorAgent",
+  "agent_type": "supervisor",
+  "version": "1.0.0",
+  "description": "Meta-orchestrator responsible for intent classification, routing requests to specialized domain agents, and aggregating responses. Serves both Customer and Teller roles with context-aware behavior.",
+
+  "capabilities": [
+    {
+      "name": "intent.classify",
+      "description": "Classify user intent from natural language input",
+      "input_schema": {
+        "user_message": "string",
+        "customer_id": "string (optional)",
+        "conversation_id": "string (optional)",
+        "requester_role": "string (customer|teller)"
+      },
+      "output_schema": "Intent classification result"
+    },
+    {
+      "name": "routing.delegate",
+      "description": "Route requests to appropriate domain agent based on intent",
+      "input_schema": {
+        "intent": "string",
+        "user_message": "string",
+        "context": "object"
+      },
+      "output_schema": "Agent response (passed through)"
+    },
+    {
+      "name": "response.aggregate",
+      "description": "Aggregate responses from multiple agents when needed",
+      "input_schema": {
+        "agent_responses": "array"
+      },
+      "output_schema": "Aggregated response"
+    }
+  ],
+
+  "routing_rules": {
+    "account_queries": "AccountAgent",
+    "transaction_queries": "TransactionHistoryAgent",
+    "payment_requests": "PaymentAgent",
+    "product_info": "ProdInfoFAQAgent",
+    "financial_coaching": "AIMoneyCoachAgent"
+  },
+
+  "mcp_tools": [],
+
+  "endpoints": {
+    "http": "http://localhost:8080",
+    "health": "http://localhost:8080/health",
+    "metrics": "http://localhost:8080/metrics",
+    "chat": "http://localhost:8080/api/v1/chat"
+  },
+
+  "performance": {
+    "average_latency_ms": 500,
+    "p95_latency_ms": 1000,
+    "p99_latency_ms": 1500,
+    "max_concurrent_requests": 200
+  },
+
+  "dependencies": {
+    "mcp_services": [],
+    "other_agents": [
+      "AccountAgent",
+      "TransactionHistoryAgent",
+      "PaymentAgent",
+      "ProdInfoFAQAgent",
+      "AIMoneyCoachAgent"
+    ],
+    "external_services": ["Agent Registry"]
+  },
+
+  "output_formats": [
+    "Pass-through from domain agents",
+    "BALANCE_CARD",
+    "TXN_TABLE",
+    "TRANSFER_APPROVAL",
+    "KNOWLEDGE_CARD"
+  ],
+
+  "metadata": {
+    "owner_team": "Platform Team",
+    "support_contact": "platform-team@bankx.com",
+    "documentation_url": "https://docs.bankx.com/agents/supervisor",
+    "use_cases": ["UC1", "UC2", "UC3"],
+    "deployment_mode": "singleton"
+  },
+
+  "tags": ["supervisor", "orchestrator", "router", "all-use-cases"]
+}

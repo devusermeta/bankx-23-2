@@ -1,0 +1,400 @@
+version: '3.8'
+
+# BankX Multi-Agent System - Backend Services
+# Includes: Copilot orchestrator + 9 MCP microservices
+
+services:
+  # ============================================================================
+  # MCP SERVICES - Business API Layer (Ports 8070-8078)
+  # ============================================================================
+
+  account-mcp:
+    build:
+      context: .
+      dockerfile: ./app/business-api/python/account/Dockerfile
+    container_name: bankx-account-mcp
+    ports:
+      - "8070:8080"
+    env_file:
+      - .env
+    environment:
+      - PROFILE=${PROFILE:-prod}
+      - PYTHONUNBUFFERED=1
+      - PYTHONPATH=/app:/app/common
+    volumes:
+      - ./dynamic_data:/app/dynamic_data:rw
+      - ./schemas:/app/schemas:ro
+    networks:
+      - bankx-backend
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys; from http.client import HTTPConnection; conn = HTTPConnection('localhost', 8070); conn.request('GET', '/'); sys.exit(0 if conn.getresponse().status < 500 else 1)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  transaction-mcp:
+    build:
+      context: .
+      dockerfile: ./app/business-api/python/transaction/Dockerfile
+    container_name: bankx-transaction-mcp
+    ports:
+      - "8071:8080"
+    env_file:
+      - .env
+    environment:
+      - PROFILE=${PROFILE:-prod}
+      - PYTHONUNBUFFERED=1
+      - PYTHONPATH=/app:/app/common
+    volumes:
+      - ./dynamic_data:/app/dynamic_data:rw
+    networks:
+      - bankx-backend
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys; from http.client import HTTPConnection; conn = HTTPConnection('localhost', 8071); conn.request('GET', '/'); sys.exit(0 if conn.getresponse().status < 500 else 1)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  payment-mcp:
+    build:
+      context: .
+      dockerfile: ./app/business-api/python/payment/Dockerfile
+    container_name: bankx-payment-mcp
+    ports:
+      - "8072:8080"
+    env_file:
+      - .env
+    environment:
+      - PROFILE=${PROFILE:-prod}
+      - PYTHONUNBUFFERED=1
+      - PYTHONPATH=/app:/app/common
+      - TRANSACTIONS_API_SERVER_URL=http://transaction-mcp:8071
+    volumes:
+      - ./dynamic_data:/app/dynamic_data:rw
+    networks:
+      - bankx-backend
+    restart: unless-stopped
+    depends_on:
+      transaction-mcp:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys; from http.client import HTTPConnection; conn = HTTPConnection('localhost', 8072); conn.request('GET', '/'); sys.exit(0 if conn.getresponse().status < 500 else 1)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  limits-mcp:
+    build:
+      context: .
+      dockerfile: ./app/business-api/python/limits/Dockerfile
+    container_name: bankx-limits-mcp
+    ports:
+      - "8073:8080"
+    env_file:
+      - .env
+    environment:
+      - PROFILE=${PROFILE:-prod}
+      - PYTHONUNBUFFERED=1
+      - PYTHONPATH=/app:/app/common
+    volumes:
+      - ./dynamic_data:/app/dynamic_data:rw
+    networks:
+      - bankx-backend
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys; from http.client import HTTPConnection; conn = HTTPConnection('localhost', 8073); conn.request('GET', '/'); sys.exit(0 if conn.getresponse().status < 500 else 1)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  contacts-mcp:
+    build:
+      context: .
+      dockerfile: ./app/business-api/python/contacts/Dockerfile
+    container_name: bankx-contacts-mcp
+    ports:
+      - "8074:8080"
+    env_file:
+      - .env
+    environment:
+      - PROFILE=${PROFILE:-prod}
+      - PYTHONUNBUFFERED=1
+      - PYTHONPATH=/app:/app/common
+    volumes:
+      - ./dynamic_data:/app/dynamic_data:rw
+    networks:
+      - bankx-backend
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys; from http.client import HTTPConnection; conn = HTTPConnection('localhost', 8074); conn.request('GET', '/'); sys.exit(0 if conn.getresponse().status < 500 else 1)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  audit-mcp:
+    build:
+      context: .
+      dockerfile: ./app/business-api/python/audit/Dockerfile
+    container_name: bankx-audit-mcp
+    ports:
+      - "8075:8080"
+    env_file:
+      - .env
+    environment:
+      - PROFILE=${PROFILE:-prod}
+      - PYTHONUNBUFFERED=1
+      - PYTHONPATH=/app:/app/common
+    volumes:
+      - ./dynamic_data:/app/dynamic_data:rw
+    networks:
+      - bankx-backend
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys; from http.client import HTTPConnection; conn = HTTPConnection('localhost', 8075); conn.request('GET', '/'); sys.exit(0 if conn.getresponse().status < 500 else 1)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  prodinfo-faq-mcp:
+    build:
+      context: .
+      dockerfile: ./app/business-api/python/prodinfo_faq/Dockerfile
+    container_name: bankx-prodinfo-faq-mcp
+    ports:
+      - "8076:8080"
+    env_file:
+      - .env
+    environment:
+      - PROFILE=${PROFILE:-prod}
+      - PORT=8080
+      - PYTHONUNBUFFERED=1
+      # Azure AI Search credentials
+      - AZURE_AI_SEARCH_ENDPOINT=${AZURE_AI_SEARCH_ENDPOINT}
+      - AZURE_AI_SEARCH_KEY=${AZURE_AI_SEARCH_KEY}
+      - AZURE_AI_SEARCH_INDEX=${AZURE_AI_SEARCH_INDEX_UC2:-bankx-products-faq}
+    networks:
+      - bankx-backend
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys; from http.client import HTTPConnection; conn = HTTPConnection('localhost', 8080); conn.request('GET', '/'); sys.exit(0 if conn.getresponse().status < 500 else 1)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  ai-money-coach-mcp:
+    build:
+      context: .
+      dockerfile: ./app/business-api/python/ai_money_coach/Dockerfile
+    container_name: bankx-ai-money-coach-mcp
+    ports:
+      - "8077:8080"
+    env_file:
+      - .env
+    environment:
+      - PROFILE=${PROFILE:-prod}
+      - PORT=8080
+      - PYTHONUNBUFFERED=1
+      - PYTHONPATH=/app:/app/common
+      # Azure AI Search credentials
+      - AZURE_AI_SEARCH_ENDPOINT=${AZURE_AI_SEARCH_ENDPOINT}
+      - AZURE_AI_SEARCH_KEY=${AZURE_AI_SEARCH_KEY}
+      - AZURE_AI_SEARCH_INDEX=${AZURE_AI_SEARCH_INDEX_UC3:-bankx-money-coach}
+    networks:
+      - bankx-backend
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys; from http.client import HTTPConnection; conn = HTTPConnection('localhost', 8080); conn.request('GET', '/'); sys.exit(0 if conn.getresponse().status < 500 else 1)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  escalation-comms-mcp:
+    build:
+      context: .
+      dockerfile: ./app/business-api/python/escalation_comms/Dockerfile
+    container_name: bankx-escalation-comms-mcp
+    ports:
+      - "8078:8080"
+    env_file:
+      - .env
+    environment:
+      - PROFILE=${PROFILE:-prod}
+      - PORT=8080
+      - PYTHONUNBUFFERED=1
+      - PYTHONPATH=/app:/app/common
+      # Azure Communication Services
+      - AZURE_COMMUNICATION_SERVICES_ENDPOINT=${AZURE_COMMUNICATION_SERVICES_ENDPOINT}
+      - AZURE_COMMUNICATION_SERVICES_EMAIL_FROM=${AZURE_COMMUNICATION_SERVICES_EMAIL_FROM:-support@bankx.com}
+      # Azure Cosmos DB
+      - AZURE_COSMOSDB_ENDPOINT=${AZURE_COSMOSDB_ENDPOINT}
+      - AZURE_COSMOSDB_DATABASE=${AZURE_COSMOSDB_DATABASE:-bankx}
+      - AZURE_COSMOSDB_CONTAINER_TICKETS=${AZURE_COSMOSDB_CONTAINER_TICKETS:-support_tickets}
+      # Azure credentials
+      - AZURE_CLIENT_ID=${AZURE_CLIENT_ID}
+      - AZURE_TENANT_ID=${AZURE_TENANT_ID}
+      - AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET}
+    networks:
+      - bankx-backend
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys; from http.client import HTTPConnection; conn = HTTPConnection('localhost', 8080); conn.request('GET', '/'); sys.exit(0 if conn.getresponse().status < 500 else 1)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # ============================================================================
+  # COPILOT SERVICE - Main Orchestrator (Port 8080)
+  # ============================================================================
+
+  copilot:
+    build:
+      context: .
+      dockerfile: ./app/copilot/Dockerfile
+    container_name: bankx-copilot
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      - PROFILE=${PROFILE:-prod}
+      - PYTHONUNBUFFERED=1
+      
+      # Azure Authentication (Service Principal or Managed Identity)
+      - AZURE_CLIENT_ID=${AZURE_CLIENT_ID}
+      - AZURE_TENANT_ID=${AZURE_TENANT_ID}
+      - AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET}
+      
+      # MCP Service URLs (Docker network names - each service on its own port)
+      - ACCOUNT_MCP_URL=${ACCOUNT_MCP_URL:-http://account-mcp:8070}
+      - TRANSACTION_MCP_URL=${TRANSACTION_MCP_URL:-http://transaction-mcp:8071}
+      - PAYMENT_MCP_URL=${PAYMENT_MCP_URL:-http://payment-mcp:8072}
+      - LIMITS_MCP_URL=${LIMITS_MCP_URL:-http://limits-mcp:8073}
+      - CONTACTS_MCP_URL=${CONTACTS_MCP_URL:-http://contacts-mcp:8074}
+      - AUDIT_MCP_URL=${AUDIT_MCP_URL:-http://audit-mcp:8075}
+      - PRODINFO_FAQ_MCP_URL=${PRODINFO_FAQ_MCP_URL:-http://prodinfo-faq-mcp:8076}
+      - AI_MONEY_COACH_MCP_URL=${AI_MONEY_COACH_MCP_URL:-http://ai-money-coach-mcp:8077}
+      - ESCALATION_COMMS_MCP_URL=${ESCALATION_COMMS_MCP_URL:-http://escalation-comms-mcp:8078}
+      
+      # Azure AI Foundry
+      - FOUNDRY_PROJECT_ENDPOINT=${FOUNDRY_PROJECT_ENDPOINT}
+      - FOUNDRY_MODEL_DEPLOYMENT_NAME=${FOUNDRY_MODEL_DEPLOYMENT_NAME:-gpt-4o}
+      - USE_PREBUILT_AGENTS_ONLY=true  # Docker mode: use pre-configured agent IDs
+      
+      # Azure OpenAI
+      - AZURE_OPENAI_ENDPOINT=${AZURE_OPENAI_ENDPOINT}
+      - AZURE_OPENAI_CHAT_DEPLOYMENT_NAME=${AZURE_OPENAI_CHAT_DEPLOYMENT_NAME:-gpt-4o}
+      - AZURE_OPENAI_MINI_DEPLOYMENT_NAME=${AZURE_OPENAI_MINI_DEPLOYMENT_NAME:-gpt-4.1-mini}
+      
+      # Azure Services
+      - AZURE_STORAGE_ACCOUNT=${AZURE_STORAGE_ACCOUNT}
+      - AZURE_STORAGE_CONTAINER=${AZURE_STORAGE_CONTAINER:-content}
+      - AZURE_DOCUMENT_INTELLIGENCE_SERVICE=${AZURE_DOCUMENT_INTELLIGENCE_SERVICE}
+      - AZURE_COSMOSDB_ENDPOINT=${AZURE_COSMOSDB_ENDPOINT}
+      - AZURE_COSMOSDB_DATABASE=${AZURE_COSMOSDB_DATABASE:-bankx}
+      - AZURE_COMMUNICATION_SERVICES_ENDPOINT=${AZURE_COMMUNICATION_SERVICES_ENDPOINT}
+      
+      # Azure AI Search (for UC2 & UC3)
+      - AZURE_AI_SEARCH_ENDPOINT=${AZURE_AI_SEARCH_ENDPOINT}
+      - AZURE_AI_SEARCH_KEY=${AZURE_AI_SEARCH_KEY}
+      - AZURE_AI_SEARCH_INDEX_UC2=${AZURE_AI_SEARCH_INDEX_UC2:-bankx-products-faq}
+      - AZURE_AI_SEARCH_INDEX_UC3=${AZURE_AI_SEARCH_INDEX_UC3:-bankx-money-coach}
+      
+      # Vector Store IDs (for knowledge base agents)
+      - PRODINFO_FAQ_VECTOR_STORE_IDS=${PRODINFO_FAQ_VECTOR_STORE_IDS}
+      - AI_MONEY_COACH_VECTOR_STORE_IDS=${AI_MONEY_COACH_VECTOR_STORE_IDS}
+      
+      # Agent IDs (optional - reuse existing agents)
+      - SUPERVISOR_AGENT_ID=${SUPERVISOR_AGENT_ID}
+      - ACCOUNT_AGENT_ID=${ACCOUNT_AGENT_ID}
+      - TRANSACTION_AGENT_ID=${TRANSACTION_AGENT_ID}
+      - PAYMENT_AGENT_ID=${PAYMENT_AGENT_ID}
+      - PRODINFO_FAQ_AGENT_ID=${PRODINFO_FAQ_AGENT_ID}
+      - AI_MONEY_COACH_AGENT_ID=${AI_MONEY_COACH_AGENT_ID}
+      - ESCALATION_COMMS_AGENT_ID=${ESCALATION_COMMS_AGENT_ID}
+      
+      # Authentication
+      - AZURE_AUTH_TENANT_ID=${AZURE_AUTH_TENANT_ID}
+      - AZURE_APP_CLIENT_ID=${AZURE_APP_CLIENT_ID}
+      
+      # Observability
+      - APPLICATIONINSIGHTS_CONNECTION_STRING=${APPLICATIONINSIGHTS_CONNECTION_STRING}
+      - ENABLE_OTEL=${ENABLE_OTEL:-true}
+      
+    volumes:
+      - ./dynamic_data:/app/dynamic_data:rw
+      - ./memory:/app/memory:rw
+      - ./conversations:/app/conversations:rw
+      - ./observability:/app/observability:rw
+      - ./schemas:/app/schemas:ro
+    networks:
+      - bankx-backend
+    restart: unless-stopped
+    depends_on:
+      account-mcp:
+        condition: service_healthy
+      transaction-mcp:
+        condition: service_healthy
+      payment-mcp:
+        condition: service_healthy
+      limits-mcp:
+        condition: service_healthy
+      contacts-mcp:
+        condition: service_healthy
+      audit-mcp:
+        condition: service_healthy
+      prodinfo-faq-mcp:
+        condition: service_healthy
+      ai-money-coach-mcp:
+        condition: service_healthy
+      escalation-comms-mcp:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys; from http.client import HTTPConnection; conn = HTTPConnection('localhost', 8080); conn.request('GET', '/'); sys.exit(0 if conn.getresponse().status < 500 else 1)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+networks:
+  bankx-backend:
+    driver: bridge
+    name: bankx-backend
+
+volumes:
+  bankx-data:
+    driver: local
+
+# Usage:
+# ------
+# Start all backend services:
+#   docker-compose -f docker-compose.backend.yml up -d
+#
+# Start specific services:
+#   docker-compose -f docker-compose.backend.yml up -d copilot account-mcp transaction-mcp
+#
+# View logs:
+#   docker-compose -f docker-compose.backend.yml logs -f copilot
+#   docker-compose -f docker-compose.backend.yml logs -f account-mcp
+#
+# Stop all services:
+#   docker-compose -f docker-compose.backend.yml down
+#
+# Rebuild and start:
+#   docker-compose -f docker-compose.backend.yml up --build -d
+#
+# Check service health:
+#   docker-compose -f docker-compose.backend.yml ps
+#
+# Environment file:
+#   Use .env.docker or set PROFILE=dev/prod

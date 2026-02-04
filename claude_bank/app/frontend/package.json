@@ -1,0 +1,58 @@
+{
+  "name": "frontend",
+  "private": true,
+  "version": "1.0.0-alpha",
+  "type": "module",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "scripts": {
+    "dev": "vite --port=8081",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@azure/msal-browser": "^3.1.0",
+    "@azure/msal-react": "^2.0.4",
+    "@fluentui/react": "^8.112.5",
+    "@fluentui/react-components": "^9.37.3",
+    "@fluentui/react-icons": "^2.0.221",
+    "@radix-ui/react-dialog": "^1.0.5",
+    "@radix-ui/react-dropdown-menu": "^2.0.6",
+    "@radix-ui/react-select": "^2.0.0",
+    "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-tabs": "^1.0.4",
+    "@react-spring/web": "^9.7.3",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.0",
+    "date-fns": "^3.0.0",
+    "dompurify": "^3.2.4",
+    "frontend": "file:",
+    "lucide-react": "^0.303.0",
+    "ndjson-readablestream": "^1.0.7",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-markdown": "^9.0.1",
+    "react-router-dom": "^6.18.0",
+    "reaflow": "^5.4.1",
+    "recharts": "^2.10.3",
+    "rehype-raw": "^7.0.0",
+    "remark-gfm": "^4.0.0",
+    "scheduler": "^0.20.2",
+    "tailwind-merge": "^2.2.0"
+  },
+  "devDependencies": {
+    "@types/dompurify": "^3.0.3",
+    "@types/node": "^20.10.0",
+    "@types/react": "^18.2.34",
+    "@types/react-dom": "^18.2.14",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.32",
+    "prettier": "^3.0.3",
+    "tailwindcss": "^3.4.0",
+    "tailwindcss-animate": "^1.0.7",
+    "typescript": "^5.2.2",
+    "vite": "^6.3.1"
+  }
+}

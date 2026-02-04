@@ -1,0 +1,28 @@
+# Account Agent Service Dependencies
+
+# Web Framework
+fastapi[all]==0.116.1
+uvicorn==0.35.0
+httpx==0.28.1
+
+# Data Validation
+pydantic>=2.0
+
+# Azure Services (optional)
+azure-identity==1.24.0
+
+# Observability - OpenTelemetry Core
+opentelemetry-api==1.24.0
+opentelemetry-sdk==1.24.0
+
+# Azure Monitor & Application Insights
+azure-monitor-opentelemetry==1.2.0
+opentelemetry-exporter-azure-monitor==1.0.0b15
+
+# OpenTelemetry Auto-Instrumentation
+opentelemetry-instrumentation-fastapi==0.45b0
+opentelemetry-instrumentation-httpx==0.45b0
+
+# Testing (optional for dev)
+pytest==8.4.1
+pytest-asyncio==1.1.0

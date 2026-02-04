@@ -1,0 +1,30 @@
+{
+  "session_id": "thread_pVvmVjhS8CyJaRVoZ2t252fs",
+  "customer_id": "CUST-002",
+  "user_email": "nattaporn@bankxthb.onmicrosoft.com",
+  "started_at": "2025-12-31T20:22:51.783303",
+  "last_updated": "2025-12-31T20:50:07.807904",
+  "conversation": [
+    {
+      "question": "what is avalanche method?",
+      "answer": "Based on the book \"Debt-Free to Financial Freedom,\" the avalanche method prioritizes paying off debts with the highest interest rates first. This minimizes the total interest paid over time. Continue making minimum payments on all debts but allocate extra funds to the high-interest debt. (Source: Chapter 4)",
+      "timestamp": "2025-12-31T20:22:51.783303",
+      "agent_used": "AIMoneyCoachAgent",
+      "duration_seconds": 19.283392429351807
+    },
+    {
+      "question": "what are your credit card interest rates?",
+      "answer": "\"I don't have information about credit card products or their interest rates in my current knowledge base. Would you like me to create a support ticket so a product specialist can help you with this?\"",
+      "timestamp": "2025-12-31T20:49:58.148997",
+      "agent_used": "ProdInfoFAQAgent",
+      "duration_seconds": 23.479677438735962
+    },
+    {
+      "question": "No, cancel the ticket creation",
+      "answer": "Understood, I will not proceed with the ticket creation.",
+      "timestamp": "2025-12-31T20:50:07.807904",
+      "agent_used": "ProdInfoFAQAgent",
+      "duration_seconds": 6.066263914108276
+    }
+  ]
+}

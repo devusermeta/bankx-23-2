@@ -1,0 +1,73 @@
+{
+  "_metadata": {
+    "last_updated": "2025-11-07T16:05:24+07:00",
+    "source": "uc1_synthetic_data/customers.csv",
+    "description": "Customer master data - read-only"
+  },
+  "customers": [
+    {
+      "customer_id": "CUST-001",
+      "full_name": "Somchai Rattanakorn",
+      "email": "somchai.rattanakorn@example.com",
+      "bankx_email": "somchai@bankxthb.onmicrosoft.com",
+      "phone": "66800000001"
+    },
+    {
+      "customer_id": "CUST-002",
+      "full_name": "Nattaporn Suksawat",
+      "email": "nattaporn.suksawat@example.com",
+      "bankx_email": "nattaporn@bankxthb.onmicrosoft.com",
+      "phone": "66800000002"
+    },
+    {
+      "customer_id": "CUST-003",
+      "full_name": "Pimchanok Thongchai",
+      "email": "pimchanok.thongchai@example.com",
+      "bankx_email": "pimchanok@bankxthb.onmicrosoft.com",
+      "phone": "66800000003"
+    },
+    {
+      "customer_id": "CUST-004",
+      "full_name": "Anan Chaiyaporn",
+      "email": "anan.chaiyaporn@example.com",
+      "bankx_email": "anan@bankxthb.onmicrosoft.com",
+      "phone": "66800000004"
+    },
+    {
+      "customer_id": "CUST-005",
+      "full_name": "Suda Kittikorn",
+      "email": "suda.kittikorn@example.com",
+      "phone": "66800000005"
+    },
+    {
+      "customer_id": "CUST-006",
+      "full_name": "Krit Boonyarat",
+      "email": "krit.boonyarat@example.com",
+      "phone": "66800000006"
+    },
+    {
+      "customer_id": "CUST-007",
+      "full_name": "Warunee Jirapat",
+      "email": "warunee.jirapat@example.com",
+      "phone": "66800000007"
+    },
+    {
+      "customer_id": "CUST-008",
+      "full_name": "Thanakorn Vichai",
+      "email": "thanakorn.vichai@example.com",
+      "phone": "66800000008"
+    },
+    {
+      "customer_id": "CUST-009",
+      "full_name": "Siriporn Kanjana",
+      "email": "siriporn.kanjana@example.com",
+      "phone": "66800000009"
+    },
+    {
+      "customer_id": "CUST-010",
+      "full_name": "Apichat Wattanakul",
+      "email": "apichat.wattanakul@example.com",
+      "phone": "66800000010"
+    }
+  ]
+}

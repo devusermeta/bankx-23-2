@@ -1,0 +1,31 @@
+﻿{
+    "appRoles":  [
+                     {
+                         "description":  "Banking customer with access to personal accounts",
+                         "displayName":  "Customer",
+                         "id":  "0fd0d9ee-9bda-45b4-bd30-286054f5001b",
+                         "value":  "Customer",
+                         "allowedMemberTypes":  [
+                                                    "User"
+                                                ]
+                     },
+                     {
+                         "description":  "Bank support agent with elevated access",
+                         "displayName":  "BankAgent",
+                         "id":  "d8e77c56-a9dd-41fc-82a8-9347c822b5d8",
+                         "value":  "BankAgent",
+                         "allowedMemberTypes":  [
+                                                    "User"
+                                                ]
+                     },
+                     {
+                         "description":  "Bank teller with branch permissions",
+                         "displayName":  "BankTeller",
+                         "id":  "5ef47dd1-1017-4b46-b624-f7e1b3c7ceb1",
+                         "value":  "BankTeller",
+                         "allowedMemberTypes":  [
+                                                    "User"
+                                                ]
+                     }
+                 ]
+}

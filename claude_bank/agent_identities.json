@@ -1,0 +1,37 @@
+{
+  "SupervisorAgent": {
+    "blueprint_id": "ba24f8b3-f9ae-4221-b712-d773992309ec",
+    "object_id": "3ce3bc67-dcde-4a31-a592-e7628d52e302",
+    "endpoint": "https://banking-new-resource.services.ai.azure.com/api/projects/banking-new/applications/SupervisorAgent"
+  },
+  "AccountAgent": {
+    "blueprint_id": "9ab1ed52-ac7c-4642-b439-51a0d2b32e9b",
+    "object_id": "cd49c905-46c1-4361-ba85-7269948c1d73",
+    "endpoint": "https://banking-new-resource.services.ai.azure.com/api/projects/banking-new/applications/AccountAgent"
+  },
+  "TransactionAgent": {
+    "blueprint_id": "b3af5bae-903f-4188-a326-2de4dcc117a3",
+    "object_id": "ae540a6c-4dec-4070-a000-cbf1760eb083",
+    "endpoint": "https://banking-new-resource.services.ai.azure.com/api/projects/banking-new/applications/TransactionAgent"
+  },
+  "PaymentAgent": {
+    "blueprint_id": "b494f2e3-7b8a-4039-83c9-34bb4548f09b",
+    "object_id": "790c605f-b84d-46d4-819b-478b161f30aa",
+    "endpoint": "https://banking-new-resource.services.ai.azure.com/api/projects/banking-new/applications/PaymentAgent"
+  },
+  "ProdInfoFAQAgent": {
+    "blueprint_id": "ff4a77c3-53e9-484b-b17a-7c9c7500156b",
+    "object_id": "33c71cdc-e99d-49e4-85c1-865920a9bfe1",
+    "endpoint": "https://banking-new-resource.services.ai.azure.com/api/projects/banking-new/applications/ProdInfoFAQAgent"
+  },
+  "AIMoneyCoachAgent": {
+    "blueprint_id": "60834169-4356-4daf-bfcf-99fd25d3f418",
+    "object_id": "ca899aab-44ad-47ed-98bc-343dd0b39f3a",
+    "endpoint": "https://banking-new-resource.services.ai.azure.com/api/projects/banking-new/applications/AIMoneyCoachAgent"
+  },
+  "EscalationAgent": {
+    "blueprint_id": "4c4777f3-0f28-4b0f-ad48-038f09150aa0",
+    "object_id": "31856c8d-1b84-4912-b1f1-5bfdd9daa0f1",
+    "endpoint": "https://banking-new-resource.services.ai.azure.com/api/projects/banking-new/applications/EscalationAgent"
+  }
+}

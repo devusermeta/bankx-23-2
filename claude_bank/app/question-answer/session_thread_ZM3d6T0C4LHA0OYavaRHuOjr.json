@@ -1,0 +1,23 @@
+{
+  "session_id": "thread_ZM3d6T0C4LHA0OYavaRHuOjr",
+  "customer_id": "CUST-002",
+  "user_email": "nattaporn@bankxthb.onmicrosoft.com",
+  "started_at": "2025-11-20T11:26:26.570402",
+  "last_updated": "2025-11-20T11:28:21.243777",
+  "conversation": [
+    {
+      "question": "what is the minimum deposit required for current account?",
+      "answer": "According to the Current Account documentation, the minimum opening deposit required is **10,000 THB**. Would you like more details about the features or fees associated with the Current Account?",
+      "timestamp": "2025-11-20T11:26:26.570402",
+      "agent_used": "ProdInfoFAQAgent",
+      "duration_seconds": 45.513476848602295
+    },
+    {
+      "question": "How can I get debt free in 2 years, I have a debt of 300000 THB",
+      "answer": "Based on the book \"Debt-Free to Financial Freedom\", here are steps to become debt-free efficiently:\n\n1. Use the \"avalanche method\": Prioritize paying off high-interest debts first while making minimum payments on others.\n2. Create a tight budget: Cut unnecessary expenses to allocate maximum funds for debt repayment.\n3. Boost income: Find additional income sources to accelerate payments. (Source: Chapter 4).\n\nIf you’d like more detailed guidance, let me know!",
+      "timestamp": "2025-11-20T11:28:21.243777",
+      "agent_used": "AIMoneyCoachAgent",
+      "duration_seconds": 48.62532186508179
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "session_id": "thread_tlQ9QMQeorAgtFgZoxqxSlrh",
+  "customer_id": "CUST-002",
+  "user_email": "nattaporn@bankxthb.onmicrosoft.com",
+  "started_at": "2025-12-31T20:11:15.825591",
+  "last_updated": "2025-12-31T20:11:27.804049",
+  "conversation": [
+    {
+      "question": "what are your credit card interest rates",
+      "answer": "\"I don't have information about credit card interest rates in my current knowledge base. Would you like me to create a support ticket so a product specialist can help you with this?\"",
+      "timestamp": "2025-12-31T20:11:15.825591",
+      "agent_used": "ProdInfoFAQAgent",
+      "duration_seconds": 21.048492431640625
+    },
+    {
+      "question": "No, cancel the ticket creation",
+      "answer": "Understood, I won’t create a ticket.",
+      "timestamp": "2025-12-31T20:11:27.804049",
+      "agent_used": "ProdInfoFAQAgent",
+      "duration_seconds": 6.828141212463379
+    }
+  ]
+}

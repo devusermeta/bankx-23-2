@@ -1,0 +1,16 @@
+{
+  "session_id": "session_90d21916",
+  "customer_id": "CUST-002",
+  "user_email": "nattaporn@bankxthb.onmicrosoft.com",
+  "started_at": "2026-01-12T15:03:59.867374",
+  "last_updated": "2026-01-12T15:03:59.867374",
+  "conversation": [
+    {
+      "question": "what are the latest credit card interest rates?",
+      "answer": "I don't have information about the latest credit card interest rates in the current knowledge base. Would you like me to create a support ticket so a product specialist can help you with this?",
+      "timestamp": "2026-01-12T15:03:59.867374",
+      "agent_used": "Product Info Agent",
+      "duration_seconds": 7.173400640487671
+    }
+  ]
+}

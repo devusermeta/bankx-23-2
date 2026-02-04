@@ -1,0 +1,34 @@
+# FastAPI and server
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+pydantic==2.5.3
+pydantic-settings==2.1.0
+
+# HTTP client
+httpx==0.26.0
+
+# Authentication
+PyJWT==2.8.0
+
+# Redis (for fast lookups)
+redis==5.0.1
+
+# Azure Cosmos DB (for persistence)
+azure-cosmos==4.5.1
+azure-identity==1.15.0
+
+# Application Insights & OpenTelemetry (MANDATORY)
+azure-monitor-opentelemetry==1.2.0
+opentelemetry-api==1.24.0
+opentelemetry-sdk==1.24.0
+opentelemetry-exporter-azure-monitor==1.0.0b15
+opentelemetry-instrumentation-fastapi==0.45b0
+opentelemetry-instrumentation-httpx==0.45b0
+opentelemetry-instrumentation-redis==0.45b0
+
+# Logging and monitoring
+python-json-logger==2.0.7
+
+# Development
+pytest==7.4.4
+pytest-asyncio==0.23.3

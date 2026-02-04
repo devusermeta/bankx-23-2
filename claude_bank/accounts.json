@@ -1,0 +1,113 @@
+{
+  "_metadata": {
+    "last_updated": "2025-12-05T11:24:07+07:00",
+    "source": "uc1_synthetic_data/accounts.csv",
+    "description": "Runtime account balances - updated on each transfer"
+  },
+  "accounts": [
+    {
+      "account_id": "CHK-001",
+      "customer_id": "CUST-001",
+      "account_no": "123-456-001",
+      "cust_name": "Somchai Rattanakorn",
+      "bankx_email": "somchai@bankxthb.onmicrosoft.com",
+      "acc_type": "CHK",
+      "currency": "THB",
+      "ledger_balance": 86000.0,
+      "available_balance": 86000.0
+    },
+    {
+      "account_id": "CHK-002",
+      "customer_id": "CUST-002",
+      "account_no": "123-456-002",
+      "cust_name": "Nattaporn Suksawat",
+      "bankx_email": "nattaporn@bankxthb.onmicrosoft.com",
+      "acc_type": "CHK",
+      "currency": "THB",
+      "ledger_balance": 79750.0,
+      "available_balance": 79750.0
+    },
+    {
+      "account_id": "CHK-003",
+      "customer_id": "CUST-003",
+      "account_no": "123-456-003",
+      "cust_name": "Pimchanok Thongchai",
+      "bankx_email": "pimchanok@bankxthb.onmicrosoft.com",
+      "acc_type": "CHK",
+      "currency": "THB",
+      "ledger_balance": 101950.0,
+      "available_balance": 101950.0
+    },
+    {
+      "account_id": "CHK-004",
+      "customer_id": "CUST-004",
+      "account_no": "123-456-004",
+      "cust_name": "Anan Chaiyaporn",
+      "bankx_email": "anan@bankxthb.onmicrosoft.com",
+      "acc_type": "CHK",
+      "currency": "THB",
+      "ledger_balance": 113400.0,
+      "available_balance": 113400.0
+    },
+    {
+      "account_id": "CHK-005",
+      "customer_id": "CUST-005",
+      "account_no": "123-456-005",
+      "cust_name": "Suda Kittikorn",
+      "acc_type": "CHK",
+      "currency": "THB",
+      "ledger_balance": 99750.0,
+      "available_balance": 99750.0
+    },
+    {
+      "account_id": "CHK-006",
+      "customer_id": "CUST-006",
+      "account_no": "123-456-006",
+      "cust_name": "Krit Boonyarat",
+      "acc_type": "CHK",
+      "currency": "THB",
+      "ledger_balance": 101550.0,
+      "available_balance": 101550.0
+    },
+    {
+      "account_id": "CHK-007",
+      "customer_id": "CUST-007",
+      "account_no": "123-456-007",
+      "cust_name": "Warunee Jirapat",
+      "acc_type": "CHK",
+      "currency": "THB",
+      "ledger_balance": 100850.0,
+      "available_balance": 100850.0
+    },
+    {
+      "account_id": "CHK-008",
+      "customer_id": "CUST-008",
+      "account_no": "123-456-008",
+      "cust_name": "Thanakorn Vichai",
+      "acc_type": "CHK",
+      "currency": "THB",
+      "ledger_balance": 107000.0,
+      "available_balance": 107000.0
+    },
+    {
+      "account_id": "CHK-009",
+      "customer_id": "CUST-009",
+      "account_no": "123-456-009",
+      "cust_name": "Siriporn Kanjana",
+      "acc_type": "CHK",
+      "currency": "THB",
+      "ledger_balance": 100950.0,
+      "available_balance": 100950.0
+    },
+    {
+      "account_id": "CHK-010",
+      "customer_id": "CUST-010",
+      "account_no": "123-456-010",
+      "cust_name": "Apichat Wattanakul",
+      "acc_type": "CHK",
+      "currency": "THB",
+      "ledger_balance": 108800.0,
+      "available_balance": 108800.0
+    }
+  ]
+}

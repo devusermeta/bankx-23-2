@@ -1,0 +1,42 @@
+{
+  "subscription_id": "your-subscription-id-here",
+  "resource_group_name": "bankx-dev-rg",
+  "location": "eastus",
+  "project_name": "bankx",
+  "environment": "dev",
+
+  "openai_account_name": "bankx-dev-openai",
+  "openai_deployment_name": "gpt-4o",
+  "openai_sku": "S0",
+
+  "ai_foundry_account_name": "bankx-dev-aifoundry",
+  "ai_foundry_project_name": "bankx-dev-aiproject",
+
+  "search_service_name": "bankx-dev-search",
+  "search_sku": "standard",
+
+  "cosmosdb_account_name": "bankx-dev-cosmos",
+  "cosmosdb_database_name": "bankx_db",
+
+  "storage_account_name": "bankxdevstorage",
+  "storage_container_name": "content",
+
+  "doc_intelligence_name": "bankx-dev-docintel",
+
+  "communication_service_name": "bankx-dev-commservice",
+
+  "apim_name": "bankx-dev-apim",
+  "apim_publisher_email": "admin@bankx.com",
+  "apim_publisher_name": "BankX Admin",
+
+  "sql_server_name": "bankx-dev-sqlserver",
+  "sql_database_name": "bankx_transactions",
+  "sql_admin_username": "bankxadmin",
+
+  "app_insights_name": "bankx-dev-appinsights",
+
+  "key_vault_name": "bankx-dev-kv",
+
+  "app_service_plan_name": "bankx-dev-appplan",
+  "app_service_sku": "B1"
+}

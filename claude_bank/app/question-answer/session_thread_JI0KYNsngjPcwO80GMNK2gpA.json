@@ -1,0 +1,16 @@
+{
+  "session_id": "thread_JI0KYNsngjPcwO80GMNK2gpA",
+  "customer_id": "CUST-002",
+  "user_email": "nattaporn@bankxthb.onmicrosoft.com",
+  "started_at": "2025-12-31T17:49:57.424863",
+  "last_updated": "2025-12-31T17:49:57.424863",
+  "conversation": [
+    {
+      "question": "transfer 1000 THb to Apichat",
+      "answer": "I couldn't retrieve that information right now.",
+      "timestamp": "2025-12-31T17:49:57.424863",
+      "agent_used": "PaymentAgent",
+      "duration_seconds": 26.961984395980835
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+# Ignore all JSON files (runtime state)
+
+# But keep README
+!README.md

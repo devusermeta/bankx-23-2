@@ -1,0 +1,23 @@
+{
+  "session_id": "thread_dY99J3TeGfWTgp2sSSpiHLgp",
+  "customer_id": "CUST-002",
+  "user_email": "nattaporn@bankxthb.onmicrosoft.com",
+  "started_at": "2025-12-31T18:06:24.020767",
+  "last_updated": "2025-12-31T18:15:13.872285",
+  "conversation": [
+    {
+      "question": "can you tell me aboput all your credit card benifits?",
+      "answer": "\"I don't have information about credit card benefits in my current knowledge base. Would you like me to create a support ticket so a product specialist can help you with this?\"",
+      "timestamp": "2025-12-31T18:06:24.020767",
+      "agent_used": "ProdInfoFAQAgent",
+      "duration_seconds": 21.194778442382812
+    },
+    {
+      "question": "Yes, create the ticket",
+      "answer": "\"The support ticket **TKT-2023-102520** has been successfully created for customer **Purohit Abhinav** (Email: purohitabhinav2001@gmail.com).\n\nA notification has been sent, confirming the ticket creation, and the ticket has been forwarded to the relevant product specialists for assistance.\"",
+      "timestamp": "2025-12-31T18:15:13.872285",
+      "agent_used": "EscalationCommsAgent",
+      "duration_seconds": 39.62555646896362
+    }
+  ]
+}

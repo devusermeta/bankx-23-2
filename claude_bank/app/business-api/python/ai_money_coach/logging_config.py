@@ -1,0 +1,36 @@
+"""Logging configuration."""
+
+import logging
+import sys
+
+
+def setup_logging(level: str = "INFO"):
+    """Setup logging configuration."""
+    handler = logging.StreamHandler(sys.stdout)
+    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    handler.setFormatter(formatter)
+
+    # Add filter to suppress noisy ConnectionResetError entries
+    class ConnectionResetFilter(logging.Filter):
+        def filter(self, record: logging.LogRecord) -> bool:
+            if record.exc_info:
+                exc_type = record.exc_info[0]
+                if exc_type and exc_type.__name__ == "ConnectionResetError":
+                    return False
+            try:
+                if "ConnectionResetError" in record.getMessage():
+                    return False
+            except Exception:
+                pass
+            return True
+
+    handler.addFilter(ConnectionResetFilter())
+
+    logging.basicConfig(
+        level=getattr(logging, level.upper()),
+        handlers=[handler]
+    )
+
+    # Set Azure SDK logging to WARNING to reduce noise
+    logging.getLogger("azure").setLevel(logging.WARNING)
+    logging.getLogger("azure.core").setLevel(logging.WARNING)

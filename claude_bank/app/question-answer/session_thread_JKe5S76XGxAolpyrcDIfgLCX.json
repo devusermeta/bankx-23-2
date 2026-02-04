@@ -1,0 +1,30 @@
+{
+  "session_id": "thread_JKe5S76XGxAolpyrcDIfgLCX",
+  "customer_id": "CUST-002",
+  "user_email": "nattaporn@bankxthb.onmicrosoft.com",
+  "started_at": "2026-01-01T13:04:40.234007",
+  "last_updated": "2026-01-01T13:06:22.676788",
+  "conversation": [
+    {
+      "question": "what is avalanche method?",
+      "answer": "The avalanche method focuses on paying off debts with the highest interest rates first to save on total interest paid in the long run. Continue making minimum payments on other debts while targeting the highest-rate debt with extra payments until it is cleared. Then, move to the next highest-rate debt.",
+      "timestamp": "2026-01-01T13:04:40.234007",
+      "agent_used": "AIMoneyCoachAgent",
+      "duration_seconds": 21.742597818374634
+    },
+    {
+      "question": "what are you rinterest on credit cards?",
+      "answer": "I don't have information about credit card products in my current knowledge base. Would you like me to create a support ticket so a product specialist can help you with this?",
+      "timestamp": "2026-01-01T13:05:32.049593",
+      "agent_used": "ProdInfoFAQAgent",
+      "duration_seconds": 14.946756839752197
+    },
+    {
+      "question": "Yes, create the ticket",
+      "answer": "The support ticket notification for ticket ID **TKT-2023-102703** has been successfully sent to the customer, Abhinav Purohit, at **purohitabhinav2001@gmail.com**.\n\nDetails:\n- Subject: Credit card products inquiry\n- Description: User asked about interest rates on credit cards.\n- Priority: Medium.",
+      "timestamp": "2026-01-01T13:06:22.676788",
+      "agent_used": "EscalationCommsAgent",
+      "duration_seconds": 37.62878131866455
+    }
+  ]
+}

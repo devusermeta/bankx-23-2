@@ -1,0 +1,80 @@
+{
+  "agent_id": "escalation-comms-agent-001",
+  "agent_name": "EscalationCommsAgent",
+  "agent_type": "communication",
+  "version": "1.0.0",
+  "description": "Handles email notifications and escalation communications via Azure Communication Services",
+  "capabilities": [
+    {
+      "name": "email.send_customer_notification",
+      "description": "Send ticket confirmation email to customer",
+      "input_schema": {
+        "customer_email": "string",
+        "customer_name": "string",
+        "ticket_id": "string",
+        "ticket_summary": "string",
+        "category": "string"
+      },
+      "output_schema": "EMAIL_CONFIRMATION"
+    },
+    {
+      "name": "email.send_employee_notification",
+      "description": "Send ticket notification to bank employee",
+      "input_schema": {
+        "employee_email": "string",
+        "ticket_id": "string",
+        "customer_id": "string",
+        "customer_name": "string",
+        "priority": "string",
+        "category": "string",
+        "details": "string"
+      },
+      "output_schema": "EMAIL_CONFIRMATION"
+    },
+    {
+      "name": "email.send_dual_notification",
+      "description": "Send notifications to both customer and employee",
+      "input_schema": {
+        "ticket_data": "object",
+        "customer_email": "string",
+        "employee_email": "string"
+      },
+      "output_schema": "EMAIL_CONFIRMATION"
+    }
+  ],
+  "mcp_tools": [
+    {
+      "tool_name": "EscalationComms.sendEmail",
+      "description": "Send email via Azure Communication Services",
+      "endpoint": "http://localhost:8076"
+    }
+  ],
+  "endpoints": {
+    "http": "http://localhost:8105",
+    "health": "http://localhost:8105/health",
+    "metrics": "http://localhost:8105/metrics",
+    "a2a": "http://localhost:8105/a2a/invoke"
+  },
+  "health_check_url": "http://localhost:8105/health",
+  "performance": {
+    "average_latency_ms": 500,
+    "p95_latency_ms": 1000,
+    "p99_latency_ms": 2000,
+    "max_concurrent_requests": 50
+  },
+  "dependencies": {
+    "mcp_services": ["EscalationComms MCP Server"],
+    "other_agents": [],
+    "external_services": ["Azure Communication Services", "APIM Gateway"]
+  },
+  "output_formats": ["EMAIL_CONFIRMATION"],
+  "metadata": {
+    "owner_team": "UC2/UC3 Team",
+    "support_contact": "uc2-uc3-support@bankx.com",
+    "documentation_url": "https://docs.bankx.com/agents/escalation-comms",
+    "max_concurrent_requests": 50,
+    "average_response_time_ms": 500
+  },
+  "status": "active",
+  "tags": ["uc2", "uc3", "communication", "escalation", "email"]
+}

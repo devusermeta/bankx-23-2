@@ -1,0 +1,23 @@
+{
+  "session_id": "thread_CppsbvPrCVGABSnGbRQNLThX",
+  "customer_id": "CUST-002",
+  "user_email": "nattaporn@bankxthb.onmicrosoft.com",
+  "started_at": "2025-12-31T21:27:57.948160",
+  "last_updated": "2025-12-31T21:30:00.958914",
+  "conversation": [
+    {
+      "question": "transfer 35 THB to Apichat",
+      "answer": "⚠️ PAYMENT CONFIRMATION REQUIRED ⚠️  \nPlease confirm to proceed with this payment:  \n• **Amount:** 35 THB  \n• **Recipient:** Apichat Wattanakul  \n• **Account:** 123-456-010  \n\nReply 'Yes' or 'Confirm' to proceed with the payment.",
+      "timestamp": "2025-12-31T21:27:57.948160",
+      "agent_used": "PaymentAgent",
+      "duration_seconds": 37.21813201904297
+    },
+    {
+      "question": "Yes, confirm the payment",
+      "answer": "The payment of **35 THB** to **Apichat Wattanakul** has been successfully completed. Your new balance is **78,780 THB**.",
+      "timestamp": "2025-12-31T21:30:00.958914",
+      "agent_used": "PaymentAgent",
+      "duration_seconds": 44.919045209884644
+    }
+  ]
+}

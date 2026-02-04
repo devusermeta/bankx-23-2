@@ -1,0 +1,6 @@
+# Ignore all session files - these are temporary and contain sensitive data
+*.json
+*
+
+# But keep the .gitignore file
+!.gitignore

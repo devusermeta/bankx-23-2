@@ -1,0 +1,37 @@
+{
+  "session_id": "cache-response",
+  "customer_id": "CUST-002",
+  "user_email": "nattaporn@bankxthb.onmicrosoft.com",
+  "started_at": "2026-01-13T12:42:20.503750",
+  "last_updated": "2026-01-14T20:26:26.651144",
+  "conversation": [
+    {
+      "question": "what have been my recent transactions?",
+      "answer": "Here are your recent transactions:\n\n<table>\n<thead>\n<tr><th>Date</th><th>Description</th><th>Type</th><th>Amount</th><th>Recipient</th></tr>\n</thead>\n<tbody>\n<tr><td>2026-01-07</td><td>Transfer to Somchai Rattanakorn</td><td>📤 Transfer</td><td>THB 3,000.00</td><td>Somchai Rattanakorn</td></tr>\n<tr><td>2026-01-01</td><td>Transfer to Somchai Rattanakorn</td><td>📤 Transfer</td><td>THB 100.00</td><td>Somchai Rattanakorn</td></tr>\n<tr><td>2026-01-01</td><td>Transfer to Apichat Wattanakul</td><td>📤 Transfer</td><td>THB 50.00</td><td>Apichat Wattanakul</td></tr>\n<tr><td>2025-12-31</td><td>Transfer to Somchai Rattanakorn</td><td>📤 Transfer</td><td>THB 100.00</td><td>Somchai Rattanakorn</td></tr>\n<tr><td>2025-12-31</td><td>Transfer to Apichat Wattanakul</td><td>📤 Transfer</td><td>THB 40.00</td><td>Apichat Wattanakul</td></tr>\n</tbody>\n</table>",
+      "timestamp": "2026-01-13T12:42:20.503750",
+      "agent_used": "TransactionAgent",
+      "duration_seconds": 0.04084348678588867
+    },
+    {
+      "question": "what is my account balance?",
+      "answer": "Your current account balance is **75,300.00 THB**.",
+      "timestamp": "2026-01-13T12:42:31.208318",
+      "agent_used": "AccountAgent",
+      "duration_seconds": 0.022081613540649414
+    },
+    {
+      "question": "what were my  recent transactions?",
+      "answer": "Here are your recent transactions:\n\n<table>\n<thead>\n<tr><th>Date</th><th>Description</th><th>Type</th><th>Amount</th><th>Recipient</th></tr>\n</thead>\n<tbody>\n<tr><td>2026-01-07</td><td>Transfer to Somchai Rattanakorn</td><td>📤 Transfer</td><td>THB 3,000.00</td><td>Somchai Rattanakorn</td></tr>\n<tr><td>2026-01-01</td><td>Transfer to Somchai Rattanakorn</td><td>📤 Transfer</td><td>THB 100.00</td><td>Somchai Rattanakorn</td></tr>\n<tr><td>2026-01-01</td><td>Transfer to Apichat Wattanakul</td><td>📤 Transfer</td><td>THB 50.00</td><td>Apichat Wattanakul</td></tr>\n<tr><td>2025-12-31</td><td>Transfer to Somchai Rattanakorn</td><td>📤 Transfer</td><td>THB 100.00</td><td>Somchai Rattanakorn</td></tr>\n<tr><td>2025-12-31</td><td>Transfer to Apichat Wattanakul</td><td>📤 Transfer</td><td>THB 40.00</td><td>Apichat Wattanakul</td></tr>\n</tbody>\n</table>",
+      "timestamp": "2026-01-13T12:52:59.381016",
+      "agent_used": "TransactionAgent",
+      "duration_seconds": 0.021622657775878906
+    },
+    {
+      "question": "I want to know my account balance",
+      "answer": "Your current account balance is **75,270.00 THB**.",
+      "timestamp": "2026-01-14T20:26:26.651144",
+      "agent_used": "AccountAgent",
+      "duration_seconds": 0.04532957077026367
+    }
+  ]
+}

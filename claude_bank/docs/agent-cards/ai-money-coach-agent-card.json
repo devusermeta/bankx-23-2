@@ -1,0 +1,248 @@
+{
+  "agent_id": "GENERATED_ON_STARTUP",
+  "agent_name": "AIMoneyCoachAgent",
+  "agent_type": "knowledge",
+  "version": "1.0.0",
+  "description": "Knowledge agent responsible for personal finance coaching, debt management advice, and financial wellness guidance. Uses RAG with 'Debt-Free to Financial Freedom' book. Implements clarification-first approach for personalized advice. Part of UC3 (AI Money Coach).",
+
+  "capabilities": [
+    {
+      "name": "coaching.debt_management",
+      "description": "Provide personalized debt management coaching and strategies",
+      "input_schema": {
+        "customer_id": "string (optional)",
+        "query": "string (required)",
+        "financial_context": "object (optional - debt amount, income, expenses)"
+      },
+      "output_schema": "Conversational response with ASCII tables and visual elements",
+      "coaching_areas": [
+        "Debt repayment strategies",
+        "Good debt vs bad debt analysis",
+        "Debt consolidation advice",
+        "Snowball vs avalanche methods",
+        "Emergency fund planning"
+      ],
+      "example_queries": [
+        "How can I manage my debt?",
+        "Should I consolidate my loans?",
+        "What is the difference between good and bad debt?",
+        "How do I prioritize multiple debts?",
+        "I'm drowning in debt, help!"
+      ],
+      "example_response": {
+        "type": "conversational",
+        "opening": "I understand dealing with debt can feel overwhelming. Let me help you create a personalized plan.",
+        "clarification_questions": [
+          "What is your total debt amount?",
+          "What is your monthly income?",
+          "Do you have an emergency fund?"
+        ],
+        "advice_preview": "Based on the book 'Debt-Free to Financial Freedom', I recommend starting with...",
+        "visual_aids": ["Debt snowball table", "Monthly budget breakdown"]
+      }
+    },
+    {
+      "name": "coaching.financial_health",
+      "description": "Assess financial health and categorize as Ordinary Patient or Critical Patient",
+      "input_schema": {
+        "customer_id": "string (optional)",
+        "debt_to_income_ratio": "number (optional)",
+        "emergency_fund_months": "number (optional)",
+        "financial_context": "object"
+      },
+      "output_schema": "Financial health assessment with category and recommendations",
+      "assessment_categories": {
+        "ordinary_patient": {
+          "description": "Can pay living expenses comfortably, has manageable debt",
+          "criteria": "Debt-to-income < 40%, has emergency fund",
+          "approach": "Optimization and wealth building"
+        },
+        "critical_patient": {
+          "description": "Cannot pay living expenses, overwhelming debt",
+          "criteria": "Debt-to-income > 40%, no emergency fund, frequent defaults",
+          "approach": "Immediate stabilization and mindset shift"
+        }
+      },
+      "example_response": {
+        "assessment": "Critical Patient",
+        "rationale": "Based on your debt-to-income ratio of 65% and lack of emergency fund...",
+        "immediate_actions": [
+          "Stop new debt immediately",
+          "Create bare minimum budget",
+          "Contact creditors for hardship programs"
+        ],
+        "mindset_coaching": "Remember: This is temporary. Many have recovered from worse situations..."
+      }
+    },
+    {
+      "name": "coaching.clarification_first",
+      "description": "Ask clarifying questions before providing personalized advice",
+      "input_schema": {
+        "query": "string (required)",
+        "context": "object (optional)"
+      },
+      "output_schema": "Clarification questions or personalized advice",
+      "clarification_mode": "enabled",
+      "why_clarification": "Generic advice can be harmful. Personalized coaching requires understanding individual circumstances.",
+      "example_interaction": {
+        "user_query": "How can I manage my debt?",
+        "agent_response": "I'd like to provide the most helpful advice for your specific situation. May I ask a few questions first?",
+        "clarification_questions": [
+          "What is your total monthly debt payment?",
+          "What is your approximate monthly income?",
+          "Do you have 3-6 months of expenses saved?",
+          "Are your debts primarily credit cards, loans, or mortgages?"
+        ],
+        "after_clarification": "Based on your responses, I recommend the debt avalanche method because..."
+      }
+    },
+    {
+      "name": "coaching.multiple_income",
+      "description": "Guide on creating multiple income streams and side hustles",
+      "input_schema": {
+        "current_income": "number (optional)",
+        "skills": "array (optional)",
+        "available_time_hours": "number (optional)"
+      },
+      "output_schema": "Multiple income strategies with examples",
+      "income_streams": [
+        "Freelancing and consulting",
+        "Online businesses",
+        "Passive income (investments, royalties)",
+        "Part-time work",
+        "Skill monetization"
+      ],
+      "example_response": {
+        "assessment": "Based on your skills and available 10 hours/week...",
+        "recommendations": [
+          {
+            "stream": "Freelance consulting",
+            "potential": "15,000-30,000 THB/month",
+            "time_investment": "10 hours/week",
+            "startup_cost": "Minimal (laptop, internet)"
+          }
+        ],
+        "action_plan": "Week 1: Set up profiles on freelancing platforms..."
+      }
+    },
+    {
+      "name": "ticket.create",
+      "description": "Create support ticket for out-of-scope or complex queries",
+      "input_schema": {
+        "customer_id": "string (required)",
+        "query": "string (required)",
+        "reason": "string (out_of_scope|requires_financial_advisor|complex)"
+      },
+      "output_schema": "TICKET_CARD",
+      "trigger_conditions": {
+        "out_of_scope_queries": ["Investment advice requiring certification", "Tax filing", "Legal advice"],
+        "user_requests_human": true
+      }
+    }
+  ],
+
+  "rag_configuration": {
+    "search_service": "Azure AI Search",
+    "index_name": "money-coach-index",
+    "embedding_model": "text-embedding-ada-002",
+    "top_k_results": 10,
+    "score_threshold": 0.6,
+    "reranking_enabled": true,
+    "cache_enabled": true,
+    "cache_ttl_hours": 168
+  },
+
+  "knowledge_base": {
+    "primary_source": {
+      "name": "Debt-Free to Financial Freedom",
+      "author": "Sarawut Suksringam",
+      "type": "Book",
+      "description": "Comprehensive guide on debt management and financial freedom",
+      "indexed": true,
+      "chapters": 12,
+      "key_topics": [
+        "Good debt vs bad debt",
+        "Ordinary patient vs critical patient",
+        "Debt repayment strategies",
+        "Multiple income streams",
+        "Mindset and psychology of money",
+        "Emergency fund creation"
+      ]
+    },
+    "supplementary_sources": [
+      "Financial wellness best practices",
+      "Thai banking context and regulations"
+    ]
+  },
+
+  "mcp_tools": [
+    {
+      "tool_name": "AIMoneyCoach.search",
+      "description": "Search money coach knowledge base using Azure AI Search",
+      "endpoint": "http://localhost:8075",
+      "apim_route": "/moneycoach/search"
+    },
+    {
+      "tool_name": "AIMoneyCoach.createTicket",
+      "description": "Create support ticket for escalation",
+      "endpoint": "http://localhost:8075",
+      "apim_route": "/moneycoach/createTicket"
+    }
+  ],
+
+  "endpoints": {
+    "http": "http://localhost:8104",
+    "health": "http://localhost:8104/health",
+    "metrics": "http://localhost:8104/metrics",
+    "a2a": "http://localhost:8104/a2a/invoke"
+  },
+
+  "performance": {
+    "average_latency_ms": 800,
+    "p95_latency_ms": 1500,
+    "p99_latency_ms": 2500,
+    "max_concurrent_requests": 80,
+    "typical_search_latency_ms": 500
+  },
+
+  "dependencies": {
+    "mcp_services": ["AIMoneyCoach MCP Server (port 8075)"],
+    "other_agents": ["EscalationCommsAgent (for ticket email notifications)"],
+    "external_services": [
+      "Azure AI Search",
+      "Azure OpenAI (embeddings + chat)",
+      "Cosmos DB (ticket storage)",
+      "Agent Registry"
+    ]
+  },
+
+  "output_formats": [
+    "Conversational responses",
+    "ASCII tables for budgets and debt plans",
+    "Visual progress indicators",
+    "Action plans with numbered steps",
+    "TICKET_CARD"
+  ],
+
+  "coaching_principles": {
+    "empathy_first": "Acknowledge emotional challenges of debt",
+    "no_judgment": "Avoid blaming or shaming language",
+    "actionable_advice": "Provide specific, implementable steps",
+    "hope_and_encouragement": "Balance realism with optimism",
+    "personalization": "Tailor advice to individual circumstances",
+    "evidence_based": "Ground all advice in book content"
+  },
+
+  "metadata": {
+    "owner_team": "UC3 Team",
+    "support_contact": "uc3-team@bankx.com",
+    "documentation_url": "https://docs.bankx.com/agents/ai-money-coach",
+    "use_cases": ["UC3"],
+    "deployment_mode": "replicated",
+    "min_replicas": 2,
+    "max_replicas": 8,
+    "sensitive_content": true
+  },
+
+  "tags": ["uc3", "knowledge-agent", "rag", "financial-coaching", "debt-management", "wellness"]
+}

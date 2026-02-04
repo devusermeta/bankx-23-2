@@ -1,0 +1,208 @@
+{
+  "agent_id": "GENERATED_ON_STARTUP",
+  "agent_name": "PaymentAgent",
+  "agent_type": "domain",
+  "version": "1.0.0",
+  "description": "Domain agent responsible for money transfers with approval workflow, beneficiary resolution, and policy gate validation. Implements explicit approval pattern for all money movement. Part of UC1 (Financial Operations).",
+
+  "capabilities": [
+    {
+      "name": "payment.transfer",
+      "description": "Process money transfer with two-phase approval workflow",
+      "input_schema": {
+        "customer_id": "string (required)",
+        "from_account_id": "string (optional - resolved if not provided)",
+        "to_beneficiary": "string (name or account number, required)",
+        "amount": "number (required)",
+        "schedule": "string (NOW|SCHEDULED, default: NOW)",
+        "scheduled_date": "string (ISO date, required if schedule=SCHEDULED)",
+        "description": "string (optional)"
+      },
+      "output_schema": "TRANSFER_APPROVAL (Phase 1) → TRANSFER_RESULT (Phase 2)",
+      "workflow": {
+        "phase_1_validation": {
+          "description": "Validate transfer and generate approval card",
+          "steps": [
+            "Resolve beneficiary from contacts",
+            "Validate transfer eligibility (policy gates)",
+            "Check limits (per-transaction, daily)",
+            "Generate TRANSFER_APPROVAL card"
+          ],
+          "output": "TRANSFER_APPROVAL"
+        },
+        "phase_2_execution": {
+          "description": "Execute transfer after user approval",
+          "steps": [
+            "User clicks 'Approve' button",
+            "Submit payment with idempotent request_id",
+            "Update balances and limits",
+            "Return TRANSFER_RESULT"
+          ],
+          "output": "TRANSFER_RESULT"
+        }
+      },
+      "example_request": {
+        "customer_id": "CUST-001",
+        "to_beneficiary": "Nattaporn",
+        "amount": 1000,
+        "schedule": "NOW"
+      },
+      "example_response_phase1": {
+        "type": "TRANSFER_APPROVAL",
+        "from_account": {
+          "account_id": "CHK-001",
+          "account_name": "Somchai's Checking",
+          "balance": 99650.00
+        },
+        "to_beneficiary": {
+          "name": "Nattaporn Suksawat",
+          "account_no": "123-456-002"
+        },
+        "amount": 1000.00,
+        "validation": {
+          "sufficient_balance": true,
+          "within_per_txn_limit": true,
+          "within_daily_limit": true
+        },
+        "action": "REQUIRE_APPROVAL"
+      },
+      "example_response_phase2": {
+        "type": "TRANSFER_RESULT",
+        "status": "SUCCESS",
+        "payment_id": "PAY-001-20251027-150001",
+        "new_balance": 98650.00,
+        "daily_limit_remaining": 199000.00
+      }
+    },
+    {
+      "name": "payment.validate",
+      "description": "Validate transfer against policy gates without executing",
+      "input_schema": {
+        "from_account_id": "string",
+        "to_account_id": "string",
+        "amount": "number"
+      },
+      "output_schema": "VALIDATION_RESULT",
+      "policy_gates": [
+        "Sufficient balance check",
+        "Per-transaction limit (50,000 THB)",
+        "Daily limit (200,000 THB)",
+        "Account status check",
+        "Beneficiary validation"
+      ]
+    },
+    {
+      "name": "beneficiary.resolve",
+      "description": "Resolve beneficiary from name or partial account number",
+      "input_schema": {
+        "customer_id": "string (required)",
+        "beneficiary_query": "string (name or account number)"
+      },
+      "output_schema": "BENEFICIARY_INFO or BENEFICIARY_PICKER (if ambiguous)",
+      "example_response": {
+        "beneficiary_id": "CONT-002",
+        "name": "Nattaporn Suksawat",
+        "account_no": "123-456-002",
+        "bank": "BankX"
+      }
+    }
+  ],
+
+  "policy_gates": {
+    "balance_check": {
+      "description": "Ensure sufficient balance for transfer",
+      "rule": "available_balance >= amount + fees"
+    },
+    "per_transaction_limit": {
+      "description": "Per-transaction limit enforcement",
+      "rule": "amount <= 50000 THB"
+    },
+    "daily_limit": {
+      "description": "Daily cumulative limit enforcement",
+      "rule": "daily_total + amount <= 200000 THB"
+    },
+    "beneficiary_validation": {
+      "description": "Ensure beneficiary is registered contact",
+      "rule": "beneficiary exists in contacts.csv"
+    },
+    "account_status": {
+      "description": "Ensure account is active",
+      "rule": "account.status == ACTIVE"
+    }
+  },
+
+  "mcp_tools": [
+    {
+      "tool_name": "Payments.validateTransfer",
+      "description": "Validate transfer eligibility against policy gates",
+      "endpoint": "http://localhost:8072",
+      "apim_route": "/payments/validateTransfer"
+    },
+    {
+      "tool_name": "Payments.submitPayment",
+      "description": "Execute payment with idempotency enforcement",
+      "endpoint": "http://localhost:8072",
+      "apim_route": "/payments/submitPayment"
+    },
+    {
+      "tool_name": "Limits.checkLimits",
+      "description": "Check per-transaction and daily limits",
+      "endpoint": "http://localhost:8073",
+      "apim_route": "/limits/checkLimits"
+    }
+  ],
+
+  "endpoints": {
+    "http": "http://localhost:8102",
+    "health": "http://localhost:8102/health",
+    "metrics": "http://localhost:8102/metrics",
+    "a2a": "http://localhost:8102/a2a/invoke"
+  },
+
+  "performance": {
+    "average_latency_ms": 400,
+    "p95_latency_ms": 800,
+    "p99_latency_ms": 1500,
+    "max_concurrent_requests": 80,
+    "typical_mcp_calls_per_request": 3
+  },
+
+  "dependencies": {
+    "mcp_services": [
+      "Payments MCP Server (port 8072)",
+      "Limits MCP Server (port 8073)"
+    ],
+    "other_agents": ["AccountAgent (for account resolution)"],
+    "external_services": ["APIM Gateway", "Agent Registry", "Decision Ledger"]
+  },
+
+  "output_formats": [
+    "TRANSFER_APPROVAL",
+    "TRANSFER_RESULT",
+    "VALIDATION_RESULT",
+    "BENEFICIARY_INFO",
+    "BENEFICIARY_PICKER",
+    "ERROR_CARD"
+  ],
+
+  "idempotency": {
+    "enabled": true,
+    "request_id_generation": "UUID v4",
+    "duplicate_window_seconds": 3600,
+    "enforcement_level": "APIM Gateway + Agent"
+  },
+
+  "metadata": {
+    "owner_team": "UC1 Team",
+    "support_contact": "uc1-team@bankx.com",
+    "documentation_url": "https://docs.bankx.com/agents/payment",
+    "use_cases": ["UC1"],
+    "user_stories": ["US 1.4 - Transfer to Registered Contact"],
+    "deployment_mode": "replicated",
+    "min_replicas": 3,
+    "max_replicas": 12,
+    "critical_service": true
+  },
+
+  "tags": ["uc1", "financial-operations", "payment", "money-transfer", "domain-agent", "critical"]
+}

@@ -1,0 +1,23 @@
+{
+  "session_id": "thread_1UoSpShBnQUmSGxBLjJyxutZ",
+  "customer_id": "CUST-002",
+  "user_email": "nattaporn@bankxthb.onmicrosoft.com",
+  "started_at": "2025-11-24T07:51:58.434760",
+  "last_updated": "2025-11-24T07:52:46.382378",
+  "conversation": [
+    {
+      "question": "what is the minimum deposit required for the current account?",
+      "answer": "According to the Current Account documentation, the minimum deposit required to open a Current Account is **1,000 THB**.",
+      "timestamp": "2025-11-24T07:51:58.434760",
+      "agent_used": "ProdInfoFAQAgent",
+      "duration_seconds": 23.80878734588623
+    },
+    {
+      "question": "what is avalanche method?",
+      "answer": "The avalanche method prioritizes paying off debts with the highest interest rates first while continuing to make minimum payments on all other debts. This reduces the overall cost of interest over time. It requires discipline but minimizes the total amount paid. (Source: Chapter 5)",
+      "timestamp": "2025-11-24T07:52:46.382378",
+      "agent_used": "AIMoneyCoachAgent",
+      "duration_seconds": 19.972035884857178
+    }
+  ]
+}

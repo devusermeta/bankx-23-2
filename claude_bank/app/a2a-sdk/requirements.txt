@@ -1,0 +1,15 @@
+# Core dependencies
+pydantic==2.5.3
+httpx==0.26.0
+
+# Distributed tracing & Application Insights (MANDATORY)
+opentelemetry-api==1.24.0
+opentelemetry-sdk==1.24.0
+opentelemetry-instrumentation-httpx==0.45b0
+opentelemetry-exporter-azure-monitor==1.0.0b15
+azure-monitor-opentelemetry==1.2.0
+
+# Development
+pytest==7.4.4
+pytest-asyncio==0.23.3
+pytest-cov==4.1.0

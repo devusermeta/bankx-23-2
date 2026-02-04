@@ -1,0 +1,107 @@
+{
+  "agent_name": "AccountAgent",
+  "agent_type": "domain",
+  "version": "1.0.0",
+  "description": "Handles account resolution, balance inquiries, and limits checking for UC1 financial operations",
+
+  "capabilities": [
+    {
+      "name": "account.balance",
+      "description": "Retrieve account balance and available funds",
+      "input_schema": {
+        "customer_id": {"type": "string", "required": true},
+        "account_id": {"type": "string", "required": false}
+      },
+      "output_schema": "BALANCE_CARD"
+    },
+    {
+      "name": "account.limits",
+      "description": "Check transaction and daily limits for an account",
+      "input_schema": {
+        "customer_id": {"type": "string", "required": true},
+        "account_id": {"type": "string", "required": false}
+      },
+      "output_schema": "BALANCE_CARD"
+    },
+    {
+      "name": "account.disambiguation",
+      "description": "Resolve which account to use when customer has multiple accounts",
+      "input_schema": {
+        "customer_id": {"type": "string", "required": true}
+      },
+      "output_schema": "ACCOUNT_PICKER"
+    },
+    {
+      "name": "account.details",
+      "description": "Get detailed account information",
+      "input_schema": {
+        "customer_id": {"type": "string", "required": true},
+        "account_id": {"type": "string", "required": true}
+      },
+      "output_schema": "ACCOUNT_DETAILS"
+    }
+  ],
+
+  "mcp_tools": [
+    {
+      "tool_name": "Account.getCustomerAccounts",
+      "description": "Get all accounts for a customer",
+      "endpoint": "http://account-mcp:8070"
+    },
+    {
+      "tool_name": "Account.getAccountDetails",
+      "description": "Get detailed account information",
+      "endpoint": "http://account-mcp:8070"
+    },
+    {
+      "tool_name": "Limits.checkLimits",
+      "description": "Check transaction limits",
+      "endpoint": "http://limits-mcp:8073"
+    }
+  ],
+
+  "endpoints": {
+    "http": "http://account-agent:8100",
+    "health": "http://account-agent:8100/health",
+    "metrics": "http://account-agent:8100/metrics",
+    "a2a": "http://account-agent:8100/a2a/invoke"
+  },
+
+  "performance": {
+    "average_latency_ms": 250,
+    "p95_latency_ms": 500,
+    "p99_latency_ms": 1000,
+    "max_concurrent_requests": 100
+  },
+
+  "dependencies": {
+    "mcp_services": ["Account MCP Server", "Limits MCP Server"],
+    "other_agents": [],
+    "external_services": ["APIM Gateway"]
+  },
+
+  "output_formats": ["BALANCE_CARD", "ACCOUNT_PICKER", "ACCOUNT_DETAILS"],
+
+  "deployment": {
+    "container_image": "bankx/account-agent:1.0.0",
+    "port": 8100,
+    "min_replicas": 2,
+    "max_replicas": 10,
+    "cpu": "0.5",
+    "memory": "1Gi",
+    "env_requirements": [
+      "ACCOUNT_MCP_URL",
+      "LIMITS_MCP_URL",
+      "AGENT_REGISTRY_URL",
+      "AZURE_OPENAI_ENDPOINT"
+    ]
+  },
+
+  "metadata": {
+    "owner_team": "UC1 Financial Operations Team",
+    "support_contact": "uc1-team@bankx.com",
+    "documentation_url": "https://docs.bankx.com/agents/account"
+  },
+
+  "tags": ["uc1", "financial-operations", "account-management", "domain-agent"]
+}

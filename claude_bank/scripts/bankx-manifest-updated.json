@@ -1,0 +1,204 @@
+{
+	"id": "3fa86f98-0c49-4d28-b4ae-43b76092fdda",
+	"deletedDateTime": null,
+	"appId": "c37e62a7-a62f-4ebf-a7c2-d6a3d318f76b",
+	"applicationTemplateId": null,
+	"disabledByMicrosoftStatus": null,
+	"createdDateTime": "2025-11-12T09:53:35Z",
+	"displayName": "BankX-Multi-Agent-App",
+	"description": null,
+	"groupMembershipClaims": null,
+	"identifierUris": [
+		"api://c37e62a7-a62f-4ebf-a7c2-d6a3d318f76b"
+	],
+	"isDeviceOnlyAuthSupported": null,
+	"isFallbackPublicClient": true,
+	"nativeAuthenticationApisEnabled": null,
+	"notes": null,
+	"publisherDomain": "bankxthb.onmicrosoft.com",
+	"serviceManagementReference": null,
+	"signInAudience": "AzureADMyOrg",
+	"tags": [],
+	"tokenEncryptionKeyId": null,
+	"samlMetadataUrl": null,
+	"defaultRedirectUri": null,
+	"certification": null,
+	"requestSignatureVerification": null,
+	"addIns": [],
+	"api": {
+		"acceptMappedClaims": null,
+		"knownClientApplications": [],
+		"requestedAccessTokenVersion": 2,
+		"oauth2PermissionScopes": [
+			{
+				"adminConsentDescription": "Allows the application to access BankX banking services on behalf of the signed-in user",
+				"adminConsentDisplayName": "Access BankX API",
+				"id": "141499f4-2ee7-47f5-a266-cd9779457551",
+				"isEnabled": true,
+				"type": "User",
+				"userConsentDescription": "Allows the app to access your BankX banking information",
+				"userConsentDisplayName": "Access your BankX account",
+				"value": "BankX.Access"
+			}
+		],
+		"preAuthorizedApplications": []
+	},
+	"appRoles": [
+		{
+			"allowedMemberTypes": [
+				"User"
+			],
+			"description": "Bank teller with branch permissions",
+			"displayName": "BankTeller",
+			"id": "5ef47dd1-1017-4b46-b624-f7e1b3c7ceb1",
+			"isEnabled": true,
+			"origin": "Application",
+			"value": "BankTeller"
+		},
+		{
+			"allowedMemberTypes": [
+				"User"
+			],
+			"description": "Bank support agent with elevated access",
+			"displayName": "BankAgent",
+			"id": "d8e77c56-a9dd-41fc-82a8-9347c822b5d8",
+			"isEnabled": true,
+			"origin": "Application",
+			"value": "BankAgent"
+		},
+		{
+			"allowedMemberTypes": [
+				"User"
+			],
+			"description": "Banking customer with access to personal accounts",
+			"displayName": "Customer",
+			"id": "0fd0d9ee-9bda-45b4-bd30-286054f5001b",
+			"isEnabled": true,
+			"origin": "Application",
+			"value": "Customer"
+		}
+	],
+	"info": {
+		"logoUrl": null,
+		"marketingUrl": null,
+		"privacyStatementUrl": null,
+		"supportUrl": null,
+		"termsOfServiceUrl": null
+	},
+	"keyCredentials": [],
+	"optionalClaims": {
+		"accessToken": [
+			{
+				"additionalProperties": [],
+				"essential": false,
+				"name": "email",
+				"source": null
+			},
+			{
+				"additionalProperties": [],
+				"essential": false,
+				"name": "upn",
+				"source": null
+			},
+			{
+				"additionalProperties": [],
+				"essential": false,
+				"name": "preferred_username",
+				"source": null
+			},
+			{
+				"additionalProperties": [],
+				"essential": false,
+				"name": "family_name",
+				"source": null
+			},
+			{
+				"additionalProperties": [],
+				"essential": false,
+				"name": "given_name",
+				"source": null
+			}
+		],
+		"idToken": [
+			{
+				"additionalProperties": [],
+				"essential": false,
+				"name": "email",
+				"source": null
+			},
+			{
+				"additionalProperties": [],
+				"essential": false,
+				"name": "upn",
+				"source": null
+			},
+			{
+				"additionalProperties": [],
+				"essential": false,
+				"name": "preferred_username",
+				"source": null
+			},
+			{
+				"additionalProperties": [],
+				"essential": false,
+				"name": "family_name",
+				"source": null
+			},
+			{
+				"additionalProperties": [],
+				"essential": false,
+				"name": "given_name",
+				"source": null
+			}
+		],
+		"saml2Token": []
+	},
+	"parentalControlSettings": {
+		"countriesBlockedForMinors": [],
+		"legalAgeGroupRule": "Allow"
+	},
+	"passwordCredentials": [],
+	"publicClient": {
+		"redirectUris": []
+	},
+	"requiredResourceAccess": [
+		{
+			"resourceAppId": "00000003-0000-0000-c000-000000000000",
+			"resourceAccess": [
+				{
+					"id": "e1fe6dd8-ba31-4d61-89e7-88639da4683d",
+					"type": "Scope"
+				},
+				{
+					"id": "37f7f235-527c-4136-accd-4a02d197296e",
+					"type": "Scope"
+				},
+				{
+					"id": "64a6cdd6-aab1-4aaf-94b8-3cc8405e90d0",
+					"type": "Scope"
+				}
+			]
+		}
+	],
+	"verifiedPublisher": {
+		"displayName": null,
+		"verifiedPublisherId": null,
+		"addedDateTime": null
+	},
+	"web": {
+		"homePageUrl": null,
+		"logoutUrl": null,
+		"redirectUris": [],
+		"implicitGrantSettings": {
+			"enableAccessTokenIssuance": true,
+			"enableIdTokenIssuance": true
+		}
+	},
+	"servicePrincipalLockConfiguration": null,
+	"spa": {
+		"redirectUris": [
+			"http://localhost:8081",
+			"http://localhost:8081/"
+		]
+	}
+}

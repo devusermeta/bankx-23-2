@@ -1,0 +1,16 @@
+{
+  "session_id": "thread_jezxVFswcoO1nLczJolTke64",
+  "customer_id": "CUST-002",
+  "user_email": "nattaporn@bankxthb.onmicrosoft.com",
+  "started_at": "2025-12-31T19:46:50.684932",
+  "last_updated": "2025-12-31T19:46:50.684932",
+  "conversation": [
+    {
+      "question": "what is the avalanche method?",
+      "answer": "The avalanche method focuses on paying off debts with the highest interest rates first, while still making minimum payments on all other debts. This approach saves money on interest over time and helps you get out of debt faster. (Source: Chapter 2)",
+      "timestamp": "2025-12-31T19:46:50.684932",
+      "agent_used": "AIMoneyCoachAgent",
+      "duration_seconds": 46.104992389678955
+    }
+  ]
+}

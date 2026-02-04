@@ -1,0 +1,39 @@
+# Azure Infrastructure Provisioning Requirements
+# Install with: pip install -r requirements.txt
+
+# Core Azure SDK
+azure-identity>=1.15.0
+azure-mgmt-resource>=23.0.0
+
+# Cognitive Services (Azure OpenAI, Document Intelligence)
+azure-mgmt-cognitiveservices>=13.5.0
+
+# Azure AI Search
+azure-mgmt-search>=9.0.0
+
+# Azure Cosmos DB
+azure-mgmt-cosmosdb>=9.3.0
+
+# Azure Storage
+azure-mgmt-storage>=21.1.0
+
+# Azure Communication Services
+azure-mgmt-communication>=2.0.0
+
+# Azure Web/App Services
+azure-mgmt-web>=7.2.0
+
+# Azure API Management
+azure-mgmt-apimanagement>=4.0.0
+
+# Azure SQL Database
+azure-mgmt-sql>=3.0.1
+
+# Azure Monitor
+azure-mgmt-monitor>=6.0.2
+
+# Azure Key Vault
+azure-mgmt-keyvault>=10.3.0
+
+# Application Insights (optional)
+# azure-mgmt-applicationinsights>=4.0.0

@@ -1,0 +1,16 @@
+{
+  "session_id": "thread_ehw5wQ7u0jv1rCpWs7TKEhsE",
+  "customer_id": "CUST-002",
+  "user_email": "nattaporn@bankxthb.onmicrosoft.com",
+  "started_at": "2025-12-31T19:58:59.707659",
+  "last_updated": "2025-12-31T19:58:59.707659",
+  "conversation": [
+    {
+      "question": "what is avalanche method?",
+      "answer": "Based on the book, the avalanche method is a debt repayment strategy where you prioritize paying off debts with the highest interest rates first. This minimizes the overall interest paid over time. While making minimum payments on all other debts, apply extra money to the highest-interest debt until it is fully paid, then move to the next highest one. (Source: Chapter X)",
+      "timestamp": "2025-12-31T19:58:59.707659",
+      "agent_used": "AIMoneyCoachAgent",
+      "duration_seconds": 24.77928400039673
+    }
+  ]
+}

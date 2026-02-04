@@ -1,0 +1,16 @@
+{
+  "session_id": "thread_dnIB8b04Hpj0qc4TbOlCxMDL",
+  "customer_id": "CUST-002",
+  "user_email": "nattaporn@bankxthb.onmicrosoft.com",
+  "started_at": "2025-12-31T19:41:29.121659",
+  "last_updated": "2025-12-31T19:41:29.121659",
+  "conversation": [
+    {
+      "question": "what is the avalanche method?",
+      "answer": "Based on the book \"Debt-Free to Financial Freedom,\" the avalanche method involves paying off debts with the highest interest rate first. This approach minimizes the total interest paid over time and accelerates debt repayment. Make minimum payments on all other debts while applying extra funds to the debt with the highest interest. (Source: Chapter 4)",
+      "timestamp": "2025-12-31T19:41:29.121659",
+      "agent_used": "AIMoneyCoachAgent",
+      "duration_seconds": 43.300400257110596
+    }
+  ]
+}

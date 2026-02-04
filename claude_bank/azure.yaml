@@ -1,0 +1,60 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+
+name: personal-finance-assistance-python
+metadata:
+  template: agent-openai-python-banking-assistant@1.0.0-alpha
+services:
+  copilot:
+    project: app/copilot
+    language: python
+    host: containerapp
+    docker:
+      remoteBuild: true
+  account:
+    project: ./app/business-api/python/account
+    language: python
+    host: containerapp
+    docker:
+      remoteBuild: true
+  payment:
+    project: ./app/business-api/python/payment
+    language: python
+    host: containerapp
+    docker:
+      remoteBuild: true
+  transaction:
+    project: ./app/business-api/python/transaction
+    language: python
+    host: containerapp
+    docker:
+      remoteBuild: true
+  web:
+    project: app/frontend
+    language: js
+    host: containerapp
+    docker:
+      remoteBuild: true
+
+  # UC2: Product Info & FAQ MCP Service
+  prodinfo-faq:
+    project: ./app/business-api/python/prodinfo_faq
+    language: python
+    host: containerapp
+    docker:
+      remoteBuild: true
+
+  # UC3: AI Money Coach MCP Service
+  ai-money-coach:
+    project: ./app/business-api/python/ai_money_coach
+    language: python
+    host: containerapp
+    docker:
+      remoteBuild: true
+
+  # Escalation & Communications MCP Service (shared by UC2/UC3)
+  escalation-comms:
+    project: ./app/business-api/python/escalation_comms
+    language: python
+    host: containerapp
+    docker:
+      remoteBuild: true

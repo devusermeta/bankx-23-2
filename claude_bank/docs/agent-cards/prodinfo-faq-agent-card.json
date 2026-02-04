@@ -1,0 +1,240 @@
+{
+  "agent_id": "GENERATED_ON_STARTUP",
+  "agent_name": "ProdInfoFAQAgent",
+  "agent_type": "knowledge",
+  "version": "1.0.0",
+  "description": "Knowledge agent responsible for answering product information questions and FAQs using RAG (Retrieval Augmented Generation) with Azure AI Search. Creates support tickets when confidence is low or answer not found. Part of UC2 (Product Information & FAQ).",
+
+  "capabilities": [
+    {
+      "name": "product.info",
+      "description": "Retrieve product information using RAG from indexed documents",
+      "input_schema": {
+        "customer_id": "string (optional)",
+        "query": "string (required)",
+        "product_type": "string (optional - current|savings|fixed|td)",
+        "context": "object (optional)"
+      },
+      "output_schema": "KNOWLEDGE_CARD",
+      "example_queries": [
+        "What is a Current Account?",
+        "What are the features of a savings account?",
+        "Compare fixed account vs savings account",
+        "What is the minimum balance for current account?",
+        "What are the interest rates for time deposits?"
+      ],
+      "example_response": {
+        "type": "KNOWLEDGE_CARD",
+        "query": "What is a Current Account?",
+        "answer": "A Current Account is a type of deposit account designed for frequent transactions...",
+        "sources": [
+          {
+            "document": "current-account-en.pdf",
+            "page": 1,
+            "confidence": 0.92
+          }
+        ],
+        "confidence_score": 0.92
+      }
+    },
+    {
+      "name": "faq.answer",
+      "description": "Answer frequently asked questions with source citations",
+      "input_schema": {
+        "customer_id": "string (optional)",
+        "question": "string (required)"
+      },
+      "output_schema": "FAQ_CARD",
+      "knowledge_sources": [
+        "SCB FAQ webpage (https://www.scb.co.th/en/personal-banking/faq/deposit-faq.html)",
+        "Product documents (Current, Savings, Fixed, TD PDFs)",
+        "Banking terms glossary"
+      ],
+      "example_response": {
+        "type": "FAQ_CARD",
+        "question": "How is interest calculated on savings accounts?",
+        "answer": "Interest on savings accounts is calculated using compound interest...",
+        "sources": ["normal-savings-account-en.pdf", "FAQ webpage"],
+        "related_questions": [
+          "What is the current interest rate?",
+          "How often is interest paid?"
+        ]
+      }
+    },
+    {
+      "name": "product.compare",
+      "description": "Compare different banking products side-by-side",
+      "input_schema": {
+        "product_a": "string (required)",
+        "product_b": "string (required)",
+        "comparison_criteria": "array (optional)"
+      },
+      "output_schema": "COMPARISON_CARD",
+      "example_response": {
+        "type": "COMPARISON_CARD",
+        "products": ["Savings Account", "Fixed Deposit"],
+        "comparison": [
+          {
+            "criteria": "Interest Rate",
+            "savings": "0.5% p.a.",
+            "fixed": "2.0% p.a."
+          },
+          {
+            "criteria": "Withdrawal",
+            "savings": "Anytime",
+            "fixed": "At maturity"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ticket.create",
+      "description": "Create support ticket when answer not found or confidence below threshold",
+      "input_schema": {
+        "customer_id": "string (required)",
+        "query": "string (required)",
+        "confidence_score": "number",
+        "reason": "string (low_confidence|not_found|complex_query)"
+      },
+      "output_schema": "TICKET_CARD",
+      "trigger_conditions": {
+        "confidence_threshold": 0.3,
+        "no_relevant_documents": true,
+        "user_requests_human": true
+      },
+      "example_response": {
+        "type": "TICKET_CARD",
+        "ticket_id": "TKT-UC2-20251107-001",
+        "status": "created",
+        "message": "Your question has been forwarded to our support team. You will receive a response within 24 hours.",
+        "estimated_response_time": "24 hours"
+      }
+    },
+    {
+      "name": "banking_terms.explain",
+      "description": "Explain banking and financial terms in simple language",
+      "input_schema": {
+        "term": "string (required)",
+        "detail_level": "string (simple|detailed, default: simple)"
+      },
+      "output_schema": "EXPLANATION_CARD",
+      "example_response": {
+        "type": "EXPLANATION_CARD",
+        "term": "Compound Interest",
+        "simple_explanation": "Interest calculated on both the initial principal and accumulated interest",
+        "example": "If you deposit 10,000 THB at 2% annually...",
+        "related_terms": ["Simple Interest", "Annual Percentage Rate"]
+      }
+    }
+  ],
+
+  "rag_configuration": {
+    "search_service": "Azure AI Search",
+    "index_name": "product-info-faq-index",
+    "embedding_model": "text-embedding-ada-002",
+    "top_k_results": 5,
+    "score_threshold": 0.7,
+    "reranking_enabled": true,
+    "cache_enabled": true,
+    "cache_ttl_hours": 24
+  },
+
+  "knowledge_base": {
+    "documents": [
+      {
+        "name": "current-account-en.pdf",
+        "type": "Product Specification",
+        "indexed": true
+      },
+      {
+        "name": "normal-savings-account-en.pdf",
+        "type": "Product Specification",
+        "indexed": true
+      },
+      {
+        "name": "normal-fixed-account-en.pdf",
+        "type": "Product Specification",
+        "indexed": true
+      },
+      {
+        "name": "td-bonus-24months-en.pdf",
+        "type": "Product Specification",
+        "indexed": true
+      },
+      {
+        "name": "td-bonus-36months-en.pdf",
+        "type": "Product Specification",
+        "indexed": true
+      },
+      {
+        "name": "SCB FAQ Webpage",
+        "type": "FAQ",
+        "url": "https://www.scb.co.th/en/personal-banking/faq/deposit-faq.html",
+        "indexed": true
+      }
+    ],
+    "total_documents": 6,
+    "last_indexed": "2025-11-07"
+  },
+
+  "mcp_tools": [
+    {
+      "tool_name": "ProdInfoFAQ.search",
+      "description": "Search product info and FAQ using Azure AI Search",
+      "endpoint": "http://localhost:8074",
+      "apim_route": "/prodinfo/search"
+    },
+    {
+      "tool_name": "ProdInfoFAQ.createTicket",
+      "description": "Create support ticket in Cosmos DB",
+      "endpoint": "http://localhost:8074",
+      "apim_route": "/prodinfo/createTicket"
+    }
+  ],
+
+  "endpoints": {
+    "http": "http://localhost:8103",
+    "health": "http://localhost:8103/health",
+    "metrics": "http://localhost:8103/metrics",
+    "a2a": "http://localhost:8103/a2a/invoke"
+  },
+
+  "performance": {
+    "average_latency_ms": 600,
+    "p95_latency_ms": 1200,
+    "p99_latency_ms": 2000,
+    "max_concurrent_requests": 100,
+    "typical_search_latency_ms": 400
+  },
+
+  "dependencies": {
+    "mcp_services": ["ProdInfoFAQ MCP Server (port 8074)"],
+    "other_agents": ["EscalationCommsAgent (for ticket email notifications)"],
+    "external_services": [
+      "Azure AI Search",
+      "Azure OpenAI (embeddings + chat)",
+      "Cosmos DB (ticket storage)",
+      "Agent Registry"
+    ]
+  },
+
+  "output_formats": [
+    "KNOWLEDGE_CARD",
+    "FAQ_CARD",
+    "COMPARISON_CARD",
+    "EXPLANATION_CARD",
+    "TICKET_CARD"
+  ],
+
+  "metadata": {
+    "owner_team": "UC2 Team",
+    "support_contact": "uc2-team@bankx.com",
+    "documentation_url": "https://docs.bankx.com/agents/prodinfo-faq",
+    "use_cases": ["UC2"],
+    "deployment_mode": "replicated",
+    "min_replicas": 2,
+    "max_replicas": 8
+  },
+
+  "tags": ["uc2", "knowledge-agent", "rag", "product-info", "faq", "support-ticket"]
+}

@@ -1,0 +1,36 @@
+version: '3.8'
+
+# Test Frontend Container Locally
+# This docker-compose file helps you test the frontend container
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bankx-frontend-test
+    ports:
+      - "8081:80"
+    environment:
+      # Point to your locally running backend (outside Docker)
+      # Windows/Mac: use host.docker.internal
+      # Linux: use 172.17.0.1 (Docker bridge IP)
+      - BACKEND_URL=http://host.docker.internal:8080
+    restart: unless-stopped
+
+# Usage:
+# ------
+# 1. Make sure your backend is running locally on port 8080
+#    cd ../../copilot
+#    .venv\Scripts\Activate.ps1
+#    $env:PROFILE="dev"
+#    uvicorn app.main:app --reload --host 0.0.0.0 --port 8080
+#
+# 2. Build and start frontend container:
+#    docker-compose -f docker-compose.test.yml up --build
+#
+# 3. Access frontend:
+#    http://localhost:8081
+#
+# 4. Stop:
+#    docker-compose -f docker-compose.test.yml down

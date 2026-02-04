@@ -1,0 +1,76 @@
+{
+  "agent_id": "prodinfo-faq-agent-001",
+  "agent_name": "ProdInfoFAQAgent",
+  "agent_type": "knowledge",
+  "version": "1.0.0",
+  "description": "Handles product information queries and FAQs using RAG with Azure AI Search",
+  "capabilities": [
+    {
+      "name": "product.info",
+      "description": "Retrieve product information using RAG",
+      "input_schema": {
+        "query": "string",
+        "product_category": "string (optional)"
+      },
+      "output_schema": "KNOWLEDGE_CARD"
+    },
+    {
+      "name": "faq.answer",
+      "description": "Answer frequently asked questions",
+      "input_schema": {
+        "question": "string"
+      },
+      "output_schema": "FAQ_CARD"
+    },
+    {
+      "name": "ticket.create",
+      "description": "Create support ticket when answer not found",
+      "input_schema": {
+        "customer_id": "string",
+        "query": "string",
+        "category": "string"
+      },
+      "output_schema": "TICKET_CARD"
+    }
+  ],
+  "mcp_tools": [
+    {
+      "tool_name": "ProdInfoFAQ.search",
+      "description": "Search product information knowledge base",
+      "endpoint": "http://localhost:8074"
+    },
+    {
+      "tool_name": "ProdInfoFAQ.createTicket",
+      "description": "Create support ticket for unanswered queries",
+      "endpoint": "http://localhost:8074"
+    }
+  ],
+  "endpoints": {
+    "http": "http://localhost:8104",
+    "health": "http://localhost:8104/health",
+    "metrics": "http://localhost:8104/metrics",
+    "a2a": "http://localhost:8104/a2a/invoke"
+  },
+  "health_check_url": "http://localhost:8104/health",
+  "performance": {
+    "average_latency_ms": 400,
+    "p95_latency_ms": 800,
+    "p99_latency_ms": 1500,
+    "max_concurrent_requests": 50
+  },
+  "dependencies": {
+    "mcp_services": ["ProdInfoFAQ MCP Server"],
+    "other_agents": ["EscalationCommsAgent"],
+    "external_services": ["Azure AI Search", "APIM Gateway"]
+  },
+  "output_formats": ["KNOWLEDGE_CARD", "FAQ_CARD", "TICKET_CARD"],
+  "metadata": {
+    "owner_team": "UC2 Team",
+    "support_contact": "uc2-support@bankx.com",
+    "documentation_url": "https://docs.bankx.com/agents/prodinfo-faq",
+    "max_concurrent_requests": 50,
+    "average_response_time_ms": 400
+  },
+  "status": "active",
+  "tags": ["uc2", "knowledge", "product-info", "faq"]
+}

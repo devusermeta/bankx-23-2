@@ -1,0 +1,93 @@
+version: 1
+disable_existing_loggers: false
+
+formatters:
+  default:
+    format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    datefmt: '%Y-%m-%d %H:%M:%S'
+  detailed:
+    format: '%(asctime)s - %(name)s - %(levelname)s - %(funcName)s:%(lineno)d - %(message)s'
+    datefmt: '%Y-%m-%d %H:%M:%S'
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: INFO
+    formatter: default
+    stream: ext://sys.stdout
+  
+  file:
+    class: logging.FileHandler
+    level: DEBUG
+    formatter: detailed
+    filename: logs/copilot.log
+    mode: a
+    encoding: utf8
+  
+  error_file:
+    class: logging.FileHandler
+    level: ERROR
+    formatter: detailed
+    filename: logs/copilot_errors.log
+    mode: a
+    encoding: utf8
+
+loggers:
+
+  app:
+    level: DEBUG
+    handlers: [console, file, error_file]
+    propagate: false
+  app.api:
+    level: DEBUG
+    handlers: [console, file, error_file]
+    propagate: false
+  app.helpers:
+    level: DEBUG
+    handlers: [console, file, error_file]
+    propagate: false
+  app.agents:
+    level: DEBUG
+    handlers: [console, file, error_file]
+    propagate: false
+  app.common:
+    level: DEBUG
+    handlers: [console, file, error_file]
+    propagate: false
+  # Azure loggers - suppress INFO logs
+  azure.core.pipeline.policies.http_logging_policy:
+    level: WARNING
+    handlers: [file]
+    propagate: false
+
+  # OpenAI client - set to DEBUG for detailed logging
+  openai._base_client:
+    level: WARNING
+    handlers: [file]
+    propagate: false
+
+  httpx:
+    level: WARNING
+    handlers: [file]
+    propagate: false
+
+  # MCP client - capture errors but reduce noise
+  mcp.client.streamable_http:
+    level: ERROR
+    handlers: [file, error_file]
+    propagate: false
+
+  # Azure Identity - set to DEBUG for detailed authentication logging
+  azure.identity:
+    level: WARNING
+    handlers: [file]
+    propagate: false
+
+  azure.monitor.opentelemetry.exporter.export._base:
+    level: WARNING
+    handlers: [file]
+    propagate: false
+
+root:
+  level: INFO
+  handlers: [console, file]

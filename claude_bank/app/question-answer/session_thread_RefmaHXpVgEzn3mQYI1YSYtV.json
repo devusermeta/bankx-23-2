@@ -1,0 +1,23 @@
+{
+  "session_id": "thread_RefmaHXpVgEzn3mQYI1YSYtV",
+  "customer_id": "CUST-002",
+  "user_email": "nattaporn@bankxthb.onmicrosoft.com",
+  "started_at": "2025-12-03T21:28:45.313648",
+  "last_updated": "2025-12-03T21:29:28.722414",
+  "conversation": [
+    {
+      "question": "what are your credit card discounts?",
+      "answer": "\"I don't have information about credit card discounts in my current knowledge base. Would you like me to create a support ticket so a product specialist can help you with this?\"",
+      "timestamp": "2025-12-03T21:28:45.313648",
+      "agent_used": "ProdInfoFAQAgent",
+      "duration_seconds": 22.745255947113037
+    },
+    {
+      "question": "Yes, create the ticket",
+      "answer": "\"The support ticket TKT-2023-102612 has been successfully created for Abhinav Purohit (purohitabhinav2001@gmail.com). The customer has been notified, and the notification email has been sent.\"",
+      "timestamp": "2025-12-03T21:29:28.722414",
+      "agent_used": "EscalationCommsAgent",
+      "duration_seconds": 39.98131442070007
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+[project]
+name = "banking-assistant-contacts-mcp"
+version = "0.1.0"
+description = "Python MCP server for beneficiary/contacts management using fastmcp"
+readme = "README.md"
+requires-python = ">=3.11"
+
+dependencies = [
+    "fastmcp",
+    "pydantic",
+    "filelock"
+]

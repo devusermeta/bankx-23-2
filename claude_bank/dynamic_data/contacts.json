@@ -1,0 +1,479 @@
+{
+  "_metadata": {
+    "last_updated": "2025-11-07T16:05:24+07:00",
+    "source": "uc1_synthetic_data/contacts.csv",
+    "description": "Registered beneficiaries - can be extended at runtime"
+  },
+  "contacts": {
+    "CUST-001": [
+      {
+        "name": "Nattaporn Suksawat",
+        "account_no": "123-456-002",
+        "alias": "Nattaporn"
+      },
+      {
+        "name": "Pimchanok Thongchai",
+        "account_no": "123-456-003",
+        "alias": "Pimchanok"
+      },
+      {
+        "name": "Anan Chaiyaporn",
+        "account_no": "123-456-004",
+        "alias": "Anan"
+      },
+      {
+        "name": "Suda Kittikorn",
+        "account_no": "123-456-005",
+        "alias": "Suda"
+      },
+      {
+        "name": "Krit Boonyarat",
+        "account_no": "123-456-006",
+        "alias": "Krit"
+      },
+      {
+        "name": "Warunee Jirapat",
+        "account_no": "123-456-007",
+        "alias": "Warunee"
+      },
+      {
+        "name": "Thanakorn Vichai",
+        "account_no": "123-456-008",
+        "alias": "Thanakorn"
+      },
+      {
+        "name": "Siriporn Kanjana",
+        "account_no": "123-456-009",
+        "alias": "Siriporn"
+      },
+      {
+        "name": "Apichat Wattanakul",
+        "account_no": "123-456-010",
+        "alias": "Apichat"
+      }
+    ],
+    "CUST-002": [
+      {
+        "name": "Somchai Rattanakorn",
+        "account_no": "123-456-001",
+        "alias": "Somchai"
+      },
+      {
+        "name": "Pimchanok Thongchai",
+        "account_no": "123-456-003",
+        "alias": "Pimchanok"
+      },
+      {
+        "name": "Anan Chaiyaporn",
+        "account_no": "123-456-004",
+        "alias": "Anan"
+      },
+      {
+        "name": "Suda Kittikorn",
+        "account_no": "123-456-005",
+        "alias": "Suda"
+      },
+      {
+        "name": "Krit Boonyarat",
+        "account_no": "123-456-006",
+        "alias": "Krit"
+      },
+      {
+        "name": "Warunee Jirapat",
+        "account_no": "123-456-007",
+        "alias": "Warunee"
+      },
+      {
+        "name": "Thanakorn Vichai",
+        "account_no": "123-456-008",
+        "alias": "Thanakorn"
+      },
+      {
+        "name": "Siriporn Kanjana",
+        "account_no": "123-456-009",
+        "alias": "Siriporn"
+      },
+      {
+        "name": "Apichat Wattanakul",
+        "account_no": "123-456-010",
+        "alias": "Apichat"
+      }
+    ],
+    "CUST-003": [
+      {
+        "name": "Somchai Rattanakorn",
+        "account_no": "123-456-001",
+        "alias": "Somchai"
+      },
+      {
+        "name": "Nattaporn Suksawat",
+        "account_no": "123-456-002",
+        "alias": "Nattaporn"
+      },
+      {
+        "name": "Anan Chaiyaporn",
+        "account_no": "123-456-004",
+        "alias": "Anan"
+      },
+      {
+        "name": "Suda Kittikorn",
+        "account_no": "123-456-005",
+        "alias": "Suda"
+      },
+      {
+        "name": "Krit Boonyarat",
+        "account_no": "123-456-006",
+        "alias": "Krit"
+      },
+      {
+        "name": "Warunee Jirapat",
+        "account_no": "123-456-007",
+        "alias": "Warunee"
+      },
+      {
+        "name": "Thanakorn Vichai",
+        "account_no": "123-456-008",
+        "alias": "Thanakorn"
+      },
+      {
+        "name": "Siriporn Kanjana",
+        "account_no": "123-456-009",
+        "alias": "Siriporn"
+      },
+      {
+        "name": "Apichat Wattanakul",
+        "account_no": "123-456-010",
+        "alias": "Apichat"
+      }
+    ],
+    "CUST-004": [
+      {
+        "name": "Somchai Rattanakorn",
+        "account_no": "123-456-001",
+        "alias": "Somchai"
+      },
+      {
+        "name": "Nattaporn Suksawat",
+        "account_no": "123-456-002",
+        "alias": "Nattaporn"
+      },
+      {
+        "name": "Pimchanok Thongchai",
+        "account_no": "123-456-003",
+        "alias": "Pimchanok"
+      },
+      {
+        "name": "Suda Kittikorn",
+        "account_no": "123-456-005",
+        "alias": "Suda"
+      },
+      {
+        "name": "Krit Boonyarat",
+        "account_no": "123-456-006",
+        "alias": "Krit"
+      },
+      {
+        "name": "Warunee Jirapat",
+        "account_no": "123-456-007",
+        "alias": "Warunee"
+      },
+      {
+        "name": "Thanakorn Vichai",
+        "account_no": "123-456-008",
+        "alias": "Thanakorn"
+      },
+      {
+        "name": "Siriporn Kanjana",
+        "account_no": "123-456-009",
+        "alias": "Siriporn"
+      },
+      {
+        "name": "Apichat Wattanakul",
+        "account_no": "123-456-010",
+        "alias": "Apichat"
+      }
+    ],
+    "CUST-005": [
+      {
+        "name": "Somchai Rattanakorn",
+        "account_no": "123-456-001",
+        "alias": "Somchai"
+      },
+      {
+        "name": "Nattaporn Suksawat",
+        "account_no": "123-456-002",
+        "alias": "Nattaporn"
+      },
+      {
+        "name": "Pimchanok Thongchai",
+        "account_no": "123-456-003",
+        "alias": "Pimchanok"
+      },
+      {
+        "name": "Anan Chaiyaporn",
+        "account_no": "123-456-004",
+        "alias": "Anan"
+      },
+      {
+        "name": "Krit Boonyarat",
+        "account_no": "123-456-006",
+        "alias": "Krit"
+      },
+      {
+        "name": "Warunee Jirapat",
+        "account_no": "123-456-007",
+        "alias": "Warunee"
+      },
+      {
+        "name": "Thanakorn Vichai",
+        "account_no": "123-456-008",
+        "alias": "Thanakorn"
+      },
+      {
+        "name": "Siriporn Kanjana",
+        "account_no": "123-456-009",
+        "alias": "Siriporn"
+      },
+      {
+        "name": "Apichat Wattanakul",
+        "account_no": "123-456-010",
+        "alias": "Apichat"
+      }
+    ],
+    "CUST-006": [
+      {
+        "name": "Somchai Rattanakorn",
+        "account_no": "123-456-001",
+        "alias": "Somchai"
+      },
+      {
+        "name": "Nattaporn Suksawat",
+        "account_no": "123-456-002",
+        "alias": "Nattaporn"
+      },
+      {
+        "name": "Pimchanok Thongchai",
+        "account_no": "123-456-003",
+        "alias": "Pimchanok"
+      },
+      {
+        "name": "Anan Chaiyaporn",
+        "account_no": "123-456-004",
+        "alias": "Anan"
+      },
+      {
+        "name": "Suda Kittikorn",
+        "account_no": "123-456-005",
+        "alias": "Suda"
+      },
+      {
+        "name": "Warunee Jirapat",
+        "account_no": "123-456-007",
+        "alias": "Warunee"
+      },
+      {
+        "name": "Thanakorn Vichai",
+        "account_no": "123-456-008",
+        "alias": "Thanakorn"
+      },
+      {
+        "name": "Siriporn Kanjana",
+        "account_no": "123-456-009",
+        "alias": "Siriporn"
+      },
+      {
+        "name": "Apichat Wattanakul",
+        "account_no": "123-456-010",
+        "alias": "Apichat"
+      }
+    ],
+    "CUST-007": [
+      {
+        "name": "Somchai Rattanakorn",
+        "account_no": "123-456-001",
+        "alias": "Somchai"
+      },
+      {
+        "name": "Nattaporn Suksawat",
+        "account_no": "123-456-002",
+        "alias": "Nattaporn"
+      },
+      {
+        "name": "Pimchanok Thongchai",
+        "account_no": "123-456-003",
+        "alias": "Pimchanok"
+      },
+      {
+        "name": "Anan Chaiyaporn",
+        "account_no": "123-456-004",
+        "alias": "Anan"
+      },
+      {
+        "name": "Suda Kittikorn",
+        "account_no": "123-456-005",
+        "alias": "Suda"
+      },
+      {
+        "name": "Krit Boonyarat",
+        "account_no": "123-456-006",
+        "alias": "Krit"
+      },
+      {
+        "name": "Thanakorn Vichai",
+        "account_no": "123-456-008",
+        "alias": "Thanakorn"
+      },
+      {
+        "name": "Siriporn Kanjana",
+        "account_no": "123-456-009",
+        "alias": "Siriporn"
+      },
+      {
+        "name": "Apichat Wattanakul",
+        "account_no": "123-456-010",
+        "alias": "Apichat"
+      }
+    ],
+    "CUST-008": [
+      {
+        "name": "Somchai Rattanakorn",
+        "account_no": "123-456-001",
+        "alias": "Somchai"
+      },
+      {
+        "name": "Nattaporn Suksawat",
+        "account_no": "123-456-002",
+        "alias": "Nattaporn"
+      },
+      {
+        "name": "Pimchanok Thongchai",
+        "account_no": "123-456-003",
+        "alias": "Pimchanok"
+      },
+      {
+        "name": "Anan Chaiyaporn",
+        "account_no": "123-456-004",
+        "alias": "Anan"
+      },
+      {
+        "name": "Suda Kittikorn",
+        "account_no": "123-456-005",
+        "alias": "Suda"
+      },
+      {
+        "name": "Krit Boonyarat",
+        "account_no": "123-456-006",
+        "alias": "Krit"
+      },
+      {
+        "name": "Warunee Jirapat",
+        "account_no": "123-456-007",
+        "alias": "Warunee"
+      },
+      {
+        "name": "Siriporn Kanjana",
+        "account_no": "123-456-009",
+        "alias": "Siriporn"
+      },
+      {
+        "name": "Apichat Wattanakul",
+        "account_no": "123-456-010",
+        "alias": "Apichat"
+      }
+    ],
+    "CUST-009": [
+      {
+        "name": "Somchai Rattanakorn",
+        "account_no": "123-456-001",
+        "alias": "Somchai"
+      },
+      {
+        "name": "Nattaporn Suksawat",
+        "account_no": "123-456-002",
+        "alias": "Nattaporn"
+      },
+      {
+        "name": "Pimchanok Thongchai",
+        "account_no": "123-456-003",
+        "alias": "Pimchanok"
+      },
+      {
+        "name": "Anan Chaiyaporn",
+        "account_no": "123-456-004",
+        "alias": "Anan"
+      },
+      {
+        "name": "Suda Kittikorn",
+        "account_no": "123-456-005",
+        "alias": "Suda"
+      },
+      {
+        "name": "Krit Boonyarat",
+        "account_no": "123-456-006",
+        "alias": "Krit"
+      },
+      {
+        "name": "Warunee Jirapat",
+        "account_no": "123-456-007",
+        "alias": "Warunee"
+      },
+      {
+        "name": "Thanakorn Vichai",
+        "account_no": "123-456-008",
+        "alias": "Thanakorn"
+      },
+      {
+        "name": "Apichat Wattanakul",
+        "account_no": "123-456-010",
+        "alias": "Apichat"
+      }
+    ],
+    "CUST-010": [
+      {
+        "name": "Somchai Rattanakorn",
+        "account_no": "123-456-001",
+        "alias": "Somchai"
+      },
+      {
+        "name": "Nattaporn Suksawat",
+        "account_no": "123-456-002",
+        "alias": "Nattaporn"
+      },
+      {
+        "name": "Pimchanok Thongchai",
+        "account_no": "123-456-003",
+        "alias": "Pimchanok"
+      },
+      {
+        "name": "Anan Chaiyaporn",
+        "account_no": "123-456-004",
+        "alias": "Anan"
+      },
+      {
+        "name": "Suda Kittikorn",
+        "account_no": "123-456-005",
+        "alias": "Suda"
+      },
+      {
+        "name": "Krit Boonyarat",
+        "account_no": "123-456-006",
+        "alias": "Krit"
+      },
+      {
+        "name": "Warunee Jirapat",
+        "account_no": "123-456-007",
+        "alias": "Warunee"
+      },
+      {
+        "name": "Thanakorn Vichai",
+        "account_no": "123-456-008",
+        "alias": "Thanakorn"
+      },
+      {
+        "name": "Siriporn Kanjana",
+        "account_no": "123-456-009",
+        "alias": "Siriporn"
+      }
+    ]
+  }
+}

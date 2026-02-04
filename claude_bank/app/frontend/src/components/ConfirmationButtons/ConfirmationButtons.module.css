@@ -1,0 +1,109 @@
+.buttonContainer {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+    margin: 16px 0;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    min-width: 120px;
+    justify-content: center;
+}
+
+.button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.button:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.confirmButton {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+}
+
+.confirmButton:hover:not(:disabled) {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+}
+
+.confirmButton:active:not(:disabled) {
+    background: linear-gradient(135deg, #047857 0%, #065f46 100%);
+}
+
+.cancelButton {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+}
+
+.cancelButton:hover:not(:disabled) {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+}
+
+.cancelButton:active:not(:disabled) {
+    background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
+}
+
+.icon {
+    flex-shrink: 0;
+}
+
+.buttonText {
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .buttonContainer {
+        flex-direction: column;
+        width: 100%;
+        gap: 10px;
+    }
+    
+    .button {
+        width: 100%;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .button {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    
+    .button:hover:not(:disabled) {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    }
+}

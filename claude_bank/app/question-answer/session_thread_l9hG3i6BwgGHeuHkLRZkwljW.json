@@ -1,0 +1,16 @@
+{
+  "session_id": "thread_l9hG3i6BwgGHeuHkLRZkwljW",
+  "customer_id": "CUST-002",
+  "user_email": "nattaporn@bankxthb.onmicrosoft.com",
+  "started_at": "2025-11-24T07:33:41.572263",
+  "last_updated": "2025-11-24T07:33:41.572263",
+  "conversation": [
+    {
+      "question": "what is my account password?",
+      "answer": "I cannot assist with account password-related questions.",
+      "timestamp": "2025-11-24T07:33:41.572263",
+      "agent_used": null,
+      "duration_seconds": 11.848158836364746
+    }
+  ]
+}

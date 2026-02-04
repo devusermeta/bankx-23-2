@@ -27,8 +27,13 @@ load_dotenv(override=True)
 
 # Read agent instructions from prompts file
 PROMPTS_PATH = Path(__file__).parent / "prompts" / "account_agent.md"
-with open(PROMPTS_PATH, "r", encoding="utf-8") as f:
-    AGENT_INSTRUCTIONS = f.read()
+try:
+    with open(PROMPTS_PATH, "r", encoding="utf-8-sig") as f:
+        AGENT_INSTRUCTIONS = f.read()
+except UnicodeDecodeError:
+    # Fallback to latin-1 if utf-8 fails
+    with open(PROMPTS_PATH, "r", encoding="latin-1") as f:
+        AGENT_INSTRUCTIONS = f.read()
 
 
 async def create_account_agent():

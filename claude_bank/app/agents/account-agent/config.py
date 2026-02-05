@@ -25,8 +25,8 @@ class AgentConfig:
     )
 
     # MCP Services
-    MCP_ACCOUNT_URL: str = os.getenv("MCP_ACCOUNT_URL", "http://localhost:8070")
-    MCP_LIMITS_URL: str = os.getenv("MCP_LIMITS_URL", "http://localhost:8073")
+    MCP_ACCOUNT_URL: str = os.getenv("MCP_ACCOUNT_URL", "https://account-mcp.mangopond-a6402d9f.swedencentral.azurecontainerapps.io")
+    MCP_LIMITS_URL: str = os.getenv("MCP_LIMITS_URL", "https://limits-mcp.mangopond-a6402d9f.swedencentral.azurecontainerapps.io")
 
     # Observability
     LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")

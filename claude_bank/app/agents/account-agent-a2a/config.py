@@ -18,8 +18,8 @@ ACCOUNT_AGENT_NAME = os.getenv("ACCOUNT_AGENT_NAME", "account-a2a")
 ACCOUNT_AGENT_VERSION = os.getenv("ACCOUNT_AGENT_VERSION", "1")
 
 # MCP Server URLs
-ACCOUNT_MCP_SERVER_URL = os.getenv("ACCOUNT_MCP_SERVER_URL", "http://localhost:8070/mcp")
-LIMITS_MCP_SERVER_URL = os.getenv("LIMITS_MCP_SERVER_URL", "http://localhost:8073/mcp")
+ACCOUNT_MCP_SERVER_URL = os.getenv("ACCOUNT_MCP_SERVER_URL", "https://account-mcp.mangopond-a6402d9f.swedencentral.azurecontainerapps.io/mcp")
+LIMITS_MCP_SERVER_URL = os.getenv("LIMITS_MCP_SERVER_URL", "https://limits-mcp.mangopond-a6402d9f.swedencentral.azurecontainerapps.io/mcp")
 
 # Agent Configuration
 ACCOUNT_AGENT_CONFIG = {

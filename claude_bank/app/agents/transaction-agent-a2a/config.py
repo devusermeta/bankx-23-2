@@ -27,8 +27,8 @@ AZURE_AI_MODEL_DEPLOYMENT_NAME = os.getenv("AZURE_AI_MODEL_DEPLOYMENT_NAME", "gp
 # =============================================================================
 # MCP SERVER URLS (Transaction agent uses Account + Transaction MCP)
 # =============================================================================
-ACCOUNT_MCP_SERVER_URL = os.getenv("ACCOUNT_MCP_SERVER_URL", "http://localhost:8070/mcp")
-TRANSACTION_MCP_SERVER_URL = os.getenv("TRANSACTION_MCP_SERVER_URL", "http://localhost:8071/mcp")
+ACCOUNT_MCP_SERVER_URL = os.getenv("ACCOUNT_MCP_SERVER_URL", "https://account-mcp.mangopond-a6402d9f.swedencentral.azurecontainerapps.io/mcp")
+TRANSACTION_MCP_SERVER_URL = os.getenv("TRANSACTION_MCP_SERVER_URL", "https://transaction.mangopond-a6402d9f.swedencentral.azurecontainerapps.io/mcp")
 
 # =============================================================================
 # A2A SERVER SETTINGS

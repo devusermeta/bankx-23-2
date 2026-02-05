@@ -3,7 +3,7 @@
   "customer_id": "CUST-002",
   "user_email": "nattaporn@bankxthb.onmicrosoft.com",
   "started_at": "2026-01-13T12:43:04.833779",
-  "last_updated": "2026-02-04T15:24:49.302166",
+  "last_updated": "2026-02-05T22:01:26.944439",
   "conversation": [
     {
       "question": "what are the rate of interst of credit cards?",
@@ -81,6 +81,13 @@
       "timestamp": "2026-02-04T15:24:49.302166",
       "agent_used": "Payment Agent",
       "duration_seconds": 46.31463408470154
+    },
+    {
+      "question": "I want to know my account balance",
+      "answer": "The account service is taking too long to respond. Please try again.",
+      "timestamp": "2026-02-05T22:01:26.944439",
+      "agent_used": "Account Agent",
+      "duration_seconds": 30.593018293380737
     }
   ]
 }

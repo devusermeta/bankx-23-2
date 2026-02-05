@@ -25,8 +25,14 @@ if not instructions_file.exists():
     print(f"❌ Error: Instructions file not found: {instructions_file}")
     sys.exit(1)
 
-with open(instructions_file, "r", encoding="utf-8") as f:
-    AGENT_INSTRUCTIONS = f.read()
+# Read instructions with encoding fallback
+try:
+    with open(instructions_file, "r", encoding="utf-8-sig") as f:
+        AGENT_INSTRUCTIONS = f.read()
+except UnicodeDecodeError:
+    print("⚠️ UTF-8 decoding failed, trying latin-1...")
+    with open(instructions_file, "r", encoding="latin-1") as f:
+        AGENT_INSTRUCTIONS = f.read()
 
 # Clean instructions to ensure proper encoding
 AGENT_INSTRUCTIONS = AGENT_INSTRUCTIONS.strip()

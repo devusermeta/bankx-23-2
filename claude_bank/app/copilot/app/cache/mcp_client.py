@@ -16,13 +16,13 @@ logger = logging.getLogger(__name__)
 class MCPClient:
     """Base MCP client for making HTTP requests to MCP servers."""
     
-    def __init__(self, base_url: str, timeout: float = 10.0):
+    def __init__(self, base_url: str, timeout: float = 60.0):
         """
         Initialize MCP client.
         
         Args:
-            base_url: Base URL of the MCP server (e.g., "http://localhost:8070")
-            timeout: Request timeout in seconds
+            base_url: Base URL of the MCP server (e.g., "https://account-mcp.mangopond-a6402d9f.swedencentral.azurecontainerapps.io")
+            timeout: Request timeout in seconds (default 60s for container cold starts)
         """
         self.base_url = base_url.rstrip('/')
         self.timeout = timeout
@@ -321,7 +321,7 @@ def get_account_mcp_client(url: str = None) -> AccountMCPClient:
     global _account_client
     if _account_client is None:
         if url is None:
-            url = os.getenv("ACCOUNT_MCP_URL", "http://localhost:8070")
+            url = os.getenv("ACCOUNT_MCP_URL", "https://account-mcp.mangopond-a6402d9f.swedencentral.azurecontainerapps.io")
         _account_client = AccountMCPClient(url)
     return _account_client
 
@@ -330,7 +330,7 @@ def get_transaction_mcp_client(url: str = None) -> TransactionMCPClient:
     """Get or create Transaction MCP client singleton."""
     global _transaction_client
     if url is None:
-        url = os.getenv("TRANSACTION_MCP_URL", "http://localhost:8071")
+        url = os.getenv("TRANSACTION_MCP_URL", "https://transaction.mangopond-a6402d9f.swedencentral.azurecontainerapps.io")
     if _transaction_client is None:
         _transaction_client = TransactionMCPClient(url)
     return _transaction_client
@@ -340,7 +340,7 @@ def get_contacts_mcp_client(url: str = None) -> ContactsMCPClient:
     """Get or create Contacts MCP client singleton."""
     global _contacts_client
     if url is None:
-        url = os.getenv("CONTACTS_MCP_URL", "http://localhost:8074")
+        url = os.getenv("CONTACTS_MCP_URL", "https://contacts-mcp.internal.mangopond-a6402d9f.swedencentral.azurecontainerapps.io")
     if _contacts_client is None:
         _contacts_client = ContactsMCPClient(url)
     return _contacts_client
@@ -350,7 +350,7 @@ def get_limits_mcp_client(url: str = None) -> LimitsMCPClient:
     """Get or create Limits MCP client singleton."""
     global _limits_client
     if url is None:
-        url = os.getenv("LIMITS_MCP_URL", "http://localhost:8073")
+        url = os.getenv("LIMITS_MCP_URL", "https://limits-mcp.mangopond-a6402d9f.swedencentral.azurecontainerapps.io")
     if _limits_client is None:
         _limits_client = LimitsMCPClient(url)
     return _limits_client

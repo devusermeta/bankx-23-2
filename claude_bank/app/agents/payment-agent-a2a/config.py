@@ -18,10 +18,10 @@ PAYMENT_AGENT_NAME = os.getenv("PAYMENT_AGENT_NAME", "payment-a2a")
 PAYMENT_AGENT_VERSION = os.getenv("PAYMENT_AGENT_VERSION", "1")
 
 # MCP Server URLs
-ACCOUNT_MCP_SERVER_URL = os.getenv("ACCOUNT_MCP_SERVER_URL", "http://localhost:8070/mcp")
-TRANSACTION_MCP_SERVER_URL = os.getenv("TRANSACTION_MCP_SERVER_URL", "http://localhost:8071/mcp")
-PAYMENT_MCP_SERVER_URL = os.getenv("PAYMENT_MCP_SERVER_URL", "http://localhost:8072/mcp")
-CONTACTS_MCP_SERVER_URL = os.getenv("CONTACTS_MCP_SERVER_URL", "http://localhost:8074/mcp")
+ACCOUNT_MCP_SERVER_URL = os.getenv("ACCOUNT_MCP_SERVER_URL", "https://account-mcp.mangopond-a6402d9f.swedencentral.azurecontainerapps.io/mcp")
+TRANSACTION_MCP_SERVER_URL = os.getenv("TRANSACTION_MCP_SERVER_URL", "https://transaction.mangopond-a6402d9f.swedencentral.azurecontainerapps.io/mcp")
+PAYMENT_MCP_SERVER_URL = os.getenv("PAYMENT_MCP_SERVER_URL", "https://escalation-mcp.mangopond-a6402d9f.swedencentral.azurecontainerapps.io/mcp")
+CONTACTS_MCP_SERVER_URL = os.getenv("CONTACTS_MCP_SERVER_URL", "https://contacts-mcp.internal.mangopond-a6402d9f.swedencentral.azurecontainerapps.io/mcp")
 
 # Agent Configuration
 PAYMENT_AGENT_CONFIG = {

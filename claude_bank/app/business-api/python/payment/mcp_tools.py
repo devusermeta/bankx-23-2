@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 # Initialize payment service (now uses StateManager internally)
 payment_service = PaymentService(
-    transaction_api_url="http://localhost:8071"  # Local transaction service
+    transaction_api_url="https://transaction.mangopond-a6402d9f.swedencentral.azurecontainerapps.io"  # Local transaction service
 )
 
 mcp = FastMCP("Payment MCP Server")
@@ -21,9 +21,9 @@ def process_payment(
     description: Annotated[str, "Description or purpose of the payment"],
     payment_method_id: Annotated[str, "Identifier for the payment method to use"],
     timestamp: Annotated[str, "ISO timestamp when the payment was initiated"],
-    recipient_name: Annotated[Optional[str], "Name of the payment recipient"] = None,
-    recipient_bank_code: Annotated[Optional[str], "Bank code or routing number for the recipient"] = None,
-    payment_type: Annotated[Optional[str], "Type of payment (e.g., transfer, bill_pay, etc.)"] = None
+    recipient_name: Annotated[str, "Name of the payment recipient (optional)"] = "",
+    recipient_bank_code: Annotated[str, "Bank code or routing number for the recipient (optional)"] = "",
+    payment_type: Annotated[str, "Type of payment - transfer, bill_pay, etc. (optional)"] = ""
 ):
     logger.info(
         "processPayment called with account_id=%s, amount=%s, description=%s, payment_method_id=%s, recipient_name=%s, recipient_bank_code=%s",
@@ -31,14 +31,15 @@ def process_payment(
     )
 
     # Create Payment object from individual parameters
+    # Convert empty strings to None for optional fields
     payment_obj = Payment(
         accountId=account_id,
         amount=amount,
         description=description,
-        recipientName=recipient_name,
-        recipientBankCode=recipient_bank_code,
+        recipientName=recipient_name if recipient_name else None,
+        recipientBankCode=recipient_bank_code if recipient_bank_code else None,
         paymentMethodId=payment_method_id,
-        paymentType=payment_type,
+        paymentType=payment_type if payment_type else None,
         timestamp=timestamp
     )
 

@@ -68,7 +68,7 @@ class MCPDataFetcher:
                 "id": 1
             }
             
-            async with httpx.AsyncClient(timeout=10.0) as client:
+            async with httpx.AsyncClient(timeout=60.0) as client:
                 response = await client.post(url, json=payload)
                 response.raise_for_status()
                 
@@ -130,7 +130,7 @@ class MCPDataFetcher:
                 "id": 2
             }
             
-            async with httpx.AsyncClient(timeout=10.0) as client:
+            async with httpx.AsyncClient(timeout=60.0) as client:
                 response = await client.post(url, json=payload)
                 response.raise_for_status()
                 
@@ -187,7 +187,7 @@ class MCPDataFetcher:
                 "id": 3
             }
             
-            async with httpx.AsyncClient(timeout=10.0) as client:
+            async with httpx.AsyncClient(timeout=60.0) as client:
                 response = await client.post(url, json=payload)
                 response.raise_for_status()
                 
@@ -242,7 +242,7 @@ class MCPDataFetcher:
                 "id": 4
             }
             
-            async with httpx.AsyncClient(timeout=10.0) as client:
+            async with httpx.AsyncClient(timeout=60.0) as client:
                 response = await client.post(url, json=payload)
                 response.raise_for_status()
                 
@@ -298,7 +298,7 @@ class MCPDataFetcher:
                 "id": 5
             }
             
-            async with httpx.AsyncClient(timeout=10.0) as client:
+            async with httpx.AsyncClient(timeout=60.0) as client:
                 response = await client.post(url, json=payload)
                 response.raise_for_status()
                 

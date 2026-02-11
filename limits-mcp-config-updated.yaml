@@ -1,0 +1,85 @@
+id: /subscriptions/e0783b50-4ca5-4059-83c1-524f39faa624/resourceGroups/rg-banking-new/providers/Microsoft.App/containerapps/limits-mcp
+identity:
+  type: None
+location: Sweden Central
+name: limits-mcp
+properties:
+  configuration:
+    activeRevisionsMode: Single
+    dapr: null
+    identitySettings: []
+    ingress:
+      additionalPortMappings: null
+      allowInsecure: false
+      clientCertificateMode: null
+      corsPolicy: null
+      customDomains: null
+      exposedPort: 0
+      external: true
+      fqdn: limits-mcp.mangopond-a6402d9f.swedencentral.azurecontainerapps.io
+      ipSecurityRestrictions: null
+      stickySessions:
+        affinity: none
+      targetPort: 0
+      traffic:
+      - latestRevision: true
+        weight: 100
+      transport: Auto
+    maxInactiveRevisions: 100
+    registries:
+    - identity: ''
+      passwordSecretRef: reg-pswd-074ea5c7-ac29
+      server: multimodaldemoacroy6neblxi3zkq.azurecr.io
+      username: multimodaldemoacroy6neblxi3zkq
+    runtime: null
+    secrets:
+    - name: reg-pswd-074ea5c7-ac29
+    service: null
+  customDomainVerificationId: B763D40B517987D4AEA45EB223B48B72CC661AD92FCC108DB8746583017346B0
+  delegatedIdentities: []
+  environmentId: /subscriptions/e0783b50-4ca5-4059-83c1-524f39faa624/resourceGroups/rg-a2a-test/providers/Microsoft.App/managedEnvironments/acae-a2a-test
+  eventStreamEndpoint: https://swedencentral.azurecontainerapps.dev/subscriptions/e0783b50-4ca5-4059-83c1-524f39faa624/resourceGroups/rg-banking-new/containerApps/limits-mcp/eventstream
+  latestReadyRevisionName: limits-mcp--0000002
+  latestRevisionFqdn: limits-mcp--0000002.mangopond-a6402d9f.swedencentral.azurecontainerapps.io
+  latestRevisionName: limits-mcp--0000002
+  managedEnvironmentId: /subscriptions/e0783b50-4ca5-4059-83c1-524f39faa624/resourceGroups/rg-a2a-test/providers/Microsoft.App/managedEnvironments/acae-a2a-test
+  provisioningState: Succeeded
+  runningStatus: Running
+  template:
+    containers:
+    - image: multimodaldemoacroy6neblxi3zkq.azurecr.io/limits-mcp-server:latest
+      name: limits-mcp
+      probes: []
+      resources:
+        cpu: 0.5
+        ephemeralStorage: 2Gi
+        memory: 1Gi
+      volumeMounts:
+      - mountPath: /app/data
+        volumeName: bankx-shared-data
+      - mountPath: /app/memory
+        volumeName: bankx-shared-data
+    initContainers: null
+    revisionSuffix: ''
+    scale:
+      cooldownPeriod: 300
+      maxReplicas: 10
+      minReplicas: 0
+      pollingInterval: 30
+      rules: null
+    serviceBinds: null
+    terminationGracePeriodSeconds: null
+    volumes:
+    - name: bankx-shared-data
+      storageName: bankx-shared-data
+      storageType: AzureFile
+  workloadProfileName: Consumption
+resourceGroup: rg-banking-new
+systemData:
+  createdAt: '2026-01-13T16:20:34.1903929'
+  createdBy: Abhinav@metakaal.com
+  createdByType: User
+  lastModifiedAt: '2026-02-04T11:19:50.5079624'
+  lastModifiedBy: Abhinav@metakaal.com
+  lastModifiedByType: User
+type: Microsoft.App/containerApps

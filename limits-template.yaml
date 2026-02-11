@@ -1,0 +1,18 @@
+properties:
+  template:
+    containers:
+    - image: multimodaldemoacroy6neblxi3zkq.azurecr.io/limits-mcp-server:latest
+      name: limits-mcp
+      resources:
+        cpu: 0.5
+        ephemeralStorage: 2Gi
+        memory: 1Gi
+      volumeMounts:
+      - mountPath: /app/data
+        volumeName: bankx-shared-data
+      - mountPath: /app/memory
+        volumeName: bankx-shared-data
+    volumes:
+    - name: bankx-shared-data
+      storageName: bankx-shared-data
+      storageType: AzureFile

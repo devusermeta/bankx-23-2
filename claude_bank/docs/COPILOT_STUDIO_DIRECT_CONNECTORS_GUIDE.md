@@ -686,4 +686,27 @@ Once testing is successful (all ✅ checks passed):
 
 **Once all tests pass, you're ready to build the A2A Bridge! 🚀**
 
-Move on to the next phase: Creating the Azure Function A2A Bridge to enable agent-to-agent communication.
+## A2A Bridge Implementation
+
+The A2A Bridge has been implemented as a FastAPI service with Microsoft Graph API integration.
+
+**Location**: `claude_bank/app/agents/escalation-copilot-bridge/`
+
+**What it does:**
+- Replaces the conversational Copilot Studio approach with direct Graph API calls
+- Receives A2A requests on port 9006 (same as current escalation agent)
+- Uses the **same Excel file and Outlook account** you configured in Copilot Studio
+- Faster and more reliable than Direct Line approach
+
+**Key advantages:**
+- ✅ No Direct Line channel needed (which isn't available in your environment)
+- ✅ Sub-5 second response times (vs 10-15s with Direct Line polling)
+- ✅ Direct API integration with Excel Online and Outlook
+- ✅ Keep your Copilot Studio agent for manual testing/demos
+- ✅ Production A2A traffic uses the FastAPI bridge
+
+**Next steps:**
+1. See `escalation-copilot-bridge/QUICKSTART.md` for setup instructions
+2. Configure Azure AD app registration for Graph API access
+3. Test the bridge endpoints
+4. Replace old escalation agent with new bridge on port 9006

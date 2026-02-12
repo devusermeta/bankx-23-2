@@ -86,6 +86,7 @@ class TicketCreationResult(BaseModel):
     error: Optional[str] = None
     email_sent: bool = False
     excel_updated: bool = False
+    copilot_response: Optional[str] = None  # Response from Copilot Studio agent
 
 
 # Agent Card Model

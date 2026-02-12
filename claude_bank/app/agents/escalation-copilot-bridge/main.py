@@ -2,7 +2,7 @@
 FastAPI server for Escalation Copilot Bridge - A2A compatible escalation agent.
 
 This service receives A2A requests from other agents (like ProdInfo)
-and creates support tickets using Microsoft Graph API (Excel + Outlook).
+and creates support tickets via Power Automate → Copilot Studio (handles Excel + Outlook).
 """
 
 import logging
@@ -13,9 +13,7 @@ from fastapi.responses import JSONResponse
 from config import settings, validate_settings
 from models import ChatRequest, ChatResponse, AgentCard, AgentEndpoints
 from a2a_handler import get_a2a_handler
-from excel_service import get_excel_service
-from email_service import get_email_service
-from graph_client import get_graph_client
+from power_automate_client import get_power_automate_client
 
 # Configure logging
 logging.basicConfig(
@@ -33,11 +31,13 @@ AGENT_CARD = AgentCard(
     agent_name=settings.AGENT_NAME,
     agent_type=settings.AGENT_TYPE,
     version=settings.VERSION,
-    description="Escalation agent for creating support tickets via Microsoft Graph API (Excel + Outlook)",
+    description="Escalation agent bridge - calls Copilot Studio via Power Automate (Outlook + Excel)",
     capabilities=[
         "escalation.create_ticket",
         "ticket.create",
-        "support.escalate"
+        "support.escalate",
+        "power_automate_integration",
+        "copilot_studio_integration"
     ],
     endpoints=AgentEndpoints(
         http=f"http://localhost:{settings.A2A_SERVER_PORT}",
@@ -66,22 +66,27 @@ async def lifespan(app: FastAPI):
     else:
         logger.info("Configuration validated successfully")
     
-    # Test Microsoft Graph connection
+    # Test Power Automate connection
     try:
-        graph_client = await get_graph_client()
-        token = await graph_client.get_access_token()
-        logger.info("Successfully authenticated with Microsoft Graph API")
+        pa_client = await get_power_automate_client()
+        logger.info(f"Power Automate client initialized")
+        logger.info(f"Bot Name: {settings.COPILOT_BOT_NAME}")
+        logger.info(f"Flow URL: {settings.POWER_AUTOMATE_FLOW_URL[:50]}...")
+        
+        # Try to test connection
+        try:
+            test_result = await pa_client.test_connection()
+            if test_result.get("success"):
+                logger.info("✓ Successfully connected to Power Automate flow")
+            else:
+                logger.warning(f"Power Automate connection test failed: {test_result.get('error')}")
+                logger.warning("Service will start but ticket creation may fail")
+        except Exception as e:
+            logger.warning(f"Could not test Power Automate connection: {e}")
+            logger.warning("Service will start but ticket creation may fail")
     except Exception as e:
-        logger.error(f"Failed to authenticate with Microsoft Graph: {e}")
+        logger.error(f"Failed to initialize Power Automate client: {e}")
         logger.warning("Service will start but ticket creation will fail")
-    
-    # Discover Excel file
-    try:
-        excel_service = await get_excel_service()
-        file_info = await excel_service.discover_excel_file()
-        logger.info(f"Excel file discovery results: {file_info}")
-    except Exception as e:
-        logger.warning(f"Could not discover Excel file: {e}")
     
     # Register with agent registry (if configured)
     if settings.REGISTER_WITH_REGISTRY:
@@ -123,15 +128,16 @@ async def root():
 async def health_check():
     """Health check endpoint."""
     try:
-        # Test Microsoft Graph connection
-        graph_client = await get_graph_client()
-        await graph_client.get_access_token()
+        # Test Power Automate connection
+        pa_client = await get_power_automate_client()
         
         return {
             "status": "healthy",
             "service": settings.SERVICE_NAME,
             "version": settings.VERSION,
-            "graph_api": "connected"
+            "power_automate": "configured",
+            "copilot_studio": "via_power_automate",
+            "bot_name": settings.COPILOT_BOT_NAME
         }
     except Exception as e:
         logger.error(f"Health check failed: {e}")
@@ -190,51 +196,46 @@ async def a2a_invoke(request: ChatRequest):
         )
 
 
-@app.post("/test/email")
-async def test_email(email_address: str):
+@app.post("/test/power-automate")
+async def test_power_automate():
     """
-    Test endpoint to send a test email.
+    Test endpoint to verify Power Automate connection.
     
-    Usage: POST /test/email?email_address=your@email.com
+    Usage: POST /test/power-automate
     """
     try:
-        email_service = await get_email_service()
-        success = await email_service.send_test_email(email_address)
-        
-        if success:
-            return {"success": True, "message": f"Test email sent to {email_address}"}
-        else:
-            raise HTTPException(status_code=500, detail="Failed to send test email")
+        pa_client = await get_power_automate_client()
+        result = await pa_client.test_connection()
+        return result
     
     except Exception as e:
-        logger.error(f"Test email failed: {e}")
+        logger.error(f"Power Automate test failed: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.get("/test/excel")
-async def test_excel():
+@app.post("/test/escalation")
+async def test_escalation():
     """
-    Test endpoint to check Excel file access.
+    Test endpoint to create a dummy escalation ticket via Power Automate → Copilot Studio.
     
-    Usage: GET /test/excel
+    Usage: POST /test/escalation
     """
     try:
-        excel_service = await get_excel_service()
+        pa_client = await get_power_automate_client()
         
-        # Discover file
-        file_info = await excel_service.discover_excel_file()
+        # Create test ticket
+        result = await pa_client.create_escalation_ticket(
+            customer_id="TEST-CUST-001",
+            customer_email="test@example.com",
+            customer_name="Test Customer",
+            description="This is a test escalation from the A2A bridge via Power Automate",
+            priority="Medium"
+        )
         
-        # Get columns
-        try:
-            columns = await excel_service.get_table_columns()
-            file_info["columns"] = columns
-        except Exception as e:
-            file_info["columns_error"] = str(e)
-        
-        return file_info
+        return result
     
     except Exception as e:
-        logger.error(f"Excel test failed: {e}")
+        logger.error(f"Escalation test failed: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -255,9 +256,10 @@ async def config_status():
             "version": settings.VERSION,
             "port": settings.A2A_SERVER_PORT,
             "agent_name": settings.AGENT_NAME,
-            "excel_configured": bool(settings.EXCEL_DRIVE_ID or settings.EXCEL_SITE_ID or settings.EXCEL_USER_ID),
-            "email_configured": bool(settings.EMAIL_SENDER_ADDRESS),
-            "graph_api_configured": bool(settings.AZURE_CLIENT_ID and settings.AZURE_CLIENT_SECRET and settings.AZURE_TENANT_ID)
+            "power_automate_configured": bool(settings.POWER_AUTOMATE_FLOW_URL),
+            "copilot_bot_name": settings.COPILOT_BOT_NAME,
+            "flow_url_configured": bool(settings.POWER_AUTOMATE_FLOW_URL),
+            "azure_tenant_id": settings.AZURE_TENANT_ID[:8] + "..." if settings.AZURE_TENANT_ID else "not set"
         }
     }
 

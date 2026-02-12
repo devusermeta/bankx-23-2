@@ -1,0 +1,300 @@
+kind: AdaptiveDialog
+modelDescription: Handle escalation ticket creation. Accepts all data via Message field containing JSON and only asks for missing fields.
+beginDialog:
+  kind: OnRecognizedIntent
+  id: main
+  intent: {}
+  actions:
+    - kind: SetVariable
+      id: initCustomerID
+      variable: Global.CustomerID
+      value: =Global.ExcelResult.'Customer ID'
+
+    - kind: SetVariable
+      id: initCustomerEmail
+      variable: Global.CustomerEmail
+      value: =Global.ExcelResult.'Customer Email'
+
+    - kind: SetVariable
+      id: initCustomerName
+      variable: Global.CustomerName
+      value: =Topic.customerName
+
+    - kind: SetVariable
+      id: initDescription
+      variable: Global.TicketDescription
+      value: =Global.ExcelResult.Description
+
+    - kind: SetVariable
+      id: initPriority
+      variable: Global.Priority
+      value: =Global.ExcelResult.Priority
+
+    - kind: Question
+      id: question_CustomerID
+      interruptionPolicy:
+        allowInterruption: true
+
+      variable: Global.CustomerID
+      prompt: Customer ID
+      entity:
+        kind: StringPrebuiltEntity
+        sensitivityLevel: None
+
+    - kind: Question
+      id: question_CustomerEmail
+      interruptionPolicy:
+        allowInterruption: true
+
+      variable: Global.CustomerEmail
+      prompt: Customer Email
+      entity: EmailPrebuiltEntity
+
+    - kind: Question
+      id: question_CustomerName
+      interruptionPolicy:
+        allowInterruption: true
+
+      variable: Global.CustomerName
+      prompt: Customer Name
+      entity: PersonNamePrebuiltEntity
+
+    - kind: Question
+      id: question_Description
+      interruptionPolicy:
+        allowInterruption: true
+
+      variable: Global.TicketDescription
+      prompt: Please describe the issue
+      entity:
+        kind: StringPrebuiltEntity
+        sensitivityLevel: None
+
+    - kind: SetVariable
+      id: setTicketID
+      variable: Global.TicketID
+      value: =Concatenate("TKT-", Text(Now(), "yyyyMMddHHmmss"))
+
+    - kind: InvokeConnectorAction
+      id: invokeConnectorAction_SendEmail
+      input:
+        binding:
+          Body: |-
+            =Concatenate(
+                "<html><body style='font-family: Arial, sans-serif; color: #333;'>",
+                "<h2 style='color: #0066cc;'>Support Ticket Created</h2>",
+                "<p>Dear <strong>", Global.CustomerName, "</strong>,</p>",
+                "<p>Your support ticket has been successfully created.</p>",
+                "<table style='border-collapse: collapse; width: 100%; max-width: 600px; margin: 20px 0;'>",
+                "<tr>",
+                "<td style='padding: 10px; border: 1px solid #ddd; background-color: #f5f5f5; width: 150px;'><strong>Ticket ID:</strong></td>",
+                "<td style='padding: 10px; border: 1px solid #ddd;'>", Global.TicketID, "</td>",
+                "</tr>",
+                "<tr>",
+                "<td style='padding: 10px; border: 1px solid #ddd; background-color: #f5f5f5;'><strong>Customer ID:</strong></td>",
+                "<td style='padding: 10px; border: 1px solid #ddd;'>", Global.CustomerID, "</td>",
+                "</tr>",
+                "<tr>",
+                "<td style='padding: 10px; border: 1px solid #ddd; background-color: #f5f5f5;'><strong>Description:</strong></td>",
+                "<td style='padding: 10px; border: 1px solid #ddd;'>", Global.TicketDescription, "</td>",
+                "</tr>",
+                "<tr>",
+                "<td style='padding: 10px; border: 1px solid #ddd; background-color: #f5f5f5;'><strong>Priority:</strong></td>",
+                "<td style='padding: 10px; border: 1px solid #ddd;'>", Global.Priority, "</td>",
+                "</tr>",
+                "<tr>",
+                "<td style='padding: 10px; border: 1px solid #ddd; background-color: #f5f5f5;'><strong>Status:</strong></td>",
+                "<td style='padding: 10px; border: 1px solid #ddd;'>Open</td>",
+                "</tr>",
+                "</table>",
+                "<p>Our support team will contact you at <strong>", Global.CustomerEmail, "</strong> within 24 business hours.</p>",
+                "<p style='margin-top: 30px;'>Best regards,<br><strong>BankX Support Team</strong></p>",
+                "<hr style='border: none; border-top: 1px solid #ddd; margin: 30px 0;'>",
+                "<p style='font-size: 12px; color: #999;'>This is an automated message. Please do not reply to this email.</p>",
+                "</body></html>"
+            )
+          Importance: Normal
+          Subject: =Concatenate("Support Ticket - ", Global.TicketID)
+          To: =Global.CustomerEmail
+
+      output:
+        kind: SingleVariableOutputBinding
+        variable: Global.EmailResult
+
+      connectionReference: copilots_header_c5107.shared_office365.shared-office365-dba75563-b775-4779-a232-d60f92afcd38
+      connectionProperties:
+        name: copilots_header_c5107.shared_office365.shared-office365-dba75563-b775-4779-a232-d60f92afcd38
+        mode: Invoker
+
+      operationId: SendEmailV2
+
+    - kind: InvokeConnectorAction
+      id: invokeConnectorAction_AddExcelRow
+      input:
+        binding:
+          dateTimeFormat: Serial Number
+          drive: b!idKNpMJYfUGjj8cmNnuIayME-OFI7MRLpmX_GsdmoGwGFP0lakflTr1-cbRR2cQm
+          file: 01ZM24RQ3NVSVVT4ZTZBBIQSRUVCZQ43YU
+          item: |-
+            ={
+                'Ticket ID': Global.TicketID,
+                'Customer ID': Global.CustomerID,
+                'Customer Email': Global.CustomerEmail,
+                'Customer Name': Global.CustomerName,
+                'Description': Global.TicketDescription,
+              'Priority': Global.Priority,
+                'Status': "Open",
+                'Created Date': Text(Now(), "yyyy-MM-dd HH:mm:ss")
+            }
+          source: me
+          table: "{8C08EEA6-6902-47C2-9AFC-6AF4DE08EE6D}"
+
+      output:
+        kind: SingleVariableOutputBinding
+        variable: Global.ExcelResult
+
+      connectionReference: copilots_header_c5107.shared_excelonlinebusiness.shared-excelonlinebu-39386086-6022-479c-bb95-3b5e65c26ea9
+      connectionProperties:
+        name: copilots_header_c5107.shared_excelonlinebusiness.shared-excelonlinebu-39386086-6022-479c-bb95-3b5e65c26ea9
+        mode: Invoker
+
+      dynamicInputSchema:
+        properties:
+          dateTimeFormat:
+            displayName: DateTime Format
+            description: DateTime Format.
+            visibility: Advanced
+            order: 5
+            enumValues:
+              - Serial Number
+              - ISO 8601
+            type: String
+
+          drive:
+            displayName: Document Library
+            description: Select a document library from the drop-down.
+            isRequired: true
+            order: 1
+            dynamicValuesConfig:
+              capability: List
+
+            type: String
+
+          file:
+            displayName: File
+            description: Select an Excel file through File Browse.
+            isRequired: true
+            order: 2
+            type: String
+
+          item:
+            displayName: Row
+            description: Row to add into the specified Excel table.
+            isRequired: true
+            order: 4
+            type: Any
+
+          source:
+            displayName: Location
+            description: |-
+              Select from the drop-down or specify one of the following:
+                            - "me"
+                            - "SharePoint Site URL"
+                            - "users/someone's UPN"
+                            - "groups/group Id"
+                            - "sites/SharePoint Site URL:/teams/team name:" (colons are required).
+            isRequired: true
+            order: 0
+            dynamicValuesConfig:
+              capability: List
+
+            type: String
+
+          table:
+            displayName: Table
+            description: Select a table from the drop-down.
+            isRequired: true
+            order: 3
+            dynamicValuesConfig:
+              capability: List
+
+            type: String
+
+      dynamicOutputSchema:
+        kind: Record
+        properties:
+          "\nCustomer Name":
+            displayName: |-
+              
+              Customer Name
+            order: 3
+            type: String
+
+          "Created Date":
+            displayName: Created Date
+            order: 7
+            type: String
+
+          "Customer Email":
+            displayName: Customer Email
+            order: 2
+            type: String
+
+          "Customer ID":
+            displayName: Customer ID
+            order: 1
+            type: String
+
+          Description:
+            displayName: Description
+            order: 4
+            type: String
+
+          Priority:
+            displayName: Priority
+            order: 5
+            type: String
+
+          Status:
+            displayName: Status
+            order: 6
+            type: String
+
+          "Ticket ID":
+            displayName: Ticket ID
+            order: 0
+            type: String
+
+      operationId: AddRowV2
+
+    - kind: SendActivity
+      id: sendActivity_Confirmation
+      activity: |-
+        ✅ Ticket #{Global.TicketID} created successfully!
+
+        Customer: {Global.CustomerName} ({Global.CustomerID})
+        Email: {Global.CustomerEmail}
+        Description: {Global.TicketDescription}
+        Priority: {Global.Priority}
+
+inputType:
+  properties:
+    customerEmail:
+      description: Customer Email Address
+      type: String
+
+    customerName:
+      description: Customer Full Name
+      type: String
+
+    description:
+      description: Ticket Description/Issue Details
+      type: String
+
+    priority:
+      description: Ticket Priority (low, medium, high)
+      type: String
+
+  type: object
+
+outputType: {}

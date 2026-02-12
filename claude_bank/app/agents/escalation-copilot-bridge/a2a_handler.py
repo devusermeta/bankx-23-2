@@ -1,5 +1,6 @@
 """
 A2A protocol handler for processing escalation requests.
+Calls Copilot Studio agent via Power Automate flow.
 """
 
 import re
@@ -9,8 +10,7 @@ from datetime import datetime
 from typing import Optional, Tuple
 from config import settings
 from models import ChatRequest, ChatResponse, TicketData, TicketCreationResult
-from excel_service import get_excel_service
-from email_service import get_email_service
+from power_automate_client import get_power_automate_client
 
 logger = logging.getLogger(__name__)
 
@@ -89,6 +89,9 @@ class A2AHandler:
         Returns:
             Cleaned description
         """
+        # Remove "Create escalation ticket:" prefix first
+        description = re.sub(r'^Create escalation ticket:\s*', '', text, flags=re.IGNORECASE)
+        
         # Remove common prefixes
         prefixes = [
             r'^Create a support ticket for this issue:\s*',
@@ -98,23 +101,28 @@ class A2AHandler:
             r'^Help with:\s*'
         ]
         
-        description = text
         for prefix in prefixes:
             description = re.sub(prefix, '', description, flags=re.IGNORECASE)
         
-        # Remove email and name patterns from description
-        description = re.sub(r'Customer email:\s*[^\s,]+(?:@[^\s,]+)?[,\.]?', '', description, flags=re.IGNORECASE)
-        description = re.sub(r'Customer name:\s*[A-Za-z\s]+[,\.]?', '', description, flags=re.IGNORECASE)
-        description = re.sub(r'Email:\s*[^\s,]+(?:@[^\s,]+)?[,\.]?', '', description, flags=re.IGNORECASE)
-        description = re.sub(r'Name:\s*[A-Za-z\s]+[,\.]?', '', description, flags=re.IGNORECASE)
+        # Extract the actual issue description (everything before Customer Email/Name)
+        # Pattern: get everything BEFORE "Customer Email:" or "Customer Name:" or similar
+        match = re.search(r'^(.+?)(?:Customer Email:|Customer Name:|Email:|Name:)', description, flags=re.IGNORECASE)
+        if match:
+            description = match.group(1).strip()
+        else:
+            # If no match, try to remove email and name patterns at the end
+            description = re.sub(r',?\s*Customer email:\s*[^\s,]+', '', description, flags=re.IGNORECASE)
+            description = re.sub(r',?\s*Customer name:\s*[A-Za-z\s]+$', '', description, flags=re.IGNORECASE)
+            description = re.sub(r',?\s*Email:\s*[^\s,]+', '', description, flags=re.IGNORECASE)
+            description = re.sub(r',?\s*Name:\s*[A-Za-z\s]+$', '', description, flags=re.IGNORECASE)
         
         # Clean up whitespace
         description = re.sub(r'\s+', ' ', description).strip()
         description = description.rstrip('.,')
         
-        # If description is too short, use original text
+        # If description is too short or empty, use a default message
         if len(description) < 10:
-            description = text
+            description = "Customer support request - details in ticket"
         
         return description
     
@@ -188,7 +196,8 @@ class A2AHandler:
     
     async def create_ticket(self, request: ChatRequest) -> TicketCreationResult:
         """
-        Create a support ticket from A2A request.
+        Create a support ticket by calling Copilot Studio agent via Power Automate.
+        The Copilot Studio agent handles Excel storage and email sending.
         
         Args:
             request: Chat request with ticket information
@@ -197,44 +206,49 @@ class A2AHandler:
             TicketCreationResult
         """
         try:
-            # Parse ticket data
+            # Parse ticket data from incoming A2A request
             ticket, warnings = self.parse_ticket_from_message(request)
             
-            logger.info(f"Creating ticket {ticket.ticket_id}")
+            logger.info(f"Creating ticket via Power Automate for customer {ticket.customer_id}")
+            if warnings:
+                logger.warning(f"Parsing warnings: {warnings}")
             
-            # Add to Excel
-            excel_service = await get_excel_service()
-            excel_success = await excel_service.add_ticket_row(ticket)
+            # Get Power Automate client
+            pa_client = await get_power_automate_client()
             
-            if not excel_success:
-                logger.error("Failed to add ticket to Excel")
+            # Call Power Automate flow which calls Copilot Studio agent
+            result = await pa_client.create_escalation_ticket(
+                customer_id=ticket.customer_id,
+                customer_email=ticket.customer_email,
+                customer_name=ticket.customer_name,
+                description=ticket.description,
+                priority=ticket.priority
+            )
+            
+            if result.get("success"):
+                ticket_id = result.get("ticket_id", ticket.ticket_id)
+                logger.info(f"Ticket {ticket_id} created successfully via Power Automate")
+                
+                return TicketCreationResult(
+                    success=True,
+                    ticket_id=ticket_id,
+                    excel_updated=True,  # Power Automate/Copilot Studio handles this
+                    email_sent=True,     # Power Automate/Copilot Studio handles this
+                    copilot_response=result.get("response", "")
+                )
+            else:
+                error = result.get("error", "Unknown error from Power Automate")
+                logger.error(f"Power Automate failed to create ticket: {error}")
+                
                 return TicketCreationResult(
                     success=False,
-                    error="Failed to store ticket in Excel",
+                    error=error,
                     excel_updated=False,
                     email_sent=False
                 )
-            
-            # Send email notification
-            email_service = await get_email_service()
-            email_success = await email_service.send_ticket_notification(ticket)
-            
-            if not email_success:
-                logger.warning("Failed to send email notification")
-                # Don't fail the entire operation if email fails
-            
-            result = TicketCreationResult(
-                success=True,
-                ticket_id=ticket.ticket_id,
-                excel_updated=excel_success,
-                email_sent=email_success
-            )
-            
-            logger.info(f"Ticket {ticket.ticket_id} created successfully (Excel: {excel_success}, Email: {email_success})")
-            return result
         
         except Exception as e:
-            logger.error(f"Error creating ticket: {e}")
+            logger.error(f"Error creating ticket via Power Automate: {e}")
             return TicketCreationResult(
                 success=False,
                 error=str(e),

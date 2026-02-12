@@ -20,25 +20,14 @@ class Settings(BaseSettings):
     AGENT_TYPE: str = "communication"
     VERSION: str = "1.0.0"
     
-    # Microsoft Graph API Configuration
-    AZURE_CLIENT_ID: str = os.getenv("AZURE_CLIENT_ID", "")
-    AZURE_CLIENT_SECRET: str = os.getenv("AZURE_CLIENT_SECRET", "")
-    AZURE_TENANT_ID: str = os.getenv("AZURE_TENANT_ID", "")
+    # Power Automate Configuration (Primary method for escalations)
+    POWER_AUTOMATE_FLOW_URL: str = os.getenv("POWER_AUTOMATE_FLOW_URL", "")
+    POWER_AUTOMATE_TIMEOUT_SECONDS: int = int(os.getenv("POWER_AUTOMATE_TIMEOUT_SECONDS", "60"))
+    COPILOT_BOT_NAME: str = os.getenv("COPILOT_BOT_NAME", "EscalationAgent")
     
-    # Microsoft Graph API Scopes
-    GRAPH_SCOPE: str = "https://graph.microsoft.com/.default"
-    GRAPH_API_ENDPOINT: str = "https://graph.microsoft.com/v1.0"
-    
-    # Excel Configuration
-    EXCEL_SITE_ID: Optional[str] = os.getenv("EXCEL_SITE_ID", None)  # SharePoint site ID
-    EXCEL_DRIVE_ID: Optional[str] = os.getenv("EXCEL_DRIVE_ID", None)  # Drive ID (OneDrive/SharePoint)
-    EXCEL_FILE_PATH: str = os.getenv("EXCEL_FILE_PATH", "/tickets.xlsx")  # Path relative to drive root
-    EXCEL_TABLE_NAME: str = os.getenv("EXCEL_TABLE_NAME", "TicketsTable")
-    EXCEL_USER_ID: Optional[str] = os.getenv("EXCEL_USER_ID", None)  # User ID for OneDrive access
-    
-    # Email Configuration
-    EMAIL_SENDER_ADDRESS: str = os.getenv("EMAIL_SENDER_ADDRESS", "")  # Your Outlook email
-    EMAIL_SENDER_NAME: str = os.getenv("EMAIL_SENDER_NAME", "BankX Support Team")
+    # Azure Tenant Configuration
+    AZURE_TENANT_ID: str = os.getenv("AZURE_TENANT_ID", "")  # metakaal.com tenant
+    POWER_PLATFORM_ENVIRONMENT_ID: Optional[str] = os.getenv("POWER_PLATFORM_ENVIRONMENT_ID", None)
     
     # Agent Registry Configuration
     AGENT_REGISTRY_URL: str = os.getenv("AGENT_REGISTRY_URL", "http://localhost:9000")
@@ -74,21 +63,16 @@ def validate_settings() -> tuple[bool, list[str]]:
     """
     errors = []
     
-    # Check Azure AD configuration
-    if not settings.AZURE_CLIENT_ID:
-        errors.append("AZURE_CLIENT_ID is not set")
-    if not settings.AZURE_CLIENT_SECRET:
-        errors.append("AZURE_CLIENT_SECRET is not set")
+    # Check Power Automate configuration (primary method)
+    if not settings.POWER_AUTOMATE_FLOW_URL:
+        errors.append("POWER_AUTOMATE_FLOW_URL is not set - required to call Power Automate flow")
+    
     if not settings.AZURE_TENANT_ID:
-        errors.append("AZURE_TENANT_ID is not set")
+        errors.append("AZURE_TENANT_ID is not set - should be metakaal.com tenant ID")
     
-    # Check email configuration
-    if not settings.EMAIL_SENDER_ADDRESS:
-        errors.append("EMAIL_SENDER_ADDRESS is not set")
-    
-    # Check Excel configuration - need either Site ID or User ID
-    if not settings.EXCEL_DRIVE_ID:
-        if not settings.EXCEL_SITE_ID and not settings.EXCEL_USER_ID:
-            errors.append("Either EXCEL_SITE_ID or EXCEL_USER_ID must be set")
+    # Warnings for optional fields
+    if not settings.POWER_PLATFORM_ENVIRONMENT_ID:
+        errors.append("POWER_PLATFORM_ENVIRONMENT_ID is not set (optional but recommended)")
     
     return len(errors) == 0, errors
+

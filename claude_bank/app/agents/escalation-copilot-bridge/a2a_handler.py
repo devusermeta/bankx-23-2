@@ -157,23 +157,16 @@ class A2AHandler:
         logger.debug(f"Parsing ticket from message: {user_message}")
         
         # Extract components
-        email = self.extract_email(user_message)
-        name = self.extract_customer_name(user_message)
         description = self.extract_description(user_message)
+        
+        # Use hardcoded email and name as per requirements
+        email = "purohitabhinav2001@gmail.com"
+        name = "Abhinav Purohit"
         
         # Use customer_id from request or default
         customer_id = request.customer_id or self.default_customer_id
         if customer_id == self.default_customer_id:
             warnings.append("customer_id not provided, using default")
-        
-        # Validate and set defaults
-        if not email:
-            warnings.append("No email address found in message")
-            email = "noreply@bankx.com"
-        
-        if not name:
-            warnings.append("No customer name found in message")
-            name = "Customer"
         
         if not description or len(description) < 5:
             warnings.append("Description is too short or missing")

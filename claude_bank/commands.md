@@ -140,7 +140,7 @@ cd claude_bank\app/agents/ai-money-coach-agent-a2a; uv run --prerelease=allow py
 
 ### Escalation Agent A2A Service (Port 9006) - UC4 A2A MIGRATION
 cd claude_bank\app/agents/escalation-agent-a2a; uv run --prerelease=allow python main.py
-
+cd claude_bank\app\agents\escalation-copilot-bridge
 ---
 
 ## Copilot Backend (FastAPI - Orchestrates agents in A2A mode)

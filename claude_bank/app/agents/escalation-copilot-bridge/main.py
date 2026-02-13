@@ -73,14 +73,35 @@ async def lifespan(app: FastAPI):
         logger.info(f"Bot Name: {settings.COPILOT_BOT_NAME}")
         logger.info(f"Flow URL: {settings.POWER_AUTOMATE_FLOW_URL[:50]}...")
         
-        # Try to test connection
+        # Try to test connection (non-blocking)
         try:
-            test_result = await pa_client.test_connection()
+            test_result = await pa_client.test_connection(raise_on_error=False)
+            
             if test_result.get("success"):
-                logger.info("✓ Successfully connected to Power Automate flow")
+                logger.info(test_result["message"])
+                response_time = test_result.get("diagnostics", {}).get("response_time_ms", 0)
+                if response_time > 0:
+                    logger.info(f"   Response time: {response_time:.1f}ms")
             else:
-                logger.warning(f"Power Automate connection test failed: {test_result.get('error')}")
-                logger.warning("Service will start but ticket creation may fail")
+                # Log detailed diagnostics for failures
+                logger.warning(test_result["message"])
+                logger.warning(f"   Error: {test_result.get('error', 'Unknown')}")
+                
+                # Log diagnostic information
+                diagnostics = test_result.get("diagnostics", {})
+                if "likely_causes" in diagnostics:
+                    logger.warning("   Likely causes:")
+                    for cause in diagnostics["likely_causes"][:3]:  # Show top 3 causes
+                        logger.warning(f"     • {cause}")
+                        
+                if "recommended_actions" in diagnostics:
+                    logger.warning("   Recommended actions:")
+                    for action in diagnostics["recommended_actions"][:2]:  # Show top 2 actions
+                        logger.warning(f"     • {action}")
+                        
+                logger.warning("   ℹ️  Service will start anyway - fix Power Automate and retry")
+                logger.warning("   📋 Use /test/power-automate endpoint to test connection later")
+                
         except Exception as e:
             logger.warning(f"Could not test Power Automate connection: {e}")
             logger.warning("Service will start but ticket creation may fail")
@@ -199,18 +220,35 @@ async def a2a_invoke(request: ChatRequest):
 @app.post("/test/power-automate")
 async def test_power_automate():
     """
-    Test endpoint to verify Power Automate connection.
+    Enhanced test endpoint to verify Power Automate connection with full diagnostics.
     
     Usage: POST /test/power-automate
+    Returns detailed diagnostic information about connection status.
     """
     try:
         pa_client = await get_power_automate_client()
-        result = await pa_client.test_connection()
-        return result
+        result = await pa_client.test_connection(raise_on_error=False)
+        
+        # Add timestamp and additional context
+        result["timestamp"] = datetime.now().isoformat()
+        result["test_type"] = "manual_api_test"
+        
+        # Return with appropriate HTTP status
+        if result.get("success"):
+            return result
+        else:
+            # Return diagnostics even for failures (don't raise HTTP error)
+            return result
     
     except Exception as e:
         logger.error(f"Power Automate test failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        return {
+            "success": False,
+            "error": str(e),
+            "message": "❌ Test endpoint failed", 
+            "timestamp": datetime.now().isoformat(),
+            "test_type": "manual_api_test"
+        }
 
 
 @app.post("/test/escalation")

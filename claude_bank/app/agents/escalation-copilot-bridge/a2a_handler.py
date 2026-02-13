@@ -53,7 +53,11 @@ class A2AHandler:
     def extract_customer_name(self, text: str) -> Optional[str]:
         """
         Extract customer name from text.
-        Looks for patterns like "Customer name: John Doe" or "Name: John Doe"
+        Looks for patterns like:
+        - "Customer name: John Doe"
+        - "Name: John Doe" 
+        - "My name is John Doe"
+        - "I am John Doe"
         
         Args:
             text: Text to search
@@ -61,15 +65,17 @@ class A2AHandler:
         Returns:
             Customer name or None
         """
-        # Pattern 1: "Customer name: John Doe"
+        # Multiple patterns to catch different formats
         patterns = [
-            r'[Cc]ustomer [Nn]ame:\s*([A-Za-z\s]+?)(?:[,\.]|$)',
-            r'[Nn]ame:\s*([A-Za-z\s]+?)(?:[,\.]|$)',
-            r'[Uu]ser:\s*([A-Za-z\s]+?)(?:[,\.]|$)'
+            r'[Cc]ustomer [Nn]ame(?:\s*:?\s*|\s+is\s+)([A-Za-z\s]+?)(?:[,\.]|\s*,|$)',
+            r'[Nn]ame(?:\s*:?\s*|\s+is\s+)([A-Za-z\s]+?)(?:[,\.]|\s*,|$)',
+            r'[Mm]y name is\s+([A-Za-z\s]+?)(?:[,\.]|\s*,|$)',
+            r'I am\s+([A-Za-z\s]+?)(?:[,\.]|\s*,|$)',
+            r'[Uu]ser(?:\s*:?\s*|\s+is\s+)([A-Za-z\s]+?)(?:[,\.]|\s*,|$)'
         ]
         
         for pattern in patterns:
-            match = re.search(pattern, text)
+            match = re.search(pattern, text, re.IGNORECASE)
             if match:
                 name = match.group(1).strip()
                 # Validate name (should be 2-50 chars, only letters and spaces)

@@ -13,7 +13,7 @@ beginDialog:
     - kind: SetVariable
       id: initCustomerEmail
       variable: Global.CustomerEmail
-      value: =Global.ExcelResult.'Customer Email'
+      value: =Topic.customerEmail
 
     - kind: SetVariable
       id: initCustomerName
@@ -23,12 +23,12 @@ beginDialog:
     - kind: SetVariable
       id: initDescription
       variable: Global.TicketDescription
-      value: =Global.ExcelResult.Description
+      value: =Topic.description
 
     - kind: SetVariable
       id: initPriority
       variable: Global.Priority
-      value: =Global.ExcelResult.Priority
+      value: =Topic.priority
 
     - kind: Question
       id: question_CustomerID

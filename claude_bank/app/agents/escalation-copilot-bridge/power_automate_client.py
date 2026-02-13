@@ -42,7 +42,7 @@ class PowerAutomateClient:
         Returns:
             dict: Result with success status and details
         """
-        # Prepare payload for Power Automate flow
+        # Prepare payload for Power Automate flow (matching expected schema)
         payload = {
             "customer_id": customer_id,
             "customer_email": customer_email,
@@ -135,26 +135,29 @@ class PowerAutomateClient:
         
         return None
     
-    async def test_connection(self) -> Dict[str, Any]:
+    async def test_connection(self, raise_on_error: bool = False) -> Dict[str, Any]:
         """
         Test connection to Power Automate flow.
         
+        Args:
+            raise_on_error: If True, raises exceptions on errors (default: False for startup)
+        
         Returns:
-            dict: Connection test result
+            dict: Connection test result with detailed diagnostics
         """
         logger.info("Testing Power Automate connection...")
         
         try:
-            # Send a test request
+            # Send a minimal test request
             test_payload = {
-                "customer_id": "TEST-CONNECTION",
-                "customer_email": "test@example.com",
-                "customer_name": "Test User",
-                "description": "Connection test from A2A bridge",
-                "priority": "Low"
+                "customer_id": "TEST-CONN-001",
+                "customer_email": "startup-test@example.com",
+                "customer_name": "Startup Test", 
+                "description": "Connection test from A2A bridge startup",
+                "priority": "Medium"
             }
             
-            async with httpx.AsyncClient(timeout=self.timeout) as client:
+            async with httpx.AsyncClient(timeout=10.0) as client:  # Shorter timeout for startup
                 response = await client.post(
                     self.flow_url,
                     json=test_payload,
@@ -163,21 +166,157 @@ class PowerAutomateClient:
                     }
                 )
                 
-                response.raise_for_status()
+                # Don't raise for HTTP errors during startup - we want to diagnose them
+                if response.status_code == 200:
+                    return {
+                        "success": True,
+                        "status_code": response.status_code,
+                        "message": "✅ Successfully connected to Power Automate flow",
+                        "diagnostics": {
+                            "flow_reachable": True,
+                            "flow_responding": True,
+                            "response_time_ms": response.elapsed.total_seconds() * 1000
+                        }
+                    }
+                elif response.status_code == 502:
+                    # 502 Bad Gateway - Flow is reachable but downstream service failing
+                    error_details = "Unknown"
+                    try:
+                        error_data = response.json()
+                        error_details = error_data.get('error', {}).get('message', 'Unknown 502 error')
+                    except:
+                        error_details = response.text[:200]
+                        
+                    result = {
+                        "success": False,
+                        "status_code": response.status_code,
+                        "error": f"502 Bad Gateway: {error_details}",
+                        "message": "❌ Power Automate flow reachable but internal error",
+                        "diagnostics": {
+                            "flow_reachable": True,
+                            "flow_responding": False,
+                            "error_type": "downstream_service_failure",
+                            "likely_causes": [
+                                "Copilot Studio bot not published or accessible",
+                                "Outlook connector authentication expired", 
+                                "Excel connector permissions revoked",
+                                "Flow disabled or has logic errors"
+                            ],
+                            "recommended_actions": [
+                                "Check Power Automate flow run history",
+                                "Re-publish Copilot Studio bot",
+                                "Re-authenticate connectors",
+                                "Test flow manually in Power Automate"
+                            ]
+                        }
+                    }
+                    
+                    if raise_on_error:
+                        raise httpx.HTTPStatusError(f"502 Bad Gateway: {error_details}", request=response.request, response=response)
+                    
+                    return result
+                    
+                elif response.status_code == 500:
+                    # 500 Internal Server Error - Flow has internal issues
+                    error_details = "Unknown"
+                    try:
+                        error_data = response.json()
+                        error_details = error_data.get('error', {}).get('message', 'Unknown server error')
+                    except:
+                        error_details = response.text[:200]
+                    
+                    result = {
+                        "success": False,
+                        "status_code": response.status_code,
+                        "error": f"500 Internal Server Error: {error_details}", 
+                        "message": "❌ Power Automate flow has internal server error",
+                        "diagnostics": {
+                            "flow_reachable": True,
+                            "flow_responding": False,
+                            "error_type": "internal_server_error",
+                            "likely_causes": [
+                                "Flow configuration error",
+                                "Connector authentication issues",
+                                "Resource permission problems",
+                                "Power Platform service issues"
+                            ]
+                        }
+                    }
+                    
+                    if raise_on_error:
+                        raise httpx.HTTPStatusError(f"500 Internal Server Error: {error_details}", request=response.request, response=response)
+                    
+                    return result
+                    
+                else:
+                    # Other HTTP errors
+                    result = {
+                        "success": False,
+                        "status_code": response.status_code,
+                        "error": f"HTTP {response.status_code}: {response.text[:200]}",
+                        "message": f"❌ Power Automate returned HTTP {response.status_code}",
+                        "diagnostics": {
+                            "flow_reachable": True,
+                            "flow_responding": False,
+                            "error_type": "http_error"
+                        }
+                    }
+                    
+                    if raise_on_error:
+                        response.raise_for_status()
+                    
+                    return result
                 
-                return {
-                    "success": True,
-                    "status_code": response.status_code,
-                    "message": "Successfully connected to Power Automate flow"
+        except httpx.TimeoutException as e:
+            result = {
+                "success": False,
+                "error": f"Connection timeout: {e}",
+                "message": "❌ Power Automate flow connection timeout",
+                "diagnostics": {
+                    "flow_reachable": False,
+                    "error_type": "timeout",
+                    "likely_causes": ["Network issues", "Flow taking too long to respond", "Service overloaded"]
                 }
+            }
+            
+            if raise_on_error:
+                raise e
                 
+            return result
+            
+        except httpx.ConnectError as e:
+            result = {
+                "success": False,
+                "error": f"Connection error: {e}",
+                "message": "❌ Cannot connect to Power Automate flow",
+                "diagnostics": {
+                    "flow_reachable": False,
+                    "error_type": "connection_error",
+                    "likely_causes": ["Wrong URL", "Network issues", "Service down"]
+                }
+            }
+            
+            if raise_on_error:
+                raise e
+                
+            return result
+            
         except Exception as e:
-            logger.error(f"Connection test failed: {e}")
-            return {
+            result = {
                 "success": False,
                 "error": str(e),
-                "message": "Failed to connect to Power Automate flow"
+                "message": "❌ Unexpected error testing Power Automate connection",
+                "diagnostics": {
+                    "error_type": "unknown"
+                }
             }
+            
+            logger.error(f"Connection test failed: {e}")
+            
+            if raise_on_error:
+                raise e
+                
+            return result
 
 
 # Singleton instance

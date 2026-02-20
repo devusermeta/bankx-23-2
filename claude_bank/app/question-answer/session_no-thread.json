@@ -3,7 +3,7 @@
   "customer_id": "CUST-002",
   "user_email": "nattaporn@bankxthb.onmicrosoft.com",
   "started_at": "2026-01-13T12:43:04.833779",
-  "last_updated": "2026-02-13T20:04:47.035300",
+  "last_updated": "2026-02-20T17:02:38.215505",
   "conversation": [
     {
       "question": "what are the rate of interst of credit cards?",
@@ -95,6 +95,48 @@
       "timestamp": "2026-02-13T20:04:47.035300",
       "agent_used": "Product Info Agent",
       "duration_seconds": 26.16909956932068
+    },
+    {
+      "question": "I want to know my account balance",
+      "answer": "The account service is taking too long to respond. Please try again.",
+      "timestamp": "2026-02-20T16:34:41.309418",
+      "agent_used": "Account Agent",
+      "duration_seconds": 31.345969200134277
+    },
+    {
+      "question": "transfer 200 THB to Somchai",
+      "answer": "I couldn't connect to the paymentagent service. Please try again later.",
+      "timestamp": "2026-02-20T16:39:57.541901",
+      "agent_used": "Payment Agent",
+      "duration_seconds": 66.9189932346344
+    },
+    {
+      "question": "transfer 200 THB to Somchai",
+      "answer": "I couldn't connect to the paymentagent service. Please try again later.",
+      "timestamp": "2026-02-20T16:44:01.087116",
+      "agent_used": "Payment Agent",
+      "duration_seconds": 26.063902854919434
+    },
+    {
+      "question": "transfer 200 THB to Somchai",
+      "answer": "I couldn't connect to the paymentagent service. Please try again later.",
+      "timestamp": "2026-02-20T16:52:16.412289",
+      "agent_used": "Payment Agent",
+      "duration_seconds": 28.428712606430054
+    },
+    {
+      "question": "transfer 200 THB to Somchai.",
+      "answer": "Before I proceed, a couple quick confirmations so I can prepare the payment preview and avoid any duplicate transfers:\n\n1) Which Somchai do you mean? Please confirm the recipient full name (e.g., \"Somchai Rattanakorn\") — or reply \"Somchai\" if that's the full name.  \n2) Confirm amount: THB 200 — correct?  \n3) I will now check your registered beneficiaries and fetch your account/payment method details to build the payment preview. OK for me to proceed? (Reply 'Yes' to proceed with the lookup.)",
+      "timestamp": "2026-02-20T16:57:37.075616",
+      "agent_used": "Payment Agent",
+      "duration_seconds": 34.0198118686676
+    },
+    {
+      "question": "transfer 2000 THB to Pimchanok Thongchai",
+      "answer": "I found Pimchanok Thongchai in your beneficiaries with account 123-456-003.\n\n⚠️ PAYMENT CONFIRMATION REQUIRED ⚠️\n\nPlease confirm to proceed with this payment:\n\n<table>\n<tbody>\n<tr><td><strong>Amount</strong></td><td>THB 2,000.00</td></tr>\n<tr><td><strong>Recipient</strong></td><td>Pimchanok Thongchai</td></tr>\n<tr><td><strong>Account</strong></td><td>123-456-003</td></tr>\n<tr><td><strong>Payment Method</strong></td><td>Bank Transfer</td></tr>\n<tr><td><strong>Current Balance</strong></td><td>THB 30,000.00</td></tr>\n<tr><td><strong>New Balance (Preview)</strong></td><td>THB 28,000.00</td></tr>\n</tbody>\n</table>\n\nReply 'Yes' or 'Confirm' to proceed with the payment.",
+      "timestamp": "2026-02-20T17:02:38.215505",
+      "agent_used": "Payment Agent",
+      "duration_seconds": 38.83501482009888
     }
   ]
 }

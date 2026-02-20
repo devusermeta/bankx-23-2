@@ -340,7 +340,7 @@ def get_contacts_mcp_client(url: str = None) -> ContactsMCPClient:
     """Get or create Contacts MCP client singleton."""
     global _contacts_client
     if url is None:
-        url = os.getenv("CONTACTS_MCP_URL", "https://contacts-mcp.internal.mangopond-a6402d9f.swedencentral.azurecontainerapps.io")
+        url = os.getenv("CONTACTS_MCP_URL", "https://contacts-mcp.mangopond-a6402d9f.swedencentral.azurecontainerapps.io")
     if _contacts_client is None:
         _contacts_client = ContactsMCPClient(url)
     return _contacts_client

@@ -120,6 +120,7 @@ Logs MCP tool invocations to: observability/mcp_audit_YYYY-MM-DD.json
 """
 
 import logging
+import os
 import sys
 import time
 from pathlib import Path
@@ -170,6 +171,18 @@ class AuditedMCPTool(MCPStreamableHTTPTool):
             mcp_server_name: Friendly name (e.g., "account", "limits")
             **kwargs: Additional arguments passed to MCPStreamableHTTPTool
         """
+        # CRITICAL FIX: Force use of external URLs for local development
+        # Prevent agent framework from converting to .internal domains
+        self._force_external_urls = os.getenv("FORCE_EXTERNAL_MCP_URLS", "true").lower() == "true"
+        
+        if self._force_external_urls and url and ".azurecontainerapps.io" in url and ".internal." not in url:
+            # Store the original external URL and prevent framework auto-transformation
+            self._original_external_url = url
+            # Use the URL directly without allowing framework transformation
+            print(f"[URL FIX] 🔧 Using external URL: {url}")
+        else:
+            self._original_external_url = url
+            
         super().__init__(name=name, url=url, **kwargs)
         self.customer_id = customer_id
         self.thread_id = thread_id
@@ -369,11 +382,33 @@ class AuditedMCPTool(MCPStreamableHTTPTool):
         return await self.call_tool(tool_name, **arguments)
     
     async def connect(self):
-        """Connect to MCP server with audit logging."""
+        """Connect to MCP server with audit logging and URL fix."""
         logger.info(
             f"[AUDIT] 🔌 Connecting to {self.mcp_server_name.upper()} MCP server "
             f"(customer={self.customer_id}, thread={self.thread_id})"
         )
+        
+        # CRITICAL FIX: Restore external URL before connection
+        if self._force_external_urls and hasattr(self, '_original_external_url'):
+            original_url = getattr(self, '_original_external_url')
+            current_url = getattr(self, 'url', None) or getattr(self, '_url', None)
+            
+            # Check if framework has transformed URL to .internal
+            if (current_url and ".internal." in current_url and 
+                original_url and ".internal." not in original_url):
+                
+                print(f"[URL FIX] ⚠️  Framework transformed URL:")
+                print(f"[URL FIX]     From: {original_url}")
+                print(f"[URL FIX]     To:   {current_url}")
+                print(f"[URL FIX] 🔧 Restoring external URL...")
+                
+                # Force external URL
+                if hasattr(self, 'url'):
+                    self.url = original_url
+                if hasattr(self, '_url'):
+                    self._url = original_url
+                    
+                print(f"[URL FIX] ✅ Using external URL: {original_url}")
         
         try:
             result = await super().connect()

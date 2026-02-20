@@ -3,7 +3,7 @@
   "customer_id": "CUST-002",
   "user_email": "nattaporn@bankxthb.onmicrosoft.com",
   "started_at": "2026-01-13T12:42:20.503750",
-  "last_updated": "2026-01-14T20:26:26.651144",
+  "last_updated": "2026-02-20T16:43:22.509794",
   "conversation": [
     {
       "question": "what have been my recent transactions?",
@@ -32,6 +32,20 @@
       "timestamp": "2026-01-14T20:26:26.651144",
       "agent_used": "AccountAgent",
       "duration_seconds": 0.04532957077026367
+    },
+    {
+      "question": "I want to know my account balance",
+      "answer": "Your current account balance is **74,270.00 THB**.",
+      "timestamp": "2026-02-20T16:38:37.797294",
+      "agent_used": "AccountAgent",
+      "duration_seconds": 0.03177595138549805
+    },
+    {
+      "question": "I want to know my account balance",
+      "answer": "Your current account balance is **74,270.00 THB**.",
+      "timestamp": "2026-02-20T16:43:22.509794",
+      "agent_used": "AccountAgent",
+      "duration_seconds": 0.03132367134094238
     }
   ]
 }

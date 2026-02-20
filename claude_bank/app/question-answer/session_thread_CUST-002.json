@@ -3,7 +3,7 @@
   "customer_id": "CUST-002",
   "user_email": "nattaporn@bankxthb.onmicrosoft.com",
   "started_at": "2026-01-13T12:46:35.711423",
-  "last_updated": "2026-01-13T12:46:35.711423",
+  "last_updated": "2026-02-20T17:05:53.494659",
   "conversation": [
     {
       "question": "transfer 50 THB to Somchai",
@@ -11,6 +11,27 @@
       "timestamp": "2026-01-13T12:46:35.711423",
       "agent_used": "Payment Agent",
       "duration_seconds": 2.8192741870880127
+    },
+    {
+      "question": "Somchai Rattanakorn, 200 THB",
+      "answer": "I encountered an error while processing your request: All connection attempts failed",
+      "timestamp": "2026-02-20T16:59:27.205077",
+      "agent_used": "Account Agent",
+      "duration_seconds": 7.207269668579102
+    },
+    {
+      "question": "what is my account balance?",
+      "answer": "Your current account balance is **74,270.00 THB**.",
+      "timestamp": "2026-02-20T17:04:18.555858",
+      "agent_used": "AccountAgent",
+      "duration_seconds": 0.07031893730163574
+    },
+    {
+      "question": "what is my acciouint balance?",
+      "answer": "Your current account balance is **74,270.00 THB**.",
+      "timestamp": "2026-02-20T17:05:53.494659",
+      "agent_used": "AccountAgent",
+      "duration_seconds": 0.10058832168579102
     }
   ]
 }

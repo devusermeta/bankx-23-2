@@ -3,7 +3,7 @@
   "customer_id": "CUST-002",
   "user_email": "nattaporn@bankxthb.onmicrosoft.com",
   "started_at": "2026-01-13T12:43:04.833779",
-  "last_updated": "2026-02-20T17:02:38.215505",
+  "last_updated": "2026-02-22T19:47:12.235652",
   "conversation": [
     {
       "question": "what are the rate of interst of credit cards?",
@@ -137,6 +137,20 @@
       "timestamp": "2026-02-20T17:02:38.215505",
       "agent_used": "Payment Agent",
       "duration_seconds": 38.83501482009888
+    },
+    {
+      "question": "transfer 300 THB to Somchai Rattankorn",
+      "answer": "I found Somchai Rattankorn in your beneficiaries with account 123-456-001.\n\n⚠️ PAYMENT CONFIRMATION REQUIRED ⚠️\n\nPlease confirm to proceed with this payment:\n\n<table>\n<tbody>\n<tr><td><strong>Amount</strong></td><td>300 THB</td></tr>\n<tr><td><strong>Recipient</strong></td><td>Somchai Rattankorn</td></tr>\n<tr><td><strong>Account</strong></td><td>123-456-001</td></tr>\n<tr><td><strong>Payment Method</strong></td><td>Bank Transfer</td></tr>\n<tr><td><strong>Current Balance</strong></td><td>15,000 THB</td></tr>\n<tr><td><strong>New Balance (Preview)</strong></td><td>14,700 THB</td></tr>\n</tbody>\n</table>\n\nReply 'Yes' or 'Confirm' to proceed with the payment.",
+      "timestamp": "2026-02-21T14:23:50.158826",
+      "agent_used": "Payment Agent",
+      "duration_seconds": 62.365628480911255
+    },
+    {
+      "question": "tell me about hte interest rates you are offering on the credit cards",
+      "answer": "🚨 TICKET CREATION CONFIRMATION REQUIRED 🚨\nPlease confirm to proceed with this ticket creation:\n• Issue: Interest rates on credit cards\n• Type: Product Information\n• Priority: medium\n\nReply 'Yes' or 'Confirm' to proceed with the ticket creation.",
+      "timestamp": "2026-02-22T19:47:12.235652",
+      "agent_used": "Product Info Agent",
+      "duration_seconds": 19.10110068321228
     }
   ]
 }

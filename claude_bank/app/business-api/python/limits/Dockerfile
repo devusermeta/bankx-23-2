@@ -18,7 +18,7 @@ COPY dynamic_data /app/dynamic_data
 COPY schemas /app/schemas
 
 # Create virtual environment and install dependencies
-RUN uv venv  
+RUN uv venv --clear
 RUN uv sync --frozen
 
 # Expose port

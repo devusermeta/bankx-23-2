@@ -20,7 +20,6 @@ WORKDIR /app
 # Copy installed packages from builder
 COPY --from=builder /root/.local /root/.local
 
-# Copy application code
 COPY . .
 
 # Copy common modules and a2a-sdk

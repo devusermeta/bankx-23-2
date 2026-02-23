@@ -203,6 +203,15 @@ class AuditedMCPTool(MCPStreamableHTTPTool):
                 audit.set_result("error", f"Tool {tool_name} failed: {str(e)}")
                 raise
     
+    async def __call__(self, tool_name: str, **arguments):
+        """Alternative calling interface that might be used by agent framework."""
+        print(f"\n{'='*80}")
+        print(f"[AUDIT __call__ DEBUG] 🔍 __call__() INVOKED!")
+        print(f"[AUDIT __call__ DEBUG] Tool: {tool_name}")
+        print(f"[AUDIT __call__ DEBUG] Arguments: {list(arguments.keys())}")
+        print(f"{'='*80}\n")
+        return await self.call_tool(tool_name, **arguments)
+    
     async def connect(self):
         """Connect to MCP server with audit logging and URL fix."""
         logger.info(

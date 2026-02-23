@@ -218,6 +218,21 @@ async def _stream_response(
                         # Fallback: just the current message
                         a2a_messages = [{"role": "user", "content": user_message}]
                     
+                    # 💳 [PAYMENT FIX] Prepend username to ALL user messages for PaymentAgent
+                    if agent_name in ("PaymentAgent", "Payment Agent"):
+                        user_email = user_context.entra_user_email if user_context else None
+                        if user_email:
+                            print(f"💳 [PAYMENT FIX] Prepending username to ALL user messages in history for {agent_name}")
+                            for msg in a2a_messages:
+                                if msg.get("role") == "user":
+                                    content = msg.get("content", "")
+                                    # Only prepend if not already present
+                                    if not content.startswith(f"my username is {user_email}"):
+                                        msg["content"] = f"my username is {user_email}, {content}"
+                            print(f"💳 [PAYMENT FIX] Fixed {len([m for m in a2a_messages if m.get('role') == 'user'])} user messages")
+                        else:
+                            print(f"⚠️ [PAYMENT FIX] No user_email available, skipping username prepending")
+                    
                     print(f"[COPILOT DEBUG] Converted to {len(a2a_messages)} A2A messages:")
                     for i, msg in enumerate(a2a_messages):
                         print(f"[COPILOT DEBUG]   A2A Message {i}: role={msg['role']}, content='{msg['content'][:80]}...'")

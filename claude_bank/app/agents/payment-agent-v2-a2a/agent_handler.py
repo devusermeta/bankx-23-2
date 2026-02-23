@@ -1,25 +1,28 @@
 """
-Payment Agent v2 Handler - Simplified Transfer Agent
+Payment Agent v2 Handler - Azure AI Foundry with Agent Framework
 
-References existing Azure AI Foundry agent (created once by create_agent_in_foundry.py).
-Uses unified Payment MCP Server for all transfer operations.
+Uses agent-framework (PyPI packages) to create Payment Agent in Foundry with:
+- Azure AI Foundry V2 (azure-ai-projects)
+- Unified MCP Tool for payment operations (with audit logging)
+- A2A protocol support for supervisor routing
 """
 
 import logging
 from typing import AsyncGenerator
 
 from agent_framework import ChatAgent
-from agent_framework.azure import AzureAIClient
+from agent_framework.azure import AzureAIClient  # Use AzureAIClient to reference existing Foundry agent
 from azure.identity.aio import AzureCliCredential
 from azure.ai.projects.aio import AIProjectClient
 
-from audited_mcp_tool import AuditedMCPTool
+from audited_mcp_tool import AuditedMCPTool  # Audit wrapper for compliance
 from config import (
     AZURE_AI_PROJECT_ENDPOINT,
     PAYMENT_AGENT_NAME,
     PAYMENT_AGENT_VERSION,
     PAYMENT_AGENT_MODEL_DEPLOYMENT,
     PAYMENT_UNIFIED_MCP_URL,
+    PAYMENT_AGENT_CONFIG,
 )
 
 logger = logging.getLogger(__name__)
@@ -27,14 +30,19 @@ logger = logging.getLogger(__name__)
 
 class PaymentAgentHandler:
     """
-    Payment Agent v2 Handler - References existing Foundry agent
+    Payment Agent Handler using Agent Framework with Azure AI Foundry
+    
+    Pattern based on: agent-framework-1/python/samples/getting_started/agents/a2a/
     
     Architecture:
-    - Agent ALREADY EXISTS in Azure AI Foundry (created once by create_agent_in_foundry.py)
-    - This handler REFERENCES that agent (never creates new ones)
-    - MCP unified tool connects to payment-unified business logic
+    - Agent created in Azure AI Foundry (cloud service)
+    - Agent Framework provides Python SDK wrapper
+    - Unified MCP tool connects to payment business logic
     - A2A protocol enables supervisor routing
     """
+
+    # Thread state storage (shared across all handler instances)
+    thread_store: dict[str, dict[str, any]] = {}
 
     def __init__(self):
         self.credential = None
@@ -44,10 +52,10 @@ class PaymentAgentHandler:
         # Agent caching (per thread)
         self._cached_agents: dict[str, ChatAgent] = {}
         
-        # MCP tool caching (shared across threads)
+        # MCP tool caching (shared across threads for performance)
         self._mcp_tool_cache: AuditedMCPTool | None = None
         
-        logger.info("[PAYMENT AGENT V2] Handler initialized")
+        logger.info("PaymentAgentHandler initialized (Agent Framework + Foundry V2)")
 
     async def initialize(self):
         """Initialize Azure AI resources"""
@@ -64,11 +72,11 @@ class PaymentAgentHandler:
         with open("prompts/payment_agent.md", "r", encoding="utf-8") as f:
             self.instructions = f.read()
         
-        logger.info("[PAYMENT AGENT V2] ✅ Initialized (credential + project client + instructions)")
+        logger.info("✅ Handler initialized (Azure credential + AIProjectClient + instructions loaded)")
 
     async def _create_mcp_tool(self, customer_id: str | None = None, thread_id: str | None = None) -> AuditedMCPTool:
         """Create unified MCP tool instance with audit logging"""
-        logger.info(f"[PAYMENT AGENT V2] Creating unified MCP connection for thread={thread_id}")
+        logger.info(f"Creating MCP connection for thread={thread_id}")
 
         # Unified Payment MCP Tool (with audit logging)
         mcp_tool = AuditedMCPTool(
@@ -82,13 +90,15 @@ class PaymentAgentHandler:
         )
         await mcp_tool.connect()
         
-        logger.info("[PAYMENT AGENT V2] ✅ MCP connection established (unified server)")
+        logger.info("✅ MCP connection established (unified server)")
 
         return mcp_tool
 
     async def _get_user_email(self, customer_id: str) -> str:
         """Get user email from customer_id using UserMapper (dynamic lookup)"""
+        # Try to use UserMapper for dynamic customer lookup
         try:
+            # Import here to avoid circular dependencies
             import sys
             from pathlib import Path
             
@@ -103,89 +113,77 @@ class PaymentAgentHandler:
             customer_info = user_mapper.get_customer_info(customer_id)
             
             if customer_info:
-                user_email = customer_info.get("bankx_email") or customer_info.get("email")
-                logger.info(f"[PAYMENT AGENT V2] 📧 {customer_id} → {user_email}")
-                return user_email
+                user_mail = customer_info.get("email")
+                logger.info(f"📧 [UserMapper] {customer_id} → {user_mail}")
+                return user_mail
             else:
-                logger.warning(f"[PAYMENT AGENT V2] ⚠️ No customer found for {customer_id}")
+                logger.warning(f"⚠️ [UserMapper] No customer found for {customer_id}, using fallback")
         except Exception as e:
-            logger.warning(f"[PAYMENT AGENT V2] ⚠️ Error looking up customer: {e}")
+            logger.warning(f"⚠️ [UserMapper] Error looking up customer: {e}, using fallback")
         
-        # Fallback
-        return "user@bankx.com"
+        # Fallback to static mapping if UserMapper fails
+        customer_email_map = {
+            "CUST-001": "somchai@bankxthb.onmicrosoft.com",
+            "CUST-002": "nattaporn@bankxthb.onmicrosoft.com",
+            "CUST-003": "pimchanok@bankxthb.onmicrosoft.com",
+            "CUST-004": "anan@bankxthb.onmicrosoft.com",
+        }
+        
+        user_mail = customer_email_map.get(customer_id, "somchai@bankxthb.onmicrosoft.com")
+        logger.info(f"📧 [Fallback] {customer_id} → {user_mail}")
+        return user_mail
 
-    async def get_agent(self, thread_id: str, customer_id: str, user_email: str | None = None) -> ChatAgent:
+    async def get_agent(self, thread_id: str, customer_id: str) -> ChatAgent:
         """
-        Get or create ChatAgent for this thread
-        REFERENCES existing agent in Azure AI Foundry (doesn't create new)
+        Get or create ChatAgent for this thread with shared MCP tool
+        Implements agent caching per thread for performance
+        MCP tool is shared across all threads for faster initialization
         """
-        logger.info(f"\n{'='*80}")
-        logger.info(f"[PAYMENT AGENT V2] 🔧 GET_AGENT CALLED")
-        logger.info(f"[PAYMENT AGENT V2]   thread_id: {thread_id}")
-        logger.info(f"[PAYMENT AGENT V2]   customer_id: {customer_id}")
-        logger.info(f"[PAYMENT AGENT V2]   user_email: {user_email}")
-        logger.info(f"{'='*80}\n")
-        
         # Check cache first
         if thread_id in self._cached_agents:
-            logger.info(f"[PAYMENT AGENT V2] ⚡ Reusing cached agent for thread={thread_id}")
+            logger.info(f"⚡ [CACHE HIT] Reusing cached PaymentAgent for thread={thread_id}")
             return self._cached_agents[thread_id]
 
-        logger.info(f"[PAYMENT AGENT V2] 🆕 Building NEW agent reference for thread={thread_id}, customer={customer_id}")
+        logger.info(f"Building new PaymentAgent for thread={thread_id}, customer={customer_id}")
 
-        # Reuse MCP tool if already created
+        # Reuse MCP tool if already created, otherwise create it once
         if self._mcp_tool_cache is None:
-            logger.info("[PAYMENT AGENT V2] 🔧 Creating MCP connection (FIRST TIME)...")
+            logger.info("🔧 [MCP INIT] Creating MCP connection (first time)...")
             self._mcp_tool_cache = await self._create_mcp_tool(customer_id=customer_id, thread_id=thread_id)
-            logger.info("[PAYMENT AGENT V2] ✅ MCP connection created and cached")
+            logger.info("✅ [MCP INIT] MCP connection created and cached")
         else:
-            logger.info("[PAYMENT AGENT V2] ⚡ Reusing CACHED MCP connection")
+            logger.info("⚡ [MCP CACHE] Reusing existing MCP connection")
         
         mcp_tool = self._mcp_tool_cache
 
-        # Get user email if not provided
-        if not user_email:
-            logger.info(f"[PAYMENT AGENT V2] 📧 Looking up user_email for customer={customer_id}...")
-            user_email = await self._get_user_email(customer_id)
-            logger.info(f"[PAYMENT AGENT V2] 📧 Found user_email: {user_email}")
-        else:
-            logger.info(f"[PAYMENT AGENT V2] 📧 Using provided user_email: {user_email}")
-
-        # Inject customer context into instructions
-        logger.info(f"[PAYMENT AGENT V2] 📝 Injecting customer context into instructions...")
-        full_instructions = self.instructions + f"\n\n## Current Customer Context\n\n"
-        full_instructions += f"- **Customer ID**: {customer_id}\n"
-        full_instructions += f"- **Username (BankX Email)**: {user_email}\n"
-        full_instructions += f"- **Thread ID**: {thread_id}\n"
-        logger.info(f"[PAYMENT AGENT V2] 📝 Instructions prepared ({len(full_instructions)} chars)")
+        # Get user email for instructions
+        user_email = await self._get_user_email(customer_id)
+        full_instructions = self.instructions.replace("{user_mail}", user_email)
 
         # Create AzureAIClient that references the EXISTING Foundry agent
         # This does NOT create a new agent - it references the agent created by create_agent_in_foundry.py
-        logger.info(f"[PAYMENT AGENT V2] 🔗 Creating AzureAIClient to reference existing agent...")
-        logger.info(f"[PAYMENT AGENT V2]   Agent Name: {PAYMENT_AGENT_NAME}")
-        logger.info(f"[PAYMENT AGENT V2]   Agent Version: {PAYMENT_AGENT_VERSION}")
-        
         azure_client = AzureAIClient(
             project_client=self.project_client,
             agent_name=PAYMENT_AGENT_NAME,
             agent_version=PAYMENT_AGENT_VERSION,
         )
-        logger.info(f"[PAYMENT AGENT V2] ✅ Referencing existing agent: {PAYMENT_AGENT_NAME}:{PAYMENT_AGENT_VERSION}")
+        logger.info(f"✅ AzureAIClient created - Referencing existing agent: {PAYMENT_AGENT_NAME}:{PAYMENT_AGENT_VERSION}")
 
         # Create ChatAgent with MCP tool added dynamically
-        # Explicitly pass model deployment since framework may not fetch it from Foundry
-        logger.info(f"[PAYMENT AGENT V2] 🤖 Creating ChatAgent wrapper with MCP tools...")
+        # The Foundry agent has NO tools - we add them here to avoid duplication
         chat_agent = azure_client.create_agent(
             name=PAYMENT_AGENT_NAME,
+            model=PAYMENT_AGENT_MODEL_DEPLOYMENT,
             tools=[mcp_tool],
             instructions=full_instructions,
         )
-        logger.info(f"[PAYMENT AGENT V2] ✅ ChatAgent created successfully")
+        
+        # Note: Azure creates thread on first message - thread ID available after first run
 
-        # Cache the agent
+        # Cache the agent using the local thread_id for lookup
+        # Note: We use local thread_id as cache key, but agent uses Azure's thread internally
         self._cached_agents[thread_id] = chat_agent
-        logger.info(f"[PAYMENT AGENT V2] 💾 Agent cached for thread={thread_id}")
-        logger.info(f"[PAYMENT AGENT V2] 📊 Total cached agents: {len(self._cached_agents)}")
+        logger.info(f"💾 [CACHE STORED] PaymentAgent cached for thread={thread_id}")
 
         return chat_agent
 
@@ -198,7 +196,7 @@ class PaymentAgentHandler:
         stream: bool = True
     ) -> AsyncGenerator[str, None]:
         """
-        Process a message using the Payment Agent v2
+        Process a message using the PaymentAgent with thread continuity
         Returns streaming response
         """
         import time
@@ -208,81 +206,80 @@ class PaymentAgentHandler:
         from a2a_banking_telemetry import get_a2a_telemetry
         
         start_time = time.time()
-        logger.info(f"[PAYMENT AGENT V2] Processing message for thread={thread_id}, customer={customer_id}")
+        logger.info(f"Processing message for thread={thread_id}, customer={customer_id}, stream={stream}")
         
         # Initialize telemetry
-        telemetry = get_a2a_telemetry("PaymentAgentV2")
+        telemetry = get_a2a_telemetry("PaymentAgent")
         
         # Get or create agent for this thread
-        agent = await self.get_agent(thread_id=thread_id, customer_id=customer_id, user_email=user_email)
+        agent = await self.get_agent(thread_id=thread_id, customer_id=customer_id)
 
-        # Collect response for logging
+        # Get or create thread object for conversation continuity
+        if thread_id in PaymentAgentHandler.thread_store:
+            # Resume existing thread with conversation history
+            logger.info(f"⚡ [THREAD RESUME] Restoring thread={thread_id} with conversation history")
+            current_thread = agent.get_new_thread()
+            await current_thread.update_from_thread_state(PaymentAgentHandler.thread_store[thread_id])
+        else:
+            # Create new thread
+            logger.info(f"🆕 [NEW THREAD] Creating new thread={thread_id}")
+            current_thread = agent.get_new_thread()
+
+        # Track response metrics
         full_response = ""
-        tools_invoked = []
         
         try:
-            logger.info(f"[PAYMENT AGENT V2] 🚀 Starting agent.run() - stream={stream}")
-            logger.info(f"[PAYMENT AGENT V2] 📝 User message: {message[:100]}...")
-            
             # Process message with streaming
             if stream:
-                logger.info(f"[PAYMENT AGENT V2] 📤 Streaming mode enabled")
-                async for chunk in agent.run_stream(message):
+                async for chunk in agent.run_stream(message, thread=current_thread):
                     if hasattr(chunk, 'text') and chunk.text:
                         full_response += chunk.text
-                        logger.debug(f"[PAYMENT AGENT V2] 📦 Chunk received: {len(chunk.text)} chars")
                         yield chunk.text
             else:
-                logger.info(f"[PAYMENT AGENT V2] 📥 Non-streaming mode")
-                result = await agent.run(message)
+                result = await agent.run(message, thread=current_thread)
                 full_response = result.text
-                logger.info(f"[PAYMENT AGENT V2] ✅ Got response: {len(full_response)} chars")
                 yield result.text
             
-            # Log successful decision
-            duration = time.time() - start_time
-            logger.info(f"[PAYMENT AGENT V2] ⏱️ Processing completed in {duration:.3f}s")
-            logger.info(f"[PAYMENT AGENT V2] 📊 Logging telemetry data...")
+            # Save thread state for next request
+            PaymentAgentHandler.thread_store[thread_id] = await current_thread.serialize()
+            logger.info(f"💾 [THREAD SAVED] Thread state saved for thread={thread_id}")
             
+            # Log successful execution
+            duration = time.time() - start_time
             telemetry.log_agent_decision(
                 thread_id=thread_id,
                 user_query=message,
-                triage_rule="UC4_PAYMENT_AGENT_V2",
-                reasoning="Transfer request processed via Payment Agent v2",
+                triage_rule="UC4_PAYMENT_AGENT",
+                reasoning="Payment query routed to PaymentAgent via A2A",
                 tools_considered=["payment-unified-mcp"],
                 tools_invoked=[{"tool": "payment-unified-mcp", "status": "success"}],
                 result_status="success",
                 result_summary=f"Response generated ({len(full_response)} chars)",
                 duration_seconds=duration,
-                context={"customer_id": customer_id, "user_email": user_email}
+                context={"customer_id": customer_id}
             )
             
-            logger.info(f"[PAYMENT AGENT V2] ✅ Request completed successfully")
-            
         except Exception as e:
-            # Log failed decision
+            # Log failed execution
             duration = time.time() - start_time
-            logger.error(f"[PAYMENT AGENT V2] ❌ Error processing message: {e}", exc_info=True)
-            logger.info(f"[PAYMENT AGENT V2] 📊 Logging error telemetry...")
-            
+            logger.error(f"❌ Error processing message: {e}", exc_info=True)
             telemetry.log_agent_decision(
                 thread_id=thread_id,
                 user_query=message,
-                triage_rule="UC4_PAYMENT_AGENT_V2",
-                reasoning="Transfer request failed in Payment Agent v2",
+                triage_rule="UC4_PAYMENT_AGENT",
+                reasoning="Payment query failed in PaymentAgent",
                 tools_considered=["payment-unified-mcp"],
                 tools_invoked=[{"tool": "payment-unified-mcp", "status": "error", "error": str(e)}],
                 result_status="error",
                 result_summary=str(e),
                 duration_seconds=duration,
-                context={"customer_id": customer_id, "user_email": user_email, "error": str(e)}
+                context={"customer_id": customer_id, "error": str(e)}
             )
-            
             yield f"I apologize, but I encountered an error: {str(e)}"
 
     async def cleanup(self):
         """Cleanup resources"""
-        logger.info("[PAYMENT AGENT V2] 🧹 Cleaning up resources")
+        logger.info("🧹 Cleaning up resources")
         
         try:
             # Close MCP connection if exists
@@ -294,7 +291,7 @@ class PaymentAgentHandler:
             self._cached_agents.clear()
             self._mcp_tool_cache = None
             
-            logger.info("[PAYMENT AGENT V2] ✅ Cleanup completed")
+            logger.info("✅ Cleanup completed")
             
         except Exception as e:
-            logger.warning(f"[PAYMENT AGENT V2] ⚠️ Cleanup error: {e}")
+            logger.warning(f"⚠️ Cleanup error: {e}")

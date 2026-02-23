@@ -811,6 +811,28 @@ class SupervisorAgentA2A:
             customer_id = self.user_context.customer_id if self.user_context else "Somchai"
             user_email = self.user_context.entra_user_email if self.user_context else "user@bankx.com"
             
+            # For PaymentAgent: Prepend username to ALL user messages (so agent sees it in conversation, not just context)
+            # This matches the pattern that works in Azure AI Foundry playground
+            if agent_name == "PaymentAgent" or agent_name == "Payment Agent":
+                user_message = f"my username is {user_email}, {user_message}"
+                logger.info(f"💳 [PAYMENT FIX] Prepended username to current message: {user_message[:100]}...")
+                
+                # ALSO prepend username to all user messages in conversation history
+                if conversation_history:
+                    fixed_history = []
+                    for msg in conversation_history:
+                        if msg.get("role") == "user":
+                            # Only prepend if not already prepended
+                            content = msg.get("content", "")
+                            if not content.startswith(f"my username is {user_email}"):
+                                content = f"my username is {user_email}, {content}"
+                            fixed_history.append({"role": "user", "content": content})
+                        else:
+                            # Keep assistant messages as-is
+                            fixed_history.append(msg)
+                    conversation_history = fixed_history
+                    logger.info(f"💳 [PAYMENT FIX] Fixed {len([m for m in conversation_history if m.get('role') == 'user'])} user messages in history")
+            
             # Build messages array - use conversation_history if provided, otherwise just current message
             if conversation_history:
                 messages = conversation_history + [{"role": "user", "content": user_message}]

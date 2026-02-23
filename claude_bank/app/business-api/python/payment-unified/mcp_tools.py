@@ -81,6 +81,120 @@ def getAccountsByUserName(username: str) -> dict:
 
 
 @mcp.tool()
+def prepareTransfer(
+    username: str,
+    recipient_identifier: str,
+    amount: float,
+    recipient_name: Optional[str] = None
+) -> dict:
+    """
+    Prepare a transfer by validating all details in ONE call.
+
+    This is the FIRST tool to call for any transfer request.
+    It internally calls getAccountsByUserName + validateTransfer + checkLimits
+    and returns all information needed to show the user a confirmation table.
+
+    This is a READ-ONLY operation - no money moves. It only validates and
+    returns preview data.
+
+    Args:
+        username: Customer's BankX email address (e.g., "nattaporn@bankxthb.onmicrosoft.com")
+        recipient_identifier: Recipient's name or alias (e.g., "Somchai Rattanakorn")
+        amount: Transfer amount in THB (e.g., 800)
+        recipient_name: Optional - same as recipient_identifier if not provided
+
+    Returns:
+        Dictionary with ALL data needed for confirmation table:
+        - sender_account_id: Use this in executeTransfer
+        - recipient_account_id: Use this in executeTransfer
+        - sender_name, sender_account_no, current_balance
+        - recipient_name, recipient_account_no
+        - amount, currency
+        - new_balance_preview (balance after transfer)
+        - daily_limit_remaining
+        - validation_status: "success" or "error"
+        - error_message: Only present if validation_status is "error"
+    """
+    try:
+        print(f"\n\n{'#'*100}")
+        print(f"# MCP TOOL CALLED: prepareTransfer")
+        print(f"{'#'*100}")
+        print(f"Parameters:")
+        print(f"  - username: {username}")
+        print(f"  - recipient_identifier: {recipient_identifier}")
+        print(f"  - amount: {amount:,.2f} THB")
+        print(f"  - recipient_name: {recipient_name or '(not provided)'}")
+        print(f"{'#'*100}\n")
+
+        # Step 1: Get accounts for this user
+        accounts = transfer_service.get_accounts_by_username(username)
+        if not accounts:
+            return {
+                "validation_status": "error",
+                "error_message": f"No accounts found for user: {username}"
+            }
+
+        # Use the first (primary) account
+        sender_account = accounts[0]
+        sender_account_id = sender_account.account_id
+
+        print(f"✅ [prepareTransfer] Sender account: {sender_account_id} ({sender_account.cust_name})")
+
+        # Step 2: Validate transfer (checks recipient + limits in one call)
+        result = transfer_service.validate_transfer(
+            sender_account_id,
+            recipient_identifier,
+            amount,
+            recipient_name or recipient_identifier
+        )
+
+        if not result.valid:
+            return {
+                "validation_status": "error",
+                "error_message": result.error_message or "Transfer validation failed",
+                "sender_account_id": sender_account_id,
+                "current_balance": result.sender_balance
+            }
+
+        # Build the complete confirmation payload
+        new_balance_preview = result.checks.remaining_after
+        daily_limit_remaining = result.checks.daily_limit_remaining_after
+
+        print(f"✅ [prepareTransfer] Validation passed!")
+        print(f"   {result.sender_name} → {result.recipient_name}")
+        print(f"   Amount: {amount:,.2f} THB")
+        print(f"   New balance preview: {new_balance_preview:,.2f} THB")
+
+        return {
+            "validation_status": "success",
+            # IDs needed for executeTransfer
+            "sender_account_id": result.sender_account_id,
+            "recipient_account_id": result.recipient_account_id,
+            # Sender details
+            "sender_name": result.sender_name,
+            "sender_account_no": sender_account.account_no,
+            "current_balance": result.sender_balance,
+            # Recipient details
+            "recipient_name": result.recipient_name,
+            "recipient_account_no": result.recipient_account_no,
+            # Transfer details
+            "amount": result.amount,
+            "currency": result.currency,
+            "payment_method": "Bank Transfer",
+            # Balance preview
+            "new_balance_preview": new_balance_preview,
+            "daily_limit_remaining": daily_limit_remaining
+        }
+
+    except Exception as e:
+        logger.error(f"Error in prepareTransfer: {e}")
+        return {
+            "validation_status": "error",
+            "error_message": f"Error preparing transfer: {str(e)}"
+        }
+
+
+@mcp.tool()
 def getAccountDetails(account_id: str) -> dict:
     """
     Get detailed information about a specific account including balance and limits.
@@ -242,7 +356,11 @@ def validateTransfer(
         print(f"  - sender_account_id: {sender_account_id}")
         print(f"  - recipient_identifier: {recipient_identifier}")
         print(f"  - amount: {amount:,.2f} THB")
-        print(f"  - recipient_name: {recipient_name or '(not provided)'}")
+        # Default recipient_name to recipient_identifier if not provided or null
+        if not recipient_name:
+            recipient_name = recipient_identifier
+
+        print(f"  - recipient_name: {recipient_name}")
         print(f"{'#'*100}\n")
         
         result = transfer_service.validate_transfer(

@@ -439,41 +439,72 @@ const Chat = () => {
     
     // Detect if response contains confirmation request
     const detectConfirmationRequest = (responseText: string) => {
-        console.log('🔍 Detection called with:', responseText);
+        console.log('🔍 [DETECTION] Called with response length:', responseText.length);
+        console.log('🔍 [DETECTION] Response preview:', responseText.substring(0, 200));
         
         // Payment confirmation pattern - matches with or without markdown bold (**), bullets, or newlines
         const paymentPattern = /⚠️\s*\*?\*?PAYMENT\s+CONFIRMATION\s+REQUIRED\*?\*?\s*⚠️/i;
-        const amountPattern = /Amount:\s*([^•\n]+)/i;
-        const recipientPattern = /Recipient:\s*([^•\n]+)/i;
-        const accountPattern = /Account:\s*([^•\n]+)/i;
         
-        console.log('🔍 Pattern test result:', paymentPattern.test(responseText));
+        console.log('🔍 [DETECTION] Pattern test result:', paymentPattern.test(responseText));
         
         if (paymentPattern.test(responseText)) {
-            const amountMatch = responseText.match(amountPattern);
-            const recipientMatch = responseText.match(recipientPattern);
-            const accountMatch = responseText.match(accountPattern);
+            console.log('✅ [DETECTION] PAYMENT MARKER FOUND! Parsing details...');
             
-            console.log('✅ PAYMENT DETECTED! Setting confirmation details');
-            console.log('Amount:', amountMatch?.[1]);
-            console.log('Recipient:', recipientMatch?.[1]);
-            console.log('Account:', accountMatch?.[1]);
+            // Helper function to extract value from HTML table row
+            const extractTableValue = (label: string): string => {
+                // Try HTML table format: <td><strong>Label</strong></td><td>Value</td>
+                const htmlPattern = new RegExp(`<td>\\s*<strong>\\s*${label}\\s*</strong>\\s*</td>\\s*<td>\\s*([^<]+)\\s*</td>`, 'i');
+                const htmlMatch = responseText.match(htmlPattern);
+                if (htmlMatch) {
+                    return htmlMatch[1].trim();
+                }
+                
+                // Try plain text format: Label: Value or • Label: Value
+                const textPattern = new RegExp(`[•\\-\\*]?\\s*${label}\\s*:\\s*([^•\\n<]+)`, 'i');
+                const textMatch = responseText.match(textPattern);
+                if (textMatch) {
+                    return textMatch[1].trim();
+                }
+                
+                return 'N/A';
+            };
+            
+            const amount = extractTableValue('Amount');
+            const recipient = extractTableValue('Recipient');
+            const account = extractTableValue('Account');
+            const paymentMethod = extractTableValue('Payment Method');
+            const currentBalance = extractTableValue('Current Balance');
+            const newBalance = extractTableValue('New Balance \\(Preview\\)') || extractTableValue('New Balance');
+            
+            console.log('📊 [DETECTION] Extracted values:', {
+                amount,
+                recipient,
+                account,
+                paymentMethod,
+                currentBalance,
+                newBalance
+            });
+            
+            const details = [
+                { label: 'Amount', value: amount },
+                { label: 'Recipient', value: recipient },
+                { label: 'Account', value: account },
+                { label: 'Payment Method', value: paymentMethod },
+                { label: 'Current Balance', value: currentBalance },
+                { label: 'New Balance', value: newBalance }
+            ];
             
             setConfirmationDetails({
                 title: 'Payment Confirmation Required',
-                message: 'Please confirm this payment to proceed.',
+                message: 'Please review the payment details below and confirm to proceed.',
                 type: 'payment',
-                details: [
-                    { label: 'Amount', value: amountMatch?.[1]?.trim() || 'N/A' },
-                    { label: 'Recipient', value: recipientMatch?.[1]?.trim() || 'N/A' },
-                    { label: 'Account', value: accountMatch?.[1]?.trim() || 'N/A' }
-                ]
+                details: details
             });
             setShowConfirmation(true);
-            console.log('✅ showConfirmation set to TRUE');
+            console.log('✅ [DETECTION] Confirmation dialog triggered!');
             return true;
         } else {
-            console.log('❌ Pattern did not match');
+            console.log('❌ [DETECTION] Payment marker not found');
         }
         
         // Ticket creation confirmation pattern

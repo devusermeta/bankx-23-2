@@ -28,15 +28,12 @@ load_dotenv(override=True)
 # Read agent instructions from prompts file
 PROMPTS_PATH = Path(__file__).parent / "prompts" / "payment_agent.md"
 try:
-    with open(PROMPTS_PATH, "r", encoding="utf-8") as f:
+    with open(PROMPTS_PATH, "r", encoding="utf-8-sig") as f:
         AGENT_INSTRUCTIONS = f.read()
 except UnicodeDecodeError:
-    # Fallback if utf-8 fails
+    # Fallback to latin-1 if utf-8 fails
     with open(PROMPTS_PATH, "r", encoding="latin-1") as f:
         AGENT_INSTRUCTIONS = f.read()
-
-# Remove any potentially problematic characters
-AGENT_INSTRUCTIONS = AGENT_INSTRUCTIONS.encode('ascii', errors='ignore').decode('ascii')
 
 
 async def create_payment_agent():
@@ -93,11 +90,13 @@ async def create_payment_agent():
         
         print("\n📋 Next Steps:")
         print("1. Update .env file with the new version (if different):")
-        print(f"   AGENT_VERSION={agent.version}")
+        print(f"   PAYMENT_AGENT_VERSION={agent.version}")
         print("\n2. The agent_handler.py will now add MCP tools dynamically")
         print("\n3. Start the unified MCP server:")
         print("   cd claude_bank/app/business-api/python/payment-unified && python main.py")
-        print("\n4. Expose MCP server via ngrok:")
+        print("\n4. Start the Payment Agent v2 A2A server:")
+        print("   cd claude_bank/app/agents/payment-agent-v2-a2a && python main.py")
+        print("=" * 80)
         print("   ngrok http 8076")
         print("\n5. Update .env with ngrok URL:")
         print("   PAYMENT_UNIFIED_MCP_URL=https://your-ngrok-id.ngrok.io/mcp")

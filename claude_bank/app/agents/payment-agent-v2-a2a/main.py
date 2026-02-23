@@ -23,8 +23,8 @@ import uvicorn
 
 from agent_handler import PaymentAgentHandler
 from config import (
-    PAYMENT_AGENT_PORT,
-    PAYMENT_AGENT_HOST,
+    A2A_SERVER_PORT,
+    A2A_SERVER_HOST,
     PAYMENT_AGENT_NAME,
     PAYMENT_AGENT_VERSION,
     PAYMENT_UNIFIED_MCP_URL,
@@ -95,7 +95,7 @@ AGENT_CARD = {
         "Validates transfers, gets user approval, and executes payments. "
         "Streamlined flow with single unified MCP server."
     ),
-    "url": f"http://localhost:{PAYMENT_AGENT_PORT}",
+    "url": f"http://localhost:{A2A_SERVER_PORT}",
     "version": PAYMENT_AGENT_VERSION,
     "capabilities": [
         "transfer_validation",
@@ -105,8 +105,8 @@ AGENT_CARD = {
     ],
     "agent_id": f"{PAYMENT_AGENT_NAME}:{PAYMENT_AGENT_VERSION}",
     "endpoints": {
-        "chat": f"http://localhost:{PAYMENT_AGENT_PORT}/a2a/invoke",
-        "health": f"http://localhost:{PAYMENT_AGENT_PORT}/health",
+        "chat": f"http://localhost:{A2A_SERVER_PORT}/a2a/invoke",
+        "health": f"http://localhost:{A2A_SERVER_PORT}/health",
     },
     "protocol": "a2a",
     "platform": "Azure AI Foundry",
@@ -140,9 +140,9 @@ async def lifespan(app: FastAPI):
     handler = await get_payment_agent_handler()
     logger.info("✅ Payment Agent v2 Handler initialized")
     
-    logger.info(f"✅ Payment Agent v2 A2A Server ready on {PAYMENT_AGENT_HOST}:{PAYMENT_AGENT_PORT}")
-    logger.info(f"   Agent Card: http://localhost:{PAYMENT_AGENT_PORT}/.well-known/agent.json")
-    logger.info(f"   Chat Endpoint: http://localhost:{PAYMENT_AGENT_PORT}/a2a/invoke")
+    logger.info(f"✅ Payment Agent v2 A2A Server ready on {A2A_SERVER_HOST}:{A2A_SERVER_PORT}")
+    logger.info(f"   Agent Card: http://localhost:{A2A_SERVER_PORT}/.well-known/agent.json")
+    logger.info(f"   Chat Endpoint: http://localhost:{A2A_SERVER_PORT}/a2a/invoke")
     
     yield
     
@@ -313,7 +313,7 @@ async def health_check():
             "status": "healthy",
             "agent": PAYMENT_AGENT_NAME,
             "version": PAYMENT_AGENT_VERSION,
-            "port": PAYMENT_AGENT_PORT,
+            "port": A2A_SERVER_PORT,
             "mcp_url": PAYMENT_UNIFIED_MCP_URL
         }
     )
@@ -327,7 +327,7 @@ async def root():
             "service": "Payment Agent v2 A2A Microservice",
             "version": PAYMENT_AGENT_VERSION,
             "description": "Simplified transfer agent with unified MCP server",
-            "agent_card": f"http://localhost:{PAYMENT_AGENT_PORT}/.well-known/agent.json",
+            "agent_card": f"http://localhost:{A2A_SERVER_PORT}/.well-known/agent.json",
             "endpoints": {
                 "chat": "/a2a/invoke",
                 "health": "/health",
@@ -345,13 +345,13 @@ async def root():
 
 if __name__ == "__main__":
     logger.info("Starting Payment Agent v2 A2A server...")
-    logger.info(f"Port: {PAYMENT_AGENT_PORT}")
+    logger.info(f"Port: {A2A_SERVER_PORT}")
     logger.info(f"Agent: {PAYMENT_AGENT_NAME} v{PAYMENT_AGENT_VERSION}")
     
     uvicorn.run(
         "main:app",
         host="0.0.0.0",
-        port=PAYMENT_AGENT_PORT,
+        port=A2A_SERVER_PORT,
         reload=False,  # Set to True for development
         log_level="info",
     )

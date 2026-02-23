@@ -1,7 +1,5 @@
 """
-Payment Agent v2 Configuration
-
-Centralized configuration for agent name, version, and Azure settings.
+Configuration for Payment Agent v2 A2A Microservice
 """
 
 import os
@@ -10,23 +8,33 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv(override=True)
 
-# Azure AI Foundry Configuration
-AZURE_AI_PROJECT_ENDPOINT = os.getenv("AZURE_PROJECT_ENDPOINT")
-PAYMENT_AGENT_MODEL_DEPLOYMENT = os.getenv("AZURE_OPENAI_DEPLOYMENT", "gpt-4o-mini")
+# Azure AI Foundry V2 Configuration
+AZURE_AI_PROJECT_ENDPOINT = os.getenv("AZURE_AI_PROJECT_ENDPOINT")
+AZURE_AI_PROJECT_API_KEY = os.getenv("AZURE_AI_PROJECT_API_KEY")
+PAYMENT_AGENT_MODEL_DEPLOYMENT = os.getenv("PAYMENT_AGENT_MODEL_DEPLOYMENT", "gpt-5-mini")
 
-# Azure AI Model Deployment (required by agent framework)
-AZURE_AI_MODEL_DEPLOYMENT_NAME = os.getenv("AZURE_AI_MODEL_DEPLOYMENT_NAME", "gpt-5-mini")
-
-# Agent Identity
-PAYMENT_AGENT_NAME = os.getenv("AGENT_NAME", "payment-agent-v2")
-PAYMENT_AGENT_VERSION = os.getenv("AGENT_VERSION", "2.0.0")
-
-# MCP Server Configuration
+# Agent Name and Version (NEW Foundry V2 format: name:version)
+PAYMENT_AGENT_NAME = os.getenv("PAYMENT_AGENT_NAME", "payment-agent-v2")
+PAYMENT_AGENT_VERSION = os.getenv("PAYMENT_AGENT_VERSION", "20")
+# MCP Server URL
 PAYMENT_UNIFIED_MCP_URL = os.getenv("PAYMENT_UNIFIED_MCP_URL", "http://localhost:8076/mcp")
 
+# Agent Configuration
+PAYMENT_AGENT_CONFIG = {
+    "max_completion_tokens": 800,  # Allow detailed payment confirmations
+    "temperature": 0.0,  # Fully deterministic for consistent tool calling
+    "parallel_tool_calls": False,  # Sequential for transfer validation flow
+}
+
 # A2A Server Configuration
-PAYMENT_AGENT_PORT = int(os.getenv("PAYMENT_AGENT_PORT", "9003"))
-PAYMENT_AGENT_HOST = os.getenv("PAYMENT_AGENT_HOST", "0.0.0.0")
+A2A_SERVER_PORT = int(os.getenv("PAYMENT_AGENT_A2A_PORT", "9003"))
+A2A_SERVER_HOST = os.getenv("PAYMENT_AGENT_A2A_HOST", "0.0.0.0")
+
+# Observability
+APPLICATIONINSIGHTS_CONNECTION_STRING = os.getenv("APPLICATIONINSIGHTS_CONNECTION_STRING")
+
+# User Mapper (for customer email lookup)
+USER_MAPPER_ENABLED = os.getenv("USER_MAPPER_ENABLED", "true").lower() == "true"
 
 def validate_config():
     """Validate that all required configuration is present"""
@@ -46,6 +54,15 @@ def validate_config():
         )
     
     print("✅ Payment Agent v2 A2A configuration validated")
+
+
+if __name__ == "__main__":
+    validate_config()
+    print(f"\n📋 Configuration Summary:")
+    print(f"   Agent: {PAYMENT_AGENT_NAME}:{PAYMENT_AGENT_VERSION}")
+    print(f"   Model: {PAYMENT_AGENT_MODEL_DEPLOYMENT}")
+    print(f"   MCP: {PAYMENT_UNIFIED_MCP_URL}")
+    print(f"   Port: {A2A_SERVER_PORT}")
 
 
 if __name__ == "__main__":

@@ -10,6 +10,7 @@ import sys
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 from config import settings, validate_settings
 from models import ChatRequest, ChatResponse, AgentCard, AgentEndpoints
 from a2a_handler import get_a2a_handler
@@ -131,6 +132,15 @@ app = FastAPI(
     version=settings.VERSION,
     description="A2A-compatible escalation agent using Microsoft Graph API",
     lifespan=lifespan
+)
+
+# Add CORS middleware to handle OPTIONS preflight requests
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow all origins for development
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all methods including OPTIONS
+    allow_headers=["*"],  # Allow all headers
 )
 
 

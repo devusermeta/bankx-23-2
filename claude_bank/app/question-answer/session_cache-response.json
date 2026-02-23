@@ -3,7 +3,7 @@
   "customer_id": "CUST-002",
   "user_email": "nattaporn@bankxthb.onmicrosoft.com",
   "started_at": "2026-01-13T12:42:20.503750",
-  "last_updated": "2026-02-20T16:43:22.509794",
+  "last_updated": "2026-02-23T21:25:07.793257",
   "conversation": [
     {
       "question": "what have been my recent transactions?",
@@ -46,6 +46,27 @@
       "timestamp": "2026-02-20T16:43:22.509794",
       "agent_used": "AccountAgent",
       "duration_seconds": 0.03132367134094238
+    },
+    {
+      "question": "I want to know my account balance",
+      "answer": "Your current account balance is **73,430.00 THB**.",
+      "timestamp": "2026-02-23T21:23:48.176072",
+      "agent_used": "AccountAgent",
+      "duration_seconds": 0.023934602737426758
+    },
+    {
+      "question": "what are my last 5 transactions",
+      "answer": "Here are your recent transactions:\n\n<table>\n<thead>\n<tr><th>Date</th><th>Description</th><th>Type</th><th>Amount</th><th>Recipient</th></tr>\n</thead>\n<tbody>\n<tr><td>2026-02-23</td><td>Transfer to Somchai Rattanakorn</td><td>📤 Transfer</td><td>THB 400.00</td><td>Somchai Rattanakorn</td></tr>\n<tr><td>2026-02-23</td><td>Transfer to Somchai Rattanakorn</td><td>📤 Transfer</td><td>THB 800.00</td><td>Somchai Rattanakorn</td></tr>\n<tr><td>2026-02-23</td><td>Transfer to Somchai Rattanakorn</td><td>📤 Transfer</td><td>THB 390.00</td><td>Somchai Rattanakorn</td></tr>\n<tr><td>2026-02-23</td><td>Transfer to Somchai Rattanakorn</td><td>📤 Transfer</td><td>THB 40.00</td><td>Somchai Rattanakorn</td></tr>\n<tr><td>2026-02-23</td><td>Transfer from Somchai Rattanakorn</td><td>📥 Income</td><td>THB 500.00</td><td>Somchai Rattanakorn</td></tr>\n</tbody>\n</table>",
+      "timestamp": "2026-02-23T21:24:15.157159",
+      "agent_used": "TransactionAgent",
+      "duration_seconds": 0.030965328216552734
+    },
+    {
+      "question": "I want to know my account balance",
+      "answer": "Your current account balance is **73,430.00 THB**.",
+      "timestamp": "2026-02-23T21:25:07.793257",
+      "agent_used": "AccountAgent",
+      "duration_seconds": 0.01965475082397461
     }
   ]
 }

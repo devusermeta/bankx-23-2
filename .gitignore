@@ -1,3 +1,8 @@
 financial-calculator-agent/
 InitialData/
 banking-platform/
+
+# Files containing secrets
+claude_bank/app/agents/escalation-copilot-bridge/SETUP_COMPLETED.md
+escalation-mcp-updated.json
+claude_bank/bankx-copilot-config.yaml

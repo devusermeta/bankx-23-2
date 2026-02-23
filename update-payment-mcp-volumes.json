@@ -1,0 +1,24 @@
+{
+  "properties": {
+    "template": {
+      "volumes": [
+        {
+          "name": "bankx-shared-data",
+          "storageType": "AzureFile",
+          "storageName": "bankx-shared-data"
+        }
+      ],
+      "containers": [
+        {
+          "name": "payment-mcp",
+          "volumeMounts": [
+            {
+              "volumeName": "bankx-shared-data",
+              "mountPath": "/app/dynamic_data"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

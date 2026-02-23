@@ -809,6 +809,7 @@ class SupervisorAgentA2A:
         
         try:
             customer_id = self.user_context.customer_id if self.user_context else "Somchai"
+            user_email = self.user_context.entra_user_email if self.user_context else "user@bankx.com"
             
             # Build messages array - use conversation_history if provided, otherwise just current message
             if conversation_history:
@@ -821,6 +822,7 @@ class SupervisorAgentA2A:
                 "messages": messages,
                 "thread_id": thread_id or f"thread_{customer_id}",
                 "customer_id": customer_id,
+                "user_email": user_email,
                 "stream": False,
             }
             

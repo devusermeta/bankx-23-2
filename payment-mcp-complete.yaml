@@ -1,0 +1,47 @@
+properties:
+  template:
+    containers:
+    - name: payment-mcp
+      image: multimodaldemoacroy6neblxi3zkq.azurecr.io/payment-mcp-server:v3
+      resources:
+        cpu: 0.5
+        memory: 1Gi
+        ephemeralStorage: 2Gi
+      env:
+      - name: STORAGE_ENABLED
+        value: "true"
+      probes:
+      - type: Liveness
+        tcpSocket:
+          port: 23040
+        failureThreshold: 3
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 5
+      - type: Readiness
+        tcpSocket:
+          port: 23040
+        failureThreshold: 48
+        periodSeconds: 5
+        successThreshold: 1
+        timeoutSeconds: 5
+      - type: Startup
+        tcpSocket:
+          port: 23040
+        failureThreshold: 240
+        initialDelaySeconds: 1
+        periodSeconds: 1
+        successThreshold: 1
+        timeoutSeconds: 3
+      volumeMounts:
+      - volumeName: bankx-shared-data
+        mountPath: /app/dynamic_data
+    scale:
+      cooldownPeriod: 300
+      maxReplicas: 10
+      minReplicas: 0
+      pollingInterval: 30
+    volumes:
+    - name: bankx-shared-data
+      storageType: AzureFile
+      storageName: bankx-shared-data

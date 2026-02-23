@@ -1,10 +1,10 @@
 {
   "_metadata": {
-    "last_updated": "2026-02-04T15:25:06+07:00",
+    "last_updated": "2026-02-23T15:25:40+07:00",
     "source": "uc1_synthetic_data/transactions.csv",
     "description": "Transaction history - new transactions appended at runtime",
-    "last_txn_id": "T000136",
-    "next_txn_id": "T000137"
+    "last_txn_id": "T000138",
+    "next_txn_id": "T000139"
   },
   "transactions": [
     {
@@ -1642,6 +1642,32 @@
       "amount": 1000.0,
       "timestamp": "2025-11-07T22:06:00",
       "txn_id": "T000136"
+    },
+    {
+      "account_id": "CHK-001",
+      "timestamp": "2026-02-23T15:25:40.183009",
+      "amount": -290.0,
+      "type": "outcome",
+      "description": "Transfer to Nattaporn Suksawat",
+      "category": "Transfer",
+      "status": "POSTED",
+      "counterparty_name": "Nattaporn Suksawat",
+      "counterparty_account_no": "123-456-002",
+      "currency": "THB",
+      "txn_id": "T000137"
+    },
+    {
+      "account_id": "CHK-002",
+      "timestamp": "2026-02-23T15:25:40.183009",
+      "amount": 290.0,
+      "type": "income",
+      "description": "Transfer from Somchai Rattanakorn",
+      "category": "Transfer",
+      "status": "POSTED",
+      "counterparty_name": "Somchai Rattanakorn",
+      "counterparty_account_no": "123-456-001",
+      "currency": "THB",
+      "txn_id": "T000138"
     }
   ]
 }

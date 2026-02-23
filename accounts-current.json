@@ -1,6 +1,6 @@
 {
   "_metadata": {
-    "last_updated": "2026-02-23T15:25:40+07:00",
+    "last_updated": "2026-02-04T15:25:06+07:00",
     "source": "uc1_synthetic_data/accounts.csv",
     "description": "Runtime account balances - updated on each transfer"
   },
@@ -13,8 +13,8 @@
       "bankx_email": "somchai@bankxthb.onmicrosoft.com",
       "acc_type": "CHK",
       "currency": "THB",
-      "ledger_balance": 90115.0,
-      "available_balance": 90115.0
+      "ledger_balance": 90405.0,
+      "available_balance": 90405.0
     },
     {
       "account_id": "CHK-002",
@@ -24,8 +24,8 @@
       "bankx_email": "nattaporn@bankxthb.onmicrosoft.com",
       "acc_type": "CHK",
       "currency": "THB",
-      "ledger_balance": 74560.0,
-      "available_balance": 74560.0
+      "ledger_balance": 74270.0,
+      "available_balance": 74270.0
     },
     {
       "account_id": "CHK-003",

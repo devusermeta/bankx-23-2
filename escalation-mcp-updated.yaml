@@ -1,0 +1,28 @@
+properties:
+  template:
+    containers:
+    - name: escalation-mcp
+      image: multimodaldemoacroy6neblxi3zkq.azurecr.io/payment-mcp-server:latest
+      resources:
+        cpu: 0.5
+        memory: 1Gi
+        ephemeralStorage: 2Gi
+      env:
+      - name: AZURE_STORAGE_ACCOUNT_NAME
+        value: bankxstorage776
+      - name: AZURE_STORAGE_CONTAINER_NAME
+        value: banking-data
+      volumeMounts:
+      - volumeName: bankx-shared-data
+        mountPath: /app/dynamic_data
+      - volumeName: bankx-shared-data
+        mountPath: /app/memory
+    scale:
+      cooldownPeriod: 300
+      maxReplicas: 10
+      minReplicas: 0
+      pollingInterval: 30
+    volumes:
+    - name: bankx-shared-data
+      storageType: AzureFile
+      storageName: bankx-shared-data

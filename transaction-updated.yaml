@@ -1,0 +1,51 @@
+properties:
+  template:
+    containers:
+    - name: transaction
+      image: multimodaldemoacroy6neblxi3zkq.azurecr.io/transaction-mcp-server:v3
+      resources:
+        cpu: 0.5
+        memory: 1Gi
+        ephemeralStorage: 2Gi
+      env:
+      - name: AZURE_STORAGE_ACCOUNT_NAME
+        value: bankxstorage776
+      - name: AZURE_STORAGE_CONTAINER_NAME
+        value: banking-data
+      probes:
+      - type: Liveness
+        tcpSocket:
+          port: 23040
+        failureThreshold: 3
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 5
+      - type: Readiness
+        tcpSocket:
+          port: 23040
+        failureThreshold: 48
+        periodSeconds: 5
+        successThreshold: 1
+        timeoutSeconds: 5
+      - type: Startup
+        tcpSocket:
+          port: 23040
+        failureThreshold: 240
+        initialDelaySeconds: 1
+        periodSeconds: 1
+        successThreshold: 1
+        timeoutSeconds: 3
+      volumeMounts:
+      - volumeName: bankx-shared-data
+        mountPath: /app/dynamic_data
+      - volumeName: bankx-shared-data
+        mountPath: /app/memory
+    scale:
+      cooldownPeriod: 300
+      maxReplicas: 10
+      minReplicas: 0
+      pollingInterval: 30
+    volumes:
+    - name: bankx-shared-data
+      storageType: AzureFile
+      storageName: bankx-shared-data

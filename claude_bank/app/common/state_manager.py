@@ -28,7 +28,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 # Import path utilities for environment-aware path resolution
-from path_utils import get_base_dir, get_dynamic_data_dir, get_csv_data_dir
+from .path_utils import get_base_dir, get_dynamic_data_dir, get_csv_data_dir
 
 # Base paths using environment-aware resolution
 PROJECT_ROOT = get_base_dir()

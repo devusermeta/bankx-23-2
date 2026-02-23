@@ -1,0 +1,15 @@
+# FastAPI and ASGI server
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+
+# FastMCP for MCP server implementation
+fastmcp>=0.1.0
+
+# Pydantic for data validation
+pydantic>=2.5.0
+
+# File locking for thread-safe JSON operations
+filelock>=3.13.0
+
+# Logging and utilities
+python-dotenv>=1.0.0

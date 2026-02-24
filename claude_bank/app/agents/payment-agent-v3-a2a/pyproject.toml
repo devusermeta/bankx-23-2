@@ -43,6 +43,9 @@ dependencies = [
 
     # Pin to version compatible with agent_framework (0.4.14 removed LLM_REQUEST_MODEL)
     "opentelemetry-semantic-conventions-ai==0.4.13",
+
+    # Azure Monitor OpenTelemetry (required by app/common/observability)
+    "azure-monitor-opentelemetry>=1.0.0",
 ]
 
 [build-system]

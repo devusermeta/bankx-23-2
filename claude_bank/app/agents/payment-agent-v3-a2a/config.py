@@ -53,7 +53,7 @@ def validate_config():
             f"Please check your .env file."
         )
 
-    print("✅ Payment Agent V3 A2A configuration validated")
+    print("[OK] Payment Agent V3 A2A configuration validated")
 
 
 if __name__ == "__main__":

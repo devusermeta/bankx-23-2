@@ -2,8 +2,10 @@ from fastapi import APIRouter, HTTPException
 from typing import List, Dict, Any
 import logging
 import asyncio
+import os
 from pydantic import BaseModel
 from agent_framework import MCPStreamableHTTPTool
+from app.config.settings import settings
 
 
 router = APIRouter()
@@ -28,7 +30,7 @@ class MCPTool(BaseModel):
 class MCPService(BaseModel):
     """Model for MCP service"""
     name: str
-    port: int
+    port: int  # Kept for backward compatibility, but not used for hosted services
     status: str  # "healthy", "degraded", "offline"
     url: str
     tools: List[MCPTool]
@@ -44,23 +46,85 @@ class MCPRegistryResponse(BaseModel):
     total_tools: int
 
 
-# MCP service configuration - simplified without hardcoded tools
-MCP_SERVICES_CONFIG = [
-    {"name": "Account", "port": 8070, "agents": ["AccountAgent", "PaymentAgent"]},
-    {"name": "Transaction", "port": 8071, "agents": ["TransactionAgent", "PaymentAgent"]},
-    {"name": "Payment", "port": 8072, "agents": ["PaymentAgent"]},
-    {"name": "Limits", "port": 8073, "agents": ["AccountAgent"]},
-    {"name": "Contacts", "port": 8074, "agents": ["PaymentAgent"]},
-    {"name": "Audit", "port": 8075, "agents": []},  # System-wide
-    {"name": "ProdInfo", "port": 8076, "agents": ["ProdInfoFAQAgent"]},
-    {"name": "AIMoneyCoach", "port": 8077, "agents": ["AIMoneyCoachAgent"]},
-    {"name": "EscalationComms", "port": 8078, "agents": ["EscalationCommsAgent"]},
-]
+# MCP service configuration - reads from environment variables for hosted services
+def get_mcp_services_config():
+    """Get MCP service configuration from settings."""
+    services = []
+    
+    # Debug logging
+    logger.info(f"🔍 Looking for MCP configuration in settings...")
+    logger.info(f"   ACCOUNT_MCP_URL: {settings.ACCOUNT_MCP_URL}")
+    logger.info(f"   TRANSACTION_MCP_URL: {settings.TRANSACTION_MCP_URL}")
+    logger.info(f"   PAYMENT_MCP_URL: {settings.PAYMENT_MCP_URL}")
+    logger.info(f"   LIMITS_MCP_URL: {settings.LIMITS_MCP_URL}")
+    logger.info(f"   CONTACTS_MCP_URL: {settings.CONTACTS_MCP_URL}")
+    
+    # Account MCP
+    if settings.ACCOUNT_MCP_URL:
+        account_url = settings.ACCOUNT_MCP_URL
+        # Ensure URL ends with /mcp
+        if not account_url.endswith("/mcp"):
+            account_url = f"{account_url}/mcp"
+        services.append({
+            "name": "Account",
+            "url": account_url,
+            "agents": ["AccountAgent", "PaymentAgent"]
+        })
+    
+    # Transaction MCP
+    if settings.TRANSACTION_MCP_URL:
+        transaction_url = settings.TRANSACTION_MCP_URL
+        if not transaction_url.endswith("/mcp"):
+            transaction_url = f"{transaction_url}/mcp"
+        services.append({
+            "name": "Transaction",
+            "url": transaction_url,
+            "agents": ["TransactionAgent", "PaymentAgent"]
+        })
+    
+    # Payment MCP
+    if settings.PAYMENT_MCP_URL:
+        payment_url = settings.PAYMENT_MCP_URL
+        if not payment_url.endswith("/mcp"):
+            payment_url = f"{payment_url}/mcp"
+        services.append({
+            "name": "Payment",
+            "url": payment_url,
+            "agents": ["PaymentAgent"]
+        })
+    
+    # Limits MCP
+    if settings.LIMITS_MCP_URL:
+        limits_url = settings.LIMITS_MCP_URL
+        if not limits_url.endswith("/mcp"):
+            limits_url = f"{limits_url}/mcp"
+        services.append({
+            "name": "Limits",
+            "url": limits_url,
+            "agents": ["AccountAgent"]
+        })
+    
+    # Contacts MCP
+    if settings.CONTACTS_MCP_URL:
+        contacts_url = settings.CONTACTS_MCP_URL
+        if not contacts_url.endswith("/mcp"):
+            contacts_url = f"{contacts_url}/mcp"
+        services.append({
+            "name": "Contacts",
+            "url": contacts_url,
+            "agents": ["PaymentAgent"]
+        })
+    
+    logger.info(f"✅ Found {len(services)} MCP services configured")
+    for svc in services:
+        logger.info(f"   - {svc['name']}: {svc['url']}")
+    
+    return services
 
 
 async def discover_mcp_service(
     service_name: str, 
-    port: int, 
+    url: str,
     used_by_agents: List[str],
     timeout: float = 10.0
 ) -> MCPService:
@@ -69,14 +133,20 @@ async def discover_mcp_service(
     
     Args:
         service_name: Name of the MCP service
-        port: Port number the service is running on
+        url: Full URL to the MCP service endpoint
         used_by_agents: List of agent names that use this service
         timeout: Connection timeout in seconds
         
     Returns:
         MCPService object with status and discovered tools
     """
-    url = f"http://localhost:{port}/mcp"
+    # Extract port from URL for display purposes (or use 0 for hosted services)
+    try:
+        from urllib.parse import urlparse
+        parsed = urlparse(url)
+        port = parsed.port if parsed.port else (443 if parsed.scheme == 'https' else 80)
+    except:
+        port = 0
     
     try:
         # Use MCPStreamableHTTPTool to connect and discover tools
@@ -132,7 +202,7 @@ async def discover_mcp_service(
         )
         
     except asyncio.TimeoutError:
-        logger.warning(f"MCP service {service_name} (port {port}) connection timeout")
+        logger.warning(f"MCP service {service_name} at {url} connection timeout")
         return MCPService(
             name=service_name,
             port=port,
@@ -144,7 +214,7 @@ async def discover_mcp_service(
         )
         
     except Exception as e:
-        logger.error(f"Error discovering MCP service {service_name} (port {port}): {str(e)}")
+        logger.error(f"Error discovering MCP service {service_name} at {url}: {str(e)}")
         return MCPService(
             name=service_name,
             port=port,
@@ -165,14 +235,26 @@ async def get_mcp_registry() -> MCPRegistryResponse:
         MCPRegistryResponse with service status, tools, and agent mappings
     """
     try:
+        # Get service configuration from environment variables
+        services_config = get_mcp_services_config()
+        
+        if not services_config:
+            logger.warning("No MCP services configured in environment variables")
+            return MCPRegistryResponse(
+                services=[],
+                total_services=0,
+                healthy_services=0,
+                total_tools=0
+            )
+        
         # Discover all services concurrently
         discovery_tasks = [
             discover_mcp_service(
                 service_name=config["name"],
-                port=config["port"],
+                url=config["url"],
                 used_by_agents=config["agents"]
             )
-            for config in MCP_SERVICES_CONFIG
+            for config in services_config
         ]
         
         services = await asyncio.gather(*discovery_tasks)
@@ -204,9 +286,12 @@ async def get_mcp_service_details(service_name: str) -> MCPService:
     Returns:
         MCPService with full details
     """
+    # Get service configuration from environment variables
+    services_config = get_mcp_services_config()
+    
     # Find service config
     service_config = next(
-        (s for s in MCP_SERVICES_CONFIG if s["name"].lower() == service_name.lower()),
+        (s for s in services_config if s["name"].lower() == service_name.lower()),
         None
     )
     
@@ -216,7 +301,7 @@ async def get_mcp_service_details(service_name: str) -> MCPService:
     # Discover service
     service = await discover_mcp_service(
         service_name=service_config["name"],
-        port=service_config["port"],
+        url=service_config["url"],
         used_by_agents=service_config["agents"]
     )
     

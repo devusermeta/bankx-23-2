@@ -1,0 +1,64 @@
+{
+  "payment-agent-v3": {
+    "agent_id": "payment-agent-v3",
+    "blueprint_id": "94a6c115-546a-4911-ba15-dc67cb85c4fc",
+    "object_id": "94a6c115-546a-4911-ba15-dc67cb85c4fc",
+    "endpoint": "https://banking-new-resources.services.ai.azure.com/api/projects/banking-new/agents/payment-agent-v3"
+  },
+  "payment-a2a": {
+    "agent_id": "payment-a2a",
+    "blueprint_id": "94a6c115-546a-4911-ba15-dc67cb85c4fc",
+    "object_id": "94a6c115-546a-4911-ba15-dc67cb85c4fc",
+    "endpoint": "https://banking-new-resources.services.ai.azure.com/api/projects/banking-new/agents/payment-a2a"
+  },
+  "payment-agent-v2": {
+    "agent_id": "payment-agent-v2",
+    "blueprint_id": "94a6c115-546a-4911-ba15-dc67cb85c4fc",
+    "object_id": "94a6c115-546a-4911-ba15-dc67cb85c4fc",
+    "endpoint": "https://banking-new-resources.services.ai.azure.com/api/projects/banking-new/agents/payment-agent-v2"
+  },
+  "transaction-a2a": {
+    "agent_id": "transaction-a2a",
+    "blueprint_id": "94a6c115-546a-4911-ba15-dc67cb85c4fc",
+    "object_id": "94a6c115-546a-4911-ba15-dc67cb85c4fc",
+    "endpoint": "https://banking-new-resources.services.ai.azure.com/api/projects/banking-new/agents/transaction-a2a"
+  },
+  "account-a2a": {
+    "agent_id": "account-a2a",
+    "blueprint_id": "94a6c115-546a-4911-ba15-dc67cb85c4fc",
+    "object_id": "94a6c115-546a-4911-ba15-dc67cb85c4fc",
+    "endpoint": "https://banking-new-resources.services.ai.azure.com/api/projects/banking-new/agents/account-a2a"
+  },
+  "ai-money-coach-a2a": {
+    "agent_id": "ai-money-coach-a2a",
+    "blueprint_id": "94a6c115-546a-4911-ba15-dc67cb85c4fc",
+    "object_id": "94a6c115-546a-4911-ba15-dc67cb85c4fc",
+    "endpoint": "https://banking-new-resources.services.ai.azure.com/api/projects/banking-new/agents/ai-money-coach-a2a"
+  },
+  "prodinfo-faq-a2a": {
+    "agent_id": "prodinfo-faq-a2a",
+    "blueprint_id": "94a6c115-546a-4911-ba15-dc67cb85c4fc",
+    "object_id": "94a6c115-546a-4911-ba15-dc67cb85c4fc",
+    "endpoint": "https://banking-new-resources.services.ai.azure.com/api/projects/banking-new/agents/prodinfo-faq-a2a"
+  },
+  "escalation-a2a": {
+    "agent_id": "escalation-a2a",
+    "blueprint_id": "94a6c115-546a-4911-ba15-dc67cb85c4fc",
+    "object_id": "94a6c115-546a-4911-ba15-dc67cb85c4fc",
+    "endpoint": "https://banking-new-resources.services.ai.azure.com/api/projects/banking-new/agents/escalation-a2a"
+  },
+  "FinancialCalculatorAgent": {
+    "agent_id": "FinancialCalculatorAgent",
+    "blueprint_id": "94a6c115-546a-4911-ba15-dc67cb85c4fc",
+    "object_id": "94a6c115-546a-4911-ba15-dc67cb85c4fc",
+    "endpoint": "https://banking-new-resources.services.ai.azure.com/api/projects/banking-new/agents/FinancialCalculatorAgent"
+  },
+  "escalation-copilot-bridge": {
+    "agent_id": "escalation-copilot-bridge",
+    "blueprint_id": "d0067233-7196-483c-a840-824cf289a078",
+    "object_id": "d97d0275-d2c3-4447-b50d-089d4e3704d3",
+    "endpoint": "https://copilot-studio-agent-endpoint",
+    "platform": "Microsoft Copilot Studio",
+    "display_name": "Agent 1 (Microsoft Copilot Studio)"
+  }
+}

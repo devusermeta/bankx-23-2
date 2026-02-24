@@ -97,14 +97,23 @@ class AgentEndpoints(BaseModel):
     a2a: str
 
 
+class A2AIdentity(BaseModel):
+    """A2A Identity information for Azure Agent ID."""
+    blueprint_id: str
+    object_id: str
+    endpoint: str
+
+
 class AgentCard(BaseModel):
     """Agent card for A2A discovery."""
     agent_name: str
+    agent_id: Optional[str] = None
     agent_type: str
     version: str
     description: str
     capabilities: List[str]
     endpoints: AgentEndpoints
+    a2a_identity: Optional[A2AIdentity] = None
     status: str = "active"
 
 

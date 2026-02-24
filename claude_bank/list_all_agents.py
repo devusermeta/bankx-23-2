@@ -39,13 +39,23 @@ try:
         print(f"\nAgent {i}:")
         print(f"  ID: {agent.id}")
         print(f"  Name: {agent.name}")
-        print(f"  Model: {agent.model}")
-        print(f"  Created: {agent.created_at}")
+        
+        # Safely check for model attribute
+        if hasattr(agent, 'model'):
+            print(f"  Model: {agent.model}")
+        
+        # Safely check for created_at
+        if hasattr(agent, 'created_at'):
+            print(f"  Created: {agent.created_at}")
         
         # Check for file search tool
         has_file_search = False
-        if agent.tools:
-            has_file_search = any(t.get('type') == 'file_search' for t in agent.tools)
+        if hasattr(agent, 'tools') and agent.tools:
+            has_file_search = any(
+                (hasattr(t, 'type') and t.type == 'file_search') or 
+                (isinstance(t, dict) and t.get('type') == 'file_search')
+                for t in agent.tools
+            )
         
         print(f"  File Search: {'✅ YES' if has_file_search else '❌ NO'}")
         

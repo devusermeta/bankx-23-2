@@ -1,9 +1,15 @@
 {
-  "agent_id": "GENERATED_ON_STARTUP",
+  "agent_id": "payment-agent-v3",
   "agent_name": "PaymentAgent",
   "agent_type": "domain",
   "version": "1.0.0",
   "description": "Domain agent responsible for money transfers with approval workflow, beneficiary resolution, and policy gate validation. Implements explicit approval pattern for all money movement. Part of UC1 (Financial Operations).",
+
+  "a2a_identity": {
+    "blueprint_id": "94a6c115-546a-4911-ba15-dc67cb85c4fc",
+    "object_id": "94a6c115-546a-4911-ba15-dc67cb85c4fc",
+    "endpoint": "https://banking-new-resources.services.ai.azure.com/api/projects/banking-new/agents/payment-agent-v3"
+  },
 
   "capabilities": [
     {

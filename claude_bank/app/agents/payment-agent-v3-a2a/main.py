@@ -65,7 +65,12 @@ AGENT_CARD = {
     "url": f"http://localhost:{A2A_SERVER_PORT}",
     "version": "3.0.0",
     "capabilities": ["bank_transfer", "transfer_validation", "transfer_execution"],
-    "agent_id": f"{PAYMENT_AGENT_NAME}:{PAYMENT_AGENT_VERSION}",
+    "agent_id": "payment-agent-v3",
+    "a2a_identity": {
+        "blueprint_id": "94a6c115-546a-4911-ba15-dc67cb85c4fc",
+        "object_id": "94a6c115-546a-4911-ba15-dc67cb85c4fc",
+        "endpoint": "https://banking-new-resources.services.ai.azure.com/api/projects/banking-new/agents/payment-agent-v3"
+    },
     "endpoints": {
         "chat": f"http://localhost:{A2A_SERVER_PORT}/a2a/invoke",
         "health": f"http://localhost:{A2A_SERVER_PORT}/health",

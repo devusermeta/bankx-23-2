@@ -1,9 +1,15 @@
 {
-  "agent_id": "GENERATED_ON_STARTUP",
+  "agent_id": "prodinfo-faq-a2a",
   "agent_name": "ProdInfoFAQAgent",
   "agent_type": "knowledge",
   "version": "1.0.0",
   "description": "Knowledge agent responsible for answering product information questions and FAQs using RAG (Retrieval Augmented Generation) with Azure AI Search. Creates support tickets when confidence is low or answer not found. Part of UC2 (Product Information & FAQ).",
+
+  "a2a_identity": {
+    "blueprint_id": "94a6c115-546a-4911-ba15-dc67cb85c4fc",
+    "object_id": "94a6c115-546a-4911-ba15-dc67cb85c4fc",
+    "endpoint": "https://banking-new-resources.services.ai.azure.com/api/projects/banking-new/agents/prodinfo-faq-a2a"
+  },
 
   "capabilities": [
     {

@@ -12,7 +12,7 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from config import settings, validate_settings
-from models import ChatRequest, ChatResponse, AgentCard, AgentEndpoints
+from models import ChatRequest, ChatResponse, AgentCard, AgentEndpoints, A2AIdentity
 from a2a_handler import get_a2a_handler
 from power_automate_client import get_power_automate_client
 
@@ -30,6 +30,7 @@ logger = logging.getLogger(__name__)
 # Agent card for A2A discovery
 AGENT_CARD = AgentCard(
     agent_name=settings.AGENT_NAME,
+    agent_id="escalation-copilot-bridge",
     agent_type=settings.AGENT_TYPE,
     version=settings.VERSION,
     description="Escalation agent bridge - calls Copilot Studio via Power Automate (Outlook + Excel)",
@@ -44,6 +45,11 @@ AGENT_CARD = AgentCard(
         http=f"http://localhost:{settings.A2A_SERVER_PORT}",
         health=f"http://localhost:{settings.A2A_SERVER_PORT}/health",
         a2a=f"http://localhost:{settings.A2A_SERVER_PORT}/a2a/invoke"
+    ),
+    a2a_identity=A2AIdentity(
+        blueprint_id="d0067233-7196-483c-a840-824cf289a078",
+        object_id="d97d0275-d2c3-4447-b50d-089d4e3704d3",
+        endpoint="https://copilot-studio-agent-endpoint"
     ),
     status="active"
 )

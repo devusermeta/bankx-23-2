@@ -1,8 +1,15 @@
 {
+  "agent_id": "account-a2a",
   "agent_name": "AccountAgent",
   "agent_type": "domain",
   "version": "1.0.0",
   "description": "Handles account resolution, balance inquiries, and limits checking for UC1 financial operations",
+
+  "a2a_identity": {
+    "blueprint_id": "94a6c115-546a-4911-ba15-dc67cb85c4fc",
+    "object_id": "94a6c115-546a-4911-ba15-dc67cb85c4fc",
+    "endpoint": "https://banking-new-resources.services.ai.azure.com/api/projects/banking-new/agents/account-a2a"
+  },
 
   "capabilities": [
     {

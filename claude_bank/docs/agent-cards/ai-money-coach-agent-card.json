@@ -1,9 +1,15 @@
 {
-  "agent_id": "GENERATED_ON_STARTUP",
+  "agent_id": "ai-money-coach-a2a",
   "agent_name": "AIMoneyCoachAgent",
   "agent_type": "knowledge",
   "version": "1.0.0",
   "description": "Knowledge agent responsible for personal finance coaching, debt management advice, and financial wellness guidance. Uses RAG with 'Debt-Free to Financial Freedom' book. Implements clarification-first approach for personalized advice. Part of UC3 (AI Money Coach).",
+
+  "a2a_identity": {
+    "blueprint_id": "94a6c115-546a-4911-ba15-dc67cb85c4fc",
+    "object_id": "94a6c115-546a-4911-ba15-dc67cb85c4fc",
+    "endpoint": "https://banking-new-resources.services.ai.azure.com/api/projects/banking-new/agents/ai-money-coach-a2a"
+  },
 
   "capabilities": [
     {

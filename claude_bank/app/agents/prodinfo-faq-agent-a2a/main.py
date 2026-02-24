@@ -84,7 +84,12 @@ AGENT_CARD = {
     "url": f"http://localhost:{A2A_SERVER_PORT}",
     "version": "1.0.0",
     "capabilities": ["product_information", "faq", "product_comparison", "ticket_creation"],
-    "agent_id": f"{PRODINFO_FAQ_AGENT_NAME}:{PRODINFO_FAQ_AGENT_VERSION}",
+    "agent_id": "prodinfo-faq-a2a",
+    "a2a_identity": {
+        "blueprint_id": "94a6c115-546a-4911-ba15-dc67cb85c4fc",
+        "object_id": "94a6c115-546a-4911-ba15-dc67cb85c4fc",
+        "endpoint": "https://banking-new-resources.services.ai.azure.com/api/projects/banking-new/agents/prodinfo-faq-a2a"
+    },
     "endpoints": {
         "chat": f"http://localhost:{A2A_SERVER_PORT}/a2a/invoke",
         "health": f"http://localhost:{A2A_SERVER_PORT}/health",

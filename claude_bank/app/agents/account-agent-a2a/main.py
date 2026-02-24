@@ -67,7 +67,12 @@ AGENT_CARD = {
     "url": f"http://localhost:{A2A_SERVER_PORT}",
     "version": "1.0.0",
     "capabilities": ["account_balance", "account_details", "payment_methods", "transaction_limits"],
-    "agent_id": f"{ACCOUNT_AGENT_NAME}:{ACCOUNT_AGENT_VERSION}",  # NEW format: name:version
+    "agent_id": "account-a2a",
+    "a2a_identity": {
+        "blueprint_id": "94a6c115-546a-4911-ba15-dc67cb85c4fc",
+        "object_id": "94a6c115-546a-4911-ba15-dc67cb85c4fc",
+        "endpoint": "https://banking-new-resources.services.ai.azure.com/api/projects/banking-new/agents/account-a2a"
+    },
     "endpoints": {
         "chat": f"http://localhost:{A2A_SERVER_PORT}/a2a/invoke",
         "health": f"http://localhost:{A2A_SERVER_PORT}/health",
